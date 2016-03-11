@@ -18,6 +18,8 @@ namespace Generator
 
         class FunctionData
         {
+            public string Docs { get; set; }
+
             public bool IsCallback { get; set; }
 
             public string ReturnType { get; set; }
@@ -66,6 +68,32 @@ namespace Generator
             return result;
         }
 
+        private static string ParseDocs(string[] lines, int i)
+        {
+            while (!lines[i].StartsWith("/*!"))
+            {
+                i--;
+            }
+
+            StringBuilder sb = new StringBuilder(512);
+
+            while (!lines[i].StartsWith(" */"))
+            {
+                if (lines[i].Length >= 4)
+                {
+                    sb.AppendLine(lines[i].Substring(4));
+                }
+                else
+                {
+                    sb.AppendLine();
+                }
+                
+                i++;
+            }
+
+            return sb.ToString();
+        }
+
         private static void Parse(string[] lines, List<EnumData> enums, List<FunctionData> functions)
         {
             for (int i = 0; i < lines.Length; i++)
@@ -90,6 +118,8 @@ namespace Generator
                     int j = 1;
 
                     FunctionData functionData = new FunctionData();
+
+                    functionData.Docs = ParseDocs(lines, i);
 
                     functionData.ReturnType = ParseType(parts, ref j);
                     j++;

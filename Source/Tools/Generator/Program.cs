@@ -18,9 +18,17 @@ namespace Generator
 
         class FunctionData
         {
-            public string Docs { get; set; }
-
             public bool IsCallback { get; set; }
+
+            public string Group { get; set; }
+
+            public string BriefDescription { get; set; }
+
+            public string Description { get; set; }
+
+            public string Remarks { get; set; }
+
+            public string ReturnDescription { get; set; }
 
             public string ReturnType { get; set; }
 
@@ -29,8 +37,17 @@ namespace Generator
             public List<FunctionParamData> Params { get; } = new List<FunctionParamData>();
         }
 
+        enum FunctionParamModifier
+        {
+            None,
+            In,
+            Out
+        }
+
         class FunctionParamData
         {
+            public FunctionParamModifier Modifier { get; set; }
+
             public string Type { get; set; }
 
             public string Name { get; set; }
@@ -68,30 +85,151 @@ namespace Generator
             return result;
         }
 
-        private static string ParseDocs(string[] lines, int i)
+        enum FunctionDocState
+        {
+            None,
+            BriefDescription,
+            Description,
+            Param,
+            Remarks,
+            Return
+        }
+
+        private static void ParseFunctionDocsFlush(
+            FunctionData functionData,
+            ref FunctionDocState state,
+            StringBuilder sb,
+            string paramName,
+            FunctionParamModifier paramModifier)
+        {
+            switch (state)
+            {
+                case FunctionDocState.BriefDescription:
+                    functionData.BriefDescription = sb.ToString();
+                    break;
+
+                case FunctionDocState.Description:
+                    functionData.Description = sb.ToString();
+                    break;
+
+                case FunctionDocState.Param:
+                    var param = functionData.Params.Single(x => x.Name == paramName);
+                    param.Modifier = paramModifier;
+                    break;
+
+                case FunctionDocState.Remarks:
+                    functionData.Remarks = sb.ToString();
+                    break;
+
+                case FunctionDocState.Return:
+                    functionData.ReturnDescription = sb.ToString();
+                    break;
+            }
+
+            if (state == FunctionDocState.BriefDescription)
+            {
+                state = FunctionDocState.Description;
+            }
+            else
+            {
+                state = FunctionDocState.None;
+            }
+
+            sb.Clear();
+        }
+
+        private static void ParseFunctionDocs(string[] lines, int i, FunctionData functionData)
         {
             while (!lines[i].StartsWith("/*!"))
             {
                 i--;
             }
 
-            StringBuilder sb = new StringBuilder(512);
+            FunctionDocState state = FunctionDocState.None;
+            StringBuilder sb = new StringBuilder(1024);
+            string paramName = string.Empty;
+            FunctionParamModifier paramModifier = FunctionParamModifier.None;
 
-            while (!lines[i].StartsWith(" */"))
+            while (true)
             {
+                bool finished = false;
+
+                string trimmedLine = null;
+
                 if (lines[i].Length >= 4)
                 {
-                    sb.AppendLine(lines[i].Substring(4));
+                    trimmedLine = lines[i].Substring(4);
                 }
                 else
                 {
-                    sb.AppendLine();
+                    trimmedLine = string.Empty;
                 }
-                
+
+                if (trimmedLine.StartsWith("@brief"))
+                {
+                    state = FunctionDocState.BriefDescription;
+                    sb.AppendLine(trimmedLine.Substring("@brief ".Length));
+                }
+                else if (trimmedLine.StartsWith("@ingroup"))
+                {
+                    functionData.Group = trimmedLine.Substring("@ingroup ".Length).Trim();
+                }
+                else if (trimmedLine.StartsWith("@param"))
+                {
+                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+
+                    state = FunctionDocState.Param;
+                    paramModifier = FunctionParamModifier.None;
+
+                    trimmedLine = trimmedLine.Substring("@param".Length);
+
+                    if (trimmedLine.StartsWith("[in]"))
+                    {
+                        paramModifier = FunctionParamModifier.In;
+                        trimmedLine = trimmedLine.Substring("[in]".Length);
+                    }
+                    else if (trimmedLine.StartsWith("[out]"))
+                    {
+                        paramModifier = FunctionParamModifier.Out;
+                        trimmedLine = trimmedLine.Substring("[out]".Length);
+                    }
+
+                    trimmedLine = trimmedLine.Substring(1);
+
+                    int index = trimmedLine.IndexOf(' ');
+                    paramName = trimmedLine.Substring(0, index);
+
+                    sb.AppendLine(trimmedLine.Substring(index + 1));
+                }
+                else if (trimmedLine.StartsWith("@remarks"))
+                {
+                    state = FunctionDocState.Remarks;
+                    sb.AppendLine(trimmedLine.Substring("@remarks ".Length));
+                }
+                else if (trimmedLine.StartsWith("@return"))
+                {
+                    state = FunctionDocState.Return;
+                    sb.AppendLine(trimmedLine.Substring("@return ".Length));
+                }
+                else if (lines[i].StartsWith(" */"))
+                {
+                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+                    finished = true;
+                }
+                else if (trimmedLine == string.Empty || trimmedLine.StartsWith("@"))
+                {
+                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+                }
+                else
+                {
+                    sb.AppendLine(trimmedLine);
+                }
+
+                if (finished)
+                    break;
+
                 i++;
             }
-
-            return sb.ToString();
         }
 
         private static void Parse(string[] lines, List<EnumData> enums, List<FunctionData> functions)
@@ -119,8 +257,6 @@ namespace Generator
 
                     FunctionData functionData = new FunctionData();
 
-                    functionData.Docs = ParseDocs(lines, i);
-
                     functionData.ReturnType = ParseType(parts, ref j);
                     j++;
 
@@ -142,6 +278,8 @@ namespace Generator
                             functionData.Params.Add(paramData);
                         }
                     }
+
+                    ParseFunctionDocs(lines, i, functionData);
 
                     functions.Add(functionData);
                 }

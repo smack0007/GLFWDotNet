@@ -14,6 +14,8 @@ namespace Generator
             public string Name { get; set; }
 
             public string Value { get; set; }
+
+            public override string ToString() => this.Name;
         }
 
         class FunctionData
@@ -33,6 +35,8 @@ namespace Generator
             public string Name { get; set; }
 
             public List<FunctionParamData> Params { get; } = new List<FunctionParamData>();
+
+            public override string ToString() => this.Name;
         }
 
         enum FunctionParamModifier
@@ -49,6 +53,8 @@ namespace Generator
             public string Type { get; set; }
 
             public string Name { get; set; }
+
+            public override string ToString() => this.Name;
         }
 
         class CallbackData
@@ -57,7 +63,18 @@ namespace Generator
 
             public string Name { get; set; }
 
-            public string[] ArgTypes { get; set; }
+            public string[] ParamTypes { get; set; }
+
+            public override string ToString() => this.Name;
+        }
+
+        class StructData
+        {
+            public bool IsOpaque { get; set; }
+
+            public string Name { get; set; }
+
+            public override string ToString() => this.Name;
         }
 
         public static void Main(string[] args)
@@ -66,10 +83,11 @@ namespace Generator
             var enums = new List<EnumData>();
             var functions = new List<FunctionData>();
             var callbacks = new List<CallbackData>();
+            var structs = new List<StructData>();
 
-            Parse(lines, enums, functions, callbacks);
+            Parse(lines, enums, functions, callbacks, structs);
 
-            Write(enums, functions, callbacks);
+            Write(enums, functions, callbacks, structs);
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -251,6 +269,7 @@ namespace Generator
                 }
                 else if (trimmedLine.StartsWith("@return"))
                 {
+                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
                     state = FunctionDocState.Return;
                     sb.AppendLine(trimmedLine.Substring("@return ".Length));
                 }
@@ -300,12 +319,36 @@ namespace Generator
                 }
             }
 
-            callback.ArgTypes = argTypes.ToArray();
+            callback.ParamTypes = argTypes.ToArray();
 
             return callback;
         }
 
-        private static void Parse(string[] lines, List<EnumData> enums, List<FunctionData> functions, List<CallbackData> callbacks)
+        private static StructData ParseStruct(string[] lines, ref int i)
+        {
+            string[] parts = lines[i].Split(' ');
+
+            var @struct = new StructData();
+            @struct.Name = parts[2];
+
+            if (lines[i].EndsWith(";"))
+            {
+                @struct.IsOpaque = true;
+            }
+            else
+            {
+                
+            }
+
+            return @struct;
+        }
+
+        private static void Parse(
+            string[] lines,
+            List<EnumData> enums,
+            List<FunctionData> functions,
+            List<CallbackData> callbacks,
+            List<StructData> structs)
         {
             for (int i = 0; i < lines.Length; i++)
             {
@@ -334,51 +377,74 @@ namespace Generator
                         CallbackData callback = ParseCallback(lines, i);
                         callbacks.Add(callback);
                     }
-                    else
+                    else if (lines[i].StartsWith("typedef struct "))
                     {
-
+                        StructData @struct = ParseStruct(lines, ref i);
+                        structs.Add(@struct);
                     }
                 }
             }
         }
 
-        private static string GetReturnType(FunctionData function)
+        private static string GetType(string type, List<StructData> structs)
         {
-            string type = function.ReturnType;
-
             if (type.StartsWith("const "))
                 type = type.Substring("const ".Length);
+
+            if (type.EndsWith("*") || type.EndsWith("**"))
+            {
+                string structName = type.TrimEnd('*');
+
+                var @struct = structs.SingleOrDefault(x => x.Name == structName);
+
+                if (@struct != null)
+                {
+                    if (@struct.IsOpaque)
+                    {
+                        if (type.EndsWith("**"))
+                        {
+                            return "IntPtr[]";
+                        }
+                        else
+                        {
+                            return "IntPtr";
+                        }
+                    }
+                    else
+                    {
+                        return structName.Substring(4);
+                    }
+                }
+            }
+
+            if (type.StartsWith("GLFW"))
+                type = type.Substring("GLFW".Length);
 
             switch (type)
             {
                 case "char*":
                     return "string";
 
-                case "void*":
+                case "char**":
+                    return "string[]";
+
+                case "double*":
+                    return "double";
+
+                case "float*":
+                    return "float[]";
+
+                case "glproc":
                     return "IntPtr";
-            }
-
-            return type;
-        }
-
-        private static string GetParamType(FunctionParamData param)
-        {
-            string type = param.Type;
-
-            switch (type)
-            {
-                case "const char*":
-                    return "string";
 
                 case "int*":
-                    if (param.Modifier == FunctionParamModifier.Out)
-                    {
-                        return "out int";
-                    }
-                    else
-                    {
-                        return "ref int";
-                    }
+                    return "int";
+
+                case "unsigned int":
+                    return "uint";
+
+                case "unsigned char*":
+                    return "string";
 
                 case "void*":
                     return "IntPtr";
@@ -387,12 +453,48 @@ namespace Generator
             return type;
         }
 
-        private static string GetFunctionName(FunctionData function)
+        private static string GetReturnType(string type, List<StructData> structs)
         {
-            return function.Name.Substring(4);
+            return GetType(type, structs);
         }
 
-        private static void Write(List<EnumData> enums, List<FunctionData> functions, List<CallbackData> callbacks)
+        private static string GetParamType(string type, FunctionParamModifier modifier, List<StructData> structs)
+        {
+            type = GetType(type, structs);
+
+            if (modifier == FunctionParamModifier.Out)
+            {
+                type = "out " + type;
+            }
+            else if (modifier == FunctionParamModifier.In)
+            {
+                type = "ref " + type;
+            }
+
+            return type;
+        }
+
+        private static string GetFunctionName(string function)
+        {
+            return function.Substring(4);
+        }
+
+        private static string GetFunctionParamName(string name)
+        {
+            switch (name)
+            {
+                case "string":
+                    return "@string";
+            }
+
+            return name;
+        }
+
+        private static void Write(
+            List<EnumData> enums,
+            List<FunctionData> functions,
+            List<CallbackData> callbacks,
+            List<StructData> structs)
         {
             StringBuilder sb = new StringBuilder(1024);
 
@@ -404,29 +506,37 @@ namespace Generator
             sb.AppendLine("\tpublic static partial class GLFW");
             sb.AppendLine("\t{");
 
-            foreach (var enumData in enums)
+            foreach (var @enum in enums)
             {
-                sb.AppendLine($"\t\tpublic const int {enumData.Name} = {enumData.Value};");
+                sb.AppendLine($"\t\tpublic const int {@enum.Name} = {@enum.Value};");
             }
 
             sb.AppendLine();
 
-            foreach (var function in functions)
+            foreach (var @struct in structs.Where(x => !x.IsOpaque))
             {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x) + " " + x.Name));
+                sb.AppendLine($"\t\tpublic struct {GetType(@struct.Name, structs)}");
+                sb.AppendLine("\t\t{");
+                sb.AppendLine("\t\t}");
 
-                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true)]");
-                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function)} {GetFunctionName(function)}({parameters});");
+                sb.AppendLine();
+            }
+
+            foreach (var callback in callbacks)
+            {
+                string parameters = string.Join(", ", callback.ParamTypes.Select((x, i) => GetParamType(x, FunctionParamModifier.None, structs) + " arg" + i));
+
+                sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {GetFunctionName(callback.Name)}({parameters});");
 
                 sb.AppendLine();
             }
 
             foreach (var function in functions)
             {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x) + " " + x.Name));
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetFunctionParamName(x.Name)));
 
                 sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true)]");
-                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function)} {GetFunctionName(function)}({parameters});");
+                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
 
                 sb.AppendLine();
             }

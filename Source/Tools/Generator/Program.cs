@@ -18,8 +18,6 @@ namespace Generator
 
         class FunctionData
         {
-            public bool IsCallback { get; set; }
-
             public string Group { get; set; }
 
             public string BriefDescription { get; set; }
@@ -53,15 +51,25 @@ namespace Generator
             public string Name { get; set; }
         }
 
+        class CallbackData
+        {
+            public string ReturnType { get; set; }
+
+            public string Name { get; set; }
+
+            public string[] ArgTypes { get; set; }
+        }
+
         public static void Main(string[] args)
         {
             var lines = File.ReadAllLines("glfw3.h");
             var enums = new List<EnumData>();
             var functions = new List<FunctionData>();
-            
-            Parse(lines, enums, functions);
+            var callbacks = new List<CallbackData>();
 
-            Write(enums, functions);
+            Parse(lines, enums, functions, callbacks);
+
+            Write(enums, functions, callbacks);
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -83,6 +91,41 @@ namespace Generator
             result += parts[j];
 
             return result;
+        }
+
+        private static FunctionData ParseFunction(string[] lines, int i)
+        {
+            string[] parts = lines[i].Split(new char[] { ' ', '\t', '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int j = 1;
+
+            FunctionData function = new FunctionData();
+
+            function.ReturnType = ParseType(parts, ref j);
+            j++;
+
+            function.Name = parts[j];
+            j++;
+
+            if (parts[j] != "void")
+            {
+                while (parts[j] != ";")
+                {
+                    FunctionParamData paramData = new FunctionParamData();
+
+                    paramData.Type = ParseType(parts, ref j);
+                    j++;
+
+                    paramData.Name = parts[j];
+                    j++;
+
+                    function.Params.Add(paramData);
+                }
+            }
+
+            ParseFunctionDocs(lines, i, function);
+
+            return function;
         }
 
         enum FunctionDocState
@@ -232,7 +275,37 @@ namespace Generator
             }
         }
 
-        private static void Parse(string[] lines, List<EnumData> enums, List<FunctionData> functions)
+        private static CallbackData ParseCallback(string[] lines, int i)
+        {
+            string[] parts = lines[i].Split(new char[] { ' ', '\t', '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int j = 1;
+
+            CallbackData callback = new CallbackData();
+
+            callback.ReturnType = ParseType(parts, ref j);
+            j += 2;
+
+            callback.Name = parts[j];
+            j++;
+
+            List<string> argTypes = new List<string>();
+
+            if (parts[j] != "void")
+            {
+                while (parts[j] != ";")
+                {
+                    argTypes.Add(ParseType(parts, ref j));
+                    j++;
+                }
+            }
+
+            callback.ArgTypes = argTypes.ToArray();
+
+            return callback;
+        }
+
+        private static void Parse(string[] lines, List<EnumData> enums, List<FunctionData> functions, List<CallbackData> callbacks)
         {
             for (int i = 0; i < lines.Length; i++)
             {
@@ -251,43 +324,15 @@ namespace Generator
                 }
                 else if (lines[i].StartsWith("GLFWAPI "))
                 {
-                    string[] parts = lines[i].Split(new char[] { ' ', '\t', '(', ')', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    int j = 1;
-
-                    FunctionData functionData = new FunctionData();
-
-                    functionData.ReturnType = ParseType(parts, ref j);
-                    j++;
-
-                    functionData.Name = parts[j];
-                    j++;
-
-                    if (parts[j] != "void")
-                    {
-                        while (parts[j] != ";")
-                        {
-                            FunctionParamData paramData = new FunctionParamData();
-
-                            paramData.Type = ParseType(parts, ref j);                            
-                            j++;
-
-                            paramData.Name = parts[j];
-                            j++;
-
-                            functionData.Params.Add(paramData);
-                        }
-                    }
-
-                    ParseFunctionDocs(lines, i, functionData);
-
-                    functions.Add(functionData);
+                    FunctionData function = ParseFunction(lines, i);
+                    functions.Add(function);
                 }
                 else if (lines[i].StartsWith("typedef "))
                 {
                     if (lines[i].Contains("(* "))
                     {
-
+                        CallbackData callback = ParseCallback(lines, i);
+                        callbacks.Add(callback);
                     }
                     else
                     {
@@ -347,7 +392,7 @@ namespace Generator
             return function.Name.Substring(4);
         }
 
-        private static void Write(List<EnumData> enums, List<FunctionData> functions)
+        private static void Write(List<EnumData> enums, List<FunctionData> functions, List<CallbackData> callbacks)
         {
             StringBuilder sb = new StringBuilder(1024);
 
@@ -365,6 +410,16 @@ namespace Generator
             }
 
             sb.AppendLine();
+
+            foreach (var function in functions)
+            {
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x) + " " + x.Name));
+
+                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true)]");
+                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function)} {GetFunctionName(function)}({parameters});");
+
+                sb.AppendLine();
+            }
 
             foreach (var function in functions)
             {

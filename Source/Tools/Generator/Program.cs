@@ -466,10 +466,10 @@ namespace Generator
             {
                 type = "out " + type;
             }
-            else if (modifier == FunctionParamModifier.In)
-            {
-                type = "ref " + type;
-            }
+            //else if (modifier == FunctionParamModifier.In)
+            //{
+            //    type = "ref " + type;
+            //}
 
             return type;
         }
@@ -535,7 +535,7 @@ namespace Generator
             {
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetFunctionParamName(x.Name)));
 
-                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true)]");
+                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
                 sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
 
                 sb.AppendLine();

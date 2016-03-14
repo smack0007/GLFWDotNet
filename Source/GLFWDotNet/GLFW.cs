@@ -8,5 +8,6 @@ namespace GLFWDotNet
 {
     public static partial class GLFW
     {
+        private const string Library = "glfw3.dll";
     }
 }

@@ -1,3 +1,6 @@
+using System;
+using System.Runtime.InteropServices;
+
 namespace GLFWDotNet
 {
 	public static partial class GLFW
@@ -218,84 +221,242 @@ namespace GLFWDotNet
 		public const int GLFW_DISCONNECTED = 0x00040002;
 		public const int GLFW_DONT_CARE = -1;
 
-		// public static int glfwInit();
-		// public static void glfwTerminate();
-		// public static void glfwGetVersion(int* major, int* minor, int* rev);
-		// public static const char* glfwGetVersionString();
-		// public static GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
-		// public static GLFWmonitor** glfwGetMonitors(int* count);
-		// public static GLFWmonitor* glfwGetPrimaryMonitor();
-		// public static void glfwGetMonitorPos(GLFWmonitor* monitor, int* xpos, int* ypos);
-		// public static void glfwGetMonitorPhysicalSize(GLFWmonitor* monitor, int* widthMM, int* heightMM);
-		// public static const char* glfwGetMonitorName(GLFWmonitor* monitor);
-		// public static GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
-		// public static const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* monitor, int* count);
-		// public static const GLFWvidmode* glfwGetVideoMode(GLFWmonitor* monitor);
-		// public static void glfwSetGamma(GLFWmonitor* monitor, float gamma);
-		// public static const GLFWgammaramp* glfwGetGammaRamp(GLFWmonitor* monitor);
-		// public static void glfwSetGammaRamp(GLFWmonitor* monitor, const GLFWgammaramp* ramp);
-		// public static void glfwDefaultWindowHints();
-		// public static void glfwWindowHint(int target, int hint);
-		// public static GLFWwindow* glfwCreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
-		// public static void glfwDestroyWindow(GLFWwindow* window);
-		// public static int glfwWindowShouldClose(GLFWwindow* window);
-		// public static void glfwSetWindowShouldClose(GLFWwindow* window, int value);
-		// public static void glfwSetWindowTitle(GLFWwindow* window, const char* title);
-		// public static void glfwGetWindowPos(GLFWwindow* window, int* xpos, int* ypos);
-		// public static void glfwSetWindowPos(GLFWwindow* window, int xpos, int ypos);
-		// public static void glfwGetWindowSize(GLFWwindow* window, int* width, int* height);
-		// public static void glfwSetWindowSize(GLFWwindow* window, int width, int height);
-		// public static void glfwGetFramebufferSize(GLFWwindow* window, int* width, int* height);
-		// public static void glfwGetWindowFrameSize(GLFWwindow* window, int* left, int* top, int* right, int* bottom);
-		// public static void glfwIconifyWindow(GLFWwindow* window);
-		// public static void glfwRestoreWindow(GLFWwindow* window);
-		// public static void glfwShowWindow(GLFWwindow* window);
-		// public static void glfwHideWindow(GLFWwindow* window);
-		// public static GLFWmonitor* glfwGetWindowMonitor(GLFWwindow* window);
-		// public static int glfwGetWindowAttrib(GLFWwindow* window, int attrib);
-		// public static void glfwSetWindowUserPointer(GLFWwindow* window, void* pointer);
-		// public static void* glfwGetWindowUserPointer(GLFWwindow* window);
-		// public static GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* window, GLFWwindowposfun cbfun);
-		// public static GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun cbfun);
-		// public static GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* window, GLFWwindowclosefun cbfun);
-		// public static GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* window, GLFWwindowrefreshfun cbfun);
-		// public static GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* window, GLFWwindowfocusfun cbfun);
-		// public static GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* window, GLFWwindowiconifyfun cbfun);
-		// public static GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, GLFWframebuffersizefun cbfun);
-		// public static void glfwPollEvents();
-		// public static void glfwWaitEvents();
-		// public static void glfwPostEmptyEvent();
-		// public static int glfwGetInputMode(GLFWwindow* window, int mode);
-		// public static void glfwSetInputMode(GLFWwindow* window, int mode, int value);
-		// public static int glfwGetKey(GLFWwindow* window, int key);
-		// public static int glfwGetMouseButton(GLFWwindow* window, int button);
-		// public static void glfwGetCursorPos(GLFWwindow* window, double* xpos, double* ypos);
-		// public static void glfwSetCursorPos(GLFWwindow* window, double xpos, double ypos);
-		// public static GLFWcursor* glfwCreateCursor(const GLFWimage* image, int xhot, int yhot);
-		// public static GLFWcursor* glfwCreateStandardCursor(int shape);
-		// public static void glfwDestroyCursor(GLFWcursor* cursor);
-		// public static void glfwSetCursor(GLFWwindow* window, GLFWcursor* cursor);
-		// public static GLFWkeyfun glfwSetKeyCallback(GLFWwindow* window, GLFWkeyfun cbfun);
-		// public static GLFWcharfun glfwSetCharCallback(GLFWwindow* window, GLFWcharfun cbfun);
-		// public static GLFWcharmodsfun glfwSetCharModsCallback(GLFWwindow* window, GLFWcharmodsfun cbfun);
-		// public static GLFWmousebuttonfun glfwSetMouseButtonCallback(GLFWwindow* window, GLFWmousebuttonfun cbfun);
-		// public static GLFWcursorposfun glfwSetCursorPosCallback(GLFWwindow* window, GLFWcursorposfun cbfun);
-		// public static GLFWcursorenterfun glfwSetCursorEnterCallback(GLFWwindow* window, GLFWcursorenterfun cbfun);
-		// public static GLFWscrollfun glfwSetScrollCallback(GLFWwindow* window, GLFWscrollfun cbfun);
-		// public static GLFWdropfun glfwSetDropCallback(GLFWwindow* window, GLFWdropfun cbfun);
-		// public static int glfwJoystickPresent(int joy);
-		// public static const float* glfwGetJoystickAxes(int joy, int* count);
-		// public static const unsigned char* glfwGetJoystickButtons(int joy, int* count);
-		// public static const char* glfwGetJoystickName(int joy);
-		// public static void glfwSetClipboardString(GLFWwindow* window, const char* string);
-		// public static const char* glfwGetClipboardString(GLFWwindow* window);
-		// public static double glfwGetTime();
-		// public static void glfwSetTime(double time);
-		// public static void glfwMakeContextCurrent(GLFWwindow* window);
-		// public static GLFWwindow* glfwGetCurrentContext();
-		// public static void glfwSwapBuffers(GLFWwindow* window);
-		// public static void glfwSwapInterval(int interval);
-		// public static int glfwExtensionSupported(const char* extension);
-		// public static GLFWglproc glfwGetProcAddress(const char* procname);
+		[DllImport(Library, EntryPoint = "glfwInit", ExactSpelling = true)]
+		public static extern int Init();
+
+		[DllImport(Library, EntryPoint = "glfwTerminate", ExactSpelling = true)]
+		public static extern void Terminate();
+
+		[DllImport(Library, EntryPoint = "glfwGetVersion", ExactSpelling = true)]
+		public static extern void GetVersion(out int major, out int minor, out int rev);
+
+		[DllImport(Library, EntryPoint = "glfwGetVersionString", ExactSpelling = true)]
+		public static extern string GetVersionString();
+
+		[DllImport(Library, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true)]
+		public static extern GLFWerrorfun SetErrorCallback(GLFWerrorfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwGetMonitors", ExactSpelling = true)]
+		public static extern GLFWmonitor** GetMonitors(ref int count);
+
+		[DllImport(Library, EntryPoint = "glfwGetPrimaryMonitor", ExactSpelling = true)]
+		public static extern GLFWmonitor* GetPrimaryMonitor();
+
+		[DllImport(Library, EntryPoint = "glfwGetMonitorPos", ExactSpelling = true)]
+		public static extern void GetMonitorPos(GLFWmonitor* monitor, out int xpos, out int ypos);
+
+		[DllImport(Library, EntryPoint = "glfwGetMonitorPhysicalSize", ExactSpelling = true)]
+		public static extern void GetMonitorPhysicalSize(GLFWmonitor* monitor, out int widthMM, out int heightMM);
+
+		[DllImport(Library, EntryPoint = "glfwGetMonitorName", ExactSpelling = true)]
+		public static extern string GetMonitorName(GLFWmonitor* monitor);
+
+		[DllImport(Library, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true)]
+		public static extern GLFWmonitorfun SetMonitorCallback(GLFWmonitorfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwGetVideoModes", ExactSpelling = true)]
+		public static extern GLFWvidmode* GetVideoModes(GLFWmonitor* monitor, ref int count);
+
+		[DllImport(Library, EntryPoint = "glfwGetVideoMode", ExactSpelling = true)]
+		public static extern GLFWvidmode* GetVideoMode(GLFWmonitor* monitor);
+
+		[DllImport(Library, EntryPoint = "glfwSetGamma", ExactSpelling = true)]
+		public static extern void SetGamma(GLFWmonitor* monitor, float gamma);
+
+		[DllImport(Library, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true)]
+		public static extern GLFWgammaramp* GetGammaRamp(GLFWmonitor* monitor);
+
+		[DllImport(Library, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true)]
+		public static extern void SetGammaRamp(GLFWmonitor* monitor, const GLFWgammaramp* ramp);
+
+		[DllImport(Library, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true)]
+		public static extern void DefaultWindowHints();
+
+		[DllImport(Library, EntryPoint = "glfwWindowHint", ExactSpelling = true)]
+		public static extern void WindowHint(int target, int hint);
+
+		[DllImport(Library, EntryPoint = "glfwCreateWindow", ExactSpelling = true)]
+		public static extern GLFWwindow* CreateWindow(int width, int height, string title, GLFWmonitor* monitor, GLFWwindow* share);
+
+		[DllImport(Library, EntryPoint = "glfwDestroyWindow", ExactSpelling = true)]
+		public static extern void DestroyWindow(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwWindowShouldClose", ExactSpelling = true)]
+		public static extern int WindowShouldClose(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowShouldClose", ExactSpelling = true)]
+		public static extern void SetWindowShouldClose(GLFWwindow* window, int value);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true)]
+		public static extern void SetWindowTitle(GLFWwindow* window, string title);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowPos", ExactSpelling = true)]
+		public static extern void GetWindowPos(GLFWwindow* window, out int xpos, out int ypos);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowPos", ExactSpelling = true)]
+		public static extern void SetWindowPos(GLFWwindow* window, int xpos, int ypos);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowSize", ExactSpelling = true)]
+		public static extern void GetWindowSize(GLFWwindow* window, out int width, out int height);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowSize", ExactSpelling = true)]
+		public static extern void SetWindowSize(GLFWwindow* window, int width, int height);
+
+		[DllImport(Library, EntryPoint = "glfwGetFramebufferSize", ExactSpelling = true)]
+		public static extern void GetFramebufferSize(GLFWwindow* window, out int width, out int height);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowFrameSize", ExactSpelling = true)]
+		public static extern void GetWindowFrameSize(GLFWwindow* window, out int left, out int top, out int right, out int bottom);
+
+		[DllImport(Library, EntryPoint = "glfwIconifyWindow", ExactSpelling = true)]
+		public static extern void IconifyWindow(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwRestoreWindow", ExactSpelling = true)]
+		public static extern void RestoreWindow(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwShowWindow", ExactSpelling = true)]
+		public static extern void ShowWindow(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwHideWindow", ExactSpelling = true)]
+		public static extern void HideWindow(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true)]
+		public static extern GLFWmonitor* GetWindowMonitor(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowAttrib", ExactSpelling = true)]
+		public static extern int GetWindowAttrib(GLFWwindow* window, int attrib);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowUserPointer", ExactSpelling = true)]
+		public static extern void SetWindowUserPointer(GLFWwindow* window, IntPtr pointer);
+
+		[DllImport(Library, EntryPoint = "glfwGetWindowUserPointer", ExactSpelling = true)]
+		public static extern IntPtr GetWindowUserPointer(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true)]
+		public static extern GLFWwindowposfun SetWindowPosCallback(GLFWwindow* window, GLFWwindowposfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true)]
+		public static extern GLFWwindowsizefun SetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true)]
+		public static extern GLFWwindowclosefun SetWindowCloseCallback(GLFWwindow* window, GLFWwindowclosefun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true)]
+		public static extern GLFWwindowrefreshfun SetWindowRefreshCallback(GLFWwindow* window, GLFWwindowrefreshfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true)]
+		public static extern GLFWwindowfocusfun SetWindowFocusCallback(GLFWwindow* window, GLFWwindowfocusfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true)]
+		public static extern GLFWwindowiconifyfun SetWindowIconifyCallback(GLFWwindow* window, GLFWwindowiconifyfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true)]
+		public static extern GLFWframebuffersizefun SetFramebufferSizeCallback(GLFWwindow* window, GLFWframebuffersizefun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwPollEvents", ExactSpelling = true)]
+		public static extern void PollEvents();
+
+		[DllImport(Library, EntryPoint = "glfwWaitEvents", ExactSpelling = true)]
+		public static extern void WaitEvents();
+
+		[DllImport(Library, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true)]
+		public static extern void PostEmptyEvent();
+
+		[DllImport(Library, EntryPoint = "glfwGetInputMode", ExactSpelling = true)]
+		public static extern int GetInputMode(GLFWwindow* window, int mode);
+
+		[DllImport(Library, EntryPoint = "glfwSetInputMode", ExactSpelling = true)]
+		public static extern void SetInputMode(GLFWwindow* window, int mode, int value);
+
+		[DllImport(Library, EntryPoint = "glfwGetKey", ExactSpelling = true)]
+		public static extern int GetKey(GLFWwindow* window, int key);
+
+		[DllImport(Library, EntryPoint = "glfwGetMouseButton", ExactSpelling = true)]
+		public static extern int GetMouseButton(GLFWwindow* window, int button);
+
+		[DllImport(Library, EntryPoint = "glfwGetCursorPos", ExactSpelling = true)]
+		public static extern void GetCursorPos(GLFWwindow* window, double* xpos, double* ypos);
+
+		[DllImport(Library, EntryPoint = "glfwSetCursorPos", ExactSpelling = true)]
+		public static extern void SetCursorPos(GLFWwindow* window, double xpos, double ypos);
+
+		[DllImport(Library, EntryPoint = "glfwCreateCursor", ExactSpelling = true)]
+		public static extern GLFWcursor* CreateCursor(const GLFWimage* image, int xhot, int yhot);
+
+		[DllImport(Library, EntryPoint = "glfwCreateStandardCursor", ExactSpelling = true)]
+		public static extern GLFWcursor* CreateStandardCursor(int shape);
+
+		[DllImport(Library, EntryPoint = "glfwDestroyCursor", ExactSpelling = true)]
+		public static extern void DestroyCursor(GLFWcursor* cursor);
+
+		[DllImport(Library, EntryPoint = "glfwSetCursor", ExactSpelling = true)]
+		public static extern void SetCursor(GLFWwindow* window, GLFWcursor* cursor);
+
+		[DllImport(Library, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true)]
+		public static extern GLFWkeyfun SetKeyCallback(GLFWwindow* window, GLFWkeyfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetCharCallback", ExactSpelling = true)]
+		public static extern GLFWcharfun SetCharCallback(GLFWwindow* window, GLFWcharfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true)]
+		public static extern GLFWcharmodsfun SetCharModsCallback(GLFWwindow* window, GLFWcharmodsfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true)]
+		public static extern GLFWmousebuttonfun SetMouseButtonCallback(GLFWwindow* window, GLFWmousebuttonfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true)]
+		public static extern GLFWcursorposfun SetCursorPosCallback(GLFWwindow* window, GLFWcursorposfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true)]
+		public static extern GLFWcursorenterfun SetCursorEnterCallback(GLFWwindow* window, GLFWcursorenterfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true)]
+		public static extern GLFWscrollfun SetScrollCallback(GLFWwindow* window, GLFWscrollfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwSetDropCallback", ExactSpelling = true)]
+		public static extern GLFWdropfun SetDropCallback(GLFWwindow* window, GLFWdropfun cbfun);
+
+		[DllImport(Library, EntryPoint = "glfwJoystickPresent", ExactSpelling = true)]
+		public static extern int JoystickPresent(int joy);
+
+		[DllImport(Library, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true)]
+		public static extern float* GetJoystickAxes(int joy, ref int count);
+
+		[DllImport(Library, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true)]
+		public static extern unsigned char* GetJoystickButtons(int joy, ref int count);
+
+		[DllImport(Library, EntryPoint = "glfwGetJoystickName", ExactSpelling = true)]
+		public static extern string GetJoystickName(int joy);
+
+		[DllImport(Library, EntryPoint = "glfwSetClipboardString", ExactSpelling = true)]
+		public static extern void SetClipboardString(GLFWwindow* window, string string);
+
+		[DllImport(Library, EntryPoint = "glfwGetClipboardString", ExactSpelling = true)]
+		public static extern string GetClipboardString(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwGetTime", ExactSpelling = true)]
+		public static extern double GetTime();
+
+		[DllImport(Library, EntryPoint = "glfwSetTime", ExactSpelling = true)]
+		public static extern void SetTime(double time);
+
+		[DllImport(Library, EntryPoint = "glfwMakeContextCurrent", ExactSpelling = true)]
+		public static extern void MakeContextCurrent(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwGetCurrentContext", ExactSpelling = true)]
+		public static extern GLFWwindow* GetCurrentContext();
+
+		[DllImport(Library, EntryPoint = "glfwSwapBuffers", ExactSpelling = true)]
+		public static extern void SwapBuffers(GLFWwindow* window);
+
+		[DllImport(Library, EntryPoint = "glfwSwapInterval", ExactSpelling = true)]
+		public static extern void SwapInterval(int interval);
+
+		[DllImport(Library, EntryPoint = "glfwExtensionSupported", ExactSpelling = true)]
+		public static extern int ExtensionSupported(string extension);
+
+		[DllImport(Library, EntryPoint = "glfwGetProcAddress", ExactSpelling = true)]
+		public static extern GLFWglproc GetProcAddress(string procname);
+
 	}
 }

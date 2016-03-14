@@ -297,10 +297,63 @@ namespace Generator
             }
         }
 
+        private static string GetReturnType(FunctionData function)
+        {
+            string type = function.ReturnType;
+
+            if (type.StartsWith("const "))
+                type = type.Substring("const ".Length);
+
+            switch (type)
+            {
+                case "char*":
+                    return "string";
+
+                case "void*":
+                    return "IntPtr";
+            }
+
+            return type;
+        }
+
+        private static string GetParamType(FunctionParamData param)
+        {
+            string type = param.Type;
+
+            switch (type)
+            {
+                case "const char*":
+                    return "string";
+
+                case "int*":
+                    if (param.Modifier == FunctionParamModifier.Out)
+                    {
+                        return "out int";
+                    }
+                    else
+                    {
+                        return "ref int";
+                    }
+
+                case "void*":
+                    return "IntPtr";
+            }
+
+            return type;
+        }
+
+        private static string GetFunctionName(FunctionData function)
+        {
+            return function.Name.Substring(4);
+        }
+
         private static void Write(List<EnumData> enums, List<FunctionData> functions)
         {
             StringBuilder sb = new StringBuilder(1024);
 
+            sb.AppendLine("using System;");
+            sb.AppendLine("using System.Runtime.InteropServices;");
+            sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
             sb.AppendLine("\tpublic static partial class GLFW");
@@ -313,13 +366,14 @@ namespace Generator
 
             sb.AppendLine();
 
-            foreach (var functionData in functions)
+            foreach (var function in functions)
             {
-                string returnType = functionData.ReturnType;
-                string name = functionData.Name;
-                string parameters = string.Join(", ", functionData.Params.Select(x => x.Type + " " + x.Name));
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x) + " " + x.Name));
 
-                sb.AppendLine($"\t\t// public static {returnType} {name}({parameters});");
+                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true)]");
+                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function)} {GetFunctionName(function)}({parameters});");
+
+                sb.AppendLine();
             }
 
             sb.AppendLine("\t}");

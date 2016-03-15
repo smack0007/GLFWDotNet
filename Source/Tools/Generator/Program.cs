@@ -50,6 +50,8 @@ namespace Generator
         {
             public FunctionParamModifier Modifier { get; set; }
 
+            public string Description { get; set; }
+
             public string Type { get; set; }
 
             public string Name { get; set; }
@@ -176,6 +178,7 @@ namespace Generator
                 case FunctionDocState.Param:
                     var param = functionData.Params.Single(x => x.Name == paramName);
                     param.Modifier = paramModifier;
+                    param.Description = sb.ToString();
                     break;
 
                 case FunctionDocState.Remarks:
@@ -386,6 +389,17 @@ namespace Generator
             }
         }
 
+        private static string TrimGLFWPrefix(string input)
+        {
+            if (input.StartsWith("glfw") || input.StartsWith("GLFW"))
+            {
+                input = input.Substring("GLFW".Length);
+                input = input.Substring(0, 1).ToUpper() + input.Substring(1);
+            }
+
+            return input;
+        }
+
         private static string GetType(string type, List<StructData> structs)
         {
             if (type.StartsWith("const "))
@@ -412,13 +426,12 @@ namespace Generator
                     }
                     else
                     {
-                        return structName.Substring(4);
+                        type = structName;
                     }
                 }
             }
 
-            if (type.StartsWith("GLFW"))
-                type = type.Substring("GLFW".Length);
+            type = TrimGLFWPrefix(type);
 
             switch (type)
             {
@@ -434,7 +447,7 @@ namespace Generator
                 case "float*":
                     return "float[]";
 
-                case "glproc":
+                case "Glproc":
                     return "IntPtr";
 
                 case "int*":
@@ -466,17 +479,13 @@ namespace Generator
             {
                 type = "out " + type;
             }
-            //else if (modifier == FunctionParamModifier.In)
-            //{
-            //    type = "ref " + type;
-            //}
 
             return type;
         }
 
         private static string GetFunctionName(string function)
         {
-            return function.Substring(4);
+            return TrimGLFWPrefix(function);
         }
 
         private static string GetFunctionParamName(string name)
@@ -488,6 +497,16 @@ namespace Generator
             }
 
             return name;
+        }
+
+        private static string FormatDocs(string input, string padding)
+        {
+            return
+                padding + "/// " +
+                string.Join(
+                    Environment.NewLine + padding + "/// ",
+                    input.TrimEnd().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                );
         }
 
         private static void Write(
@@ -508,7 +527,13 @@ namespace Generator
 
             foreach (var @enum in enums)
             {
-                sb.AppendLine($"\t\tpublic const int {@enum.Name} = {@enum.Value};");
+                string name = @enum.Name.Substring(5);
+                string value = @enum.Value;
+
+                if (value.StartsWith("GLFW_"))                
+                    value = value.Substring(5);
+
+                sb.AppendLine($"\t\tpublic const int {name} = {value};");
             }
 
             sb.AppendLine();
@@ -534,6 +559,27 @@ namespace Generator
             foreach (var function in functions)
             {
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetFunctionParamName(x.Name)));
+
+                sb.AppendLine("\t\t/// <summary>");
+                sb.AppendLine(FormatDocs(function.BriefDescription, "\t\t"));
+                sb.AppendLine("\t\t/// </summary>");
+                sb.AppendLine("\t\t/// <remarks>");
+                sb.AppendLine(FormatDocs(function.Description, "\t\t"));
+                sb.AppendLine("\t\t/// </remarks>");
+
+                foreach (var param in function.Params)
+                {
+                    sb.AppendLine($"\t\t/// <param name=\"{param.Name}\">");
+                    sb.AppendLine(FormatDocs(param.Description, "\t\t"));
+                    sb.AppendLine("\t\t/// </param>");
+                }
+
+                if (!string.IsNullOrEmpty(function.ReturnDescription))
+                {
+                    sb.AppendLine("\t\t/// <returns>");
+                    sb.AppendLine(FormatDocs(function.ReturnDescription, "\t\t"));
+                    sb.AppendLine("\t\t/// </returns>");
+                }
 
                 sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
                 sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");

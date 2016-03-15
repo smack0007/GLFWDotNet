@@ -10,7 +10,12 @@ namespace HelloWorld
             if (GLFW.Init() == 0)
                 return -1;
 
-            IntPtr window = GLFW.CreateWindow(640, 480, "Hello World", IntPtr.Zero, IntPtr.Zero);
+            int major, minor, revision;
+            GLFW.GetVersion(out major, out minor, out revision);
+
+            string title = $"Hello World! GLFW {major}.{minor}.{revision}";
+
+            IntPtr window = GLFW.CreateWindow(640, 480, title, IntPtr.Zero, IntPtr.Zero);
             if (window == IntPtr.Zero)
             {
                 GLFW.Terminate();

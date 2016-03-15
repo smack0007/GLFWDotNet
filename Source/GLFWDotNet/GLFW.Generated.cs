@@ -233,48 +233,247 @@ namespace GLFWDotNet
 		{
 		}
 
-		public delegate void ErrorFun(int arg0, string arg1);
-
-		public delegate void WindowPosFun(IntPtr arg0, int arg1, int arg2);
-
-		public delegate void WindowSizeFun(IntPtr arg0, int arg1, int arg2);
-
-		public delegate void WindowCloseFun(IntPtr arg0);
-
-		public delegate void WindowRefreshFun(IntPtr arg0);
-
-		public delegate void WindowFocusFun(IntPtr arg0, int arg1);
-
-		public delegate void WindowIconifyFun(IntPtr arg0, int arg1);
-
-		public delegate void FramebufferSizeFun(IntPtr arg0, int arg1, int arg2);
-
-		public delegate void MouseButtonFun(IntPtr arg0, int arg1, int arg2, int arg3);
-
-		public delegate void CursorPosFun(IntPtr arg0, double arg1, double arg2);
-
-		public delegate void CursorEnterFun(IntPtr arg0, int arg1);
-
-		public delegate void ScrollFun(IntPtr arg0, double arg1, double arg2);
-
-		public delegate void KeyFun(IntPtr arg0, int arg1, int arg2, int arg3, int arg4);
-
-		public delegate void CharFun(IntPtr arg0, uint arg1);
-
-		public delegate void CharModsFun(IntPtr arg0, uint arg1, int arg2);
-
-		public delegate void DropFun(IntPtr arg0, int arg1, string[] arg2);
-
-		public delegate void MonitorFun(IntPtr arg0, int arg1);
+		/// <summary>
+		/// This is the function signature for error callback functions.
+		/// </summary>
+		/// <param name="error">
+		/// An [error code](@ref errors).
+		/// </param>
+		/// <param name="description">
+		/// A UTF-8 encoded string describing the error.
+		/// </param>
+		public delegate void ErrorFun(int error, string description);
 
 		/// <summary>
-		/// Initializes the GLFW library.
+		/// This is the function signature for window position callback functions.
 		/// </summary>
-		/// <remarks>
+		/// <param name="window">
+		/// The window that was moved.
+		/// </param>
+		/// <param name="xpos">
+		/// The new x-coordinate, in screen coordinates, of the
+		/// upper-left corner of the client area of the window.
+		/// </param>
+		/// <param name="ypos">
+		/// The new y-coordinate, in screen coordinates, of the
+		/// upper-left corner of the client area of the window.
+		/// </param>
+		public delegate void WindowPosFun(IntPtr window, int xpos, int ypos);
+
+		/// <summary>
+		/// This is the function signature for window size callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that was resized.
+		/// </param>
+		/// <param name="width">
+		/// The new width, in screen coordinates, of the window.
+		/// </param>
+		/// <param name="height">
+		/// The new height, in screen coordinates, of the window.
+		/// </param>
+		public delegate void WindowSizeFun(IntPtr window, int width, int height);
+
+		/// <summary>
+		/// This is the function signature for window close callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that the user attempted to close.
+		/// </param>
+		public delegate void WindowCloseFun(IntPtr window);
+
+		/// <summary>
+		/// This is the function signature for window refresh callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window whose content needs to be refreshed.
+		/// </param>
+		public delegate void WindowRefreshFun(IntPtr window);
+
+		/// <summary>
+		/// This is the function signature for window focus callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that gained or lost input focus.
+		/// </param>
+		/// <param name="focused">
+		/// `GL_TRUE` if the window was given input focus, or
+		/// `GL_FALSE` if it lost it.
+		/// </param>
+		public delegate void WindowFocusFun(IntPtr window, int focused);
+
+		/// <summary>
+		/// This is the function signature for window iconify/restore callback
+		/// functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that was iconified or restored.
+		/// </param>
+		/// <param name="iconified">
+		/// `GL_TRUE` if the window was iconified, or `GL_FALSE`
+		/// if it was restored.
+		/// </param>
+		public delegate void WindowIconifyFun(IntPtr window, int iconified);
+
+		/// <summary>
+		/// This is the function signature for framebuffer resize callback
+		/// functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window whose framebuffer was resized.
+		/// </param>
+		/// <param name="width">
+		/// The new width, in pixels, of the framebuffer.
+		/// </param>
+		/// <param name="height">
+		/// The new height, in pixels, of the framebuffer.
+		/// </param>
+		public delegate void FramebufferSizeFun(IntPtr window, int width, int height);
+
+		/// <summary>
+		/// This is the function signature for mouse button callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="button">
+		/// The [mouse button](@ref buttons) that was pressed or
+		/// released.
+		/// </param>
+		/// <param name="action">
+		/// One of `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </param>
+		/// <param name="mods">
+		/// Bit field describing which [modifier keys](@ref mods) were
+		/// held down.
+		/// </param>
+		public delegate void MouseButtonFun(IntPtr window, int button, int action, int mods);
+
+		/// <summary>
+		/// This is the function signature for cursor position callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="xpos">
+		/// The new x-coordinate, in screen coordinates, of the cursor.
+		/// </param>
+		/// <param name="ypos">
+		/// The new y-coordinate, in screen coordinates, of the cursor.
+		/// </param>
+		public delegate void CursorPosFun(IntPtr window, double xpos, double ypos);
+
+		/// <summary>
+		/// This is the function signature for cursor enter/leave callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="entered">
+		/// `GL_TRUE` if the cursor entered the window's client
+		/// area, or `GL_FALSE` if it left it.
+		/// </param>
+		public delegate void CursorEnterFun(IntPtr window, int entered);
+
+		/// <summary>
+		/// This is the function signature for scroll callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="xoffset">
+		/// The scroll offset along the x-axis.
+		/// </param>
+		/// <param name="yoffset">
+		/// The scroll offset along the y-axis.
+		/// </param>
+		public delegate void ScrollFun(IntPtr window, double xoffset, double yoffset);
+
+		/// <summary>
+		/// This is the function signature for keyboard key callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="key">
+		/// The [keyboard key](@ref keys) that was pressed or released.
+		/// </param>
+		/// <param name="scancode">
+		/// The system-specific scancode of the key.
+		/// </param>
+		/// <param name="action">
+		/// `GLFW_PRESS`, `GLFW_RELEASE` or `GLFW_REPEAT`.
+		/// </param>
+		/// <param name="mods">
+		/// Bit field describing which [modifier keys](@ref mods) were
+		/// held down.
+		/// </param>
+		public delegate void KeyFun(IntPtr window, int key, int scancode, int action, int mods);
+
+		/// <summary>
+		/// This is the function signature for Unicode character callback functions.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="codepoint">
+		/// The Unicode code point of the character.
+		/// </param>
+		public delegate void CharFun(IntPtr window, uint codepoint);
+
+		/// <summary>
+		/// This is the function signature for Unicode character with modifiers callback
+		/// functions.  It is called for each input character, regardless of what
+		/// modifier keys are held down.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="codepoint">
+		/// The Unicode code point of the character.
+		/// </param>
+		/// <param name="mods">
+		/// Bit field describing which [modifier keys](@ref mods) were
+		/// held down.
+		/// </param>
+		public delegate void CharModsFun(IntPtr window, uint codepoint, int mods);
+
+		/// <summary>
+		/// This is the function signature for file drop callbacks.
+		/// </summary>
+		/// <param name="window">
+		/// The window that received the event.
+		/// </param>
+		/// <param name="count">
+		/// The number of dropped files.
+		/// </param>
+		/// <param name="paths">
+		/// The UTF-8 encoded file and/or directory path names.
+		/// </param>
+		public delegate void DropFun(IntPtr window, int count, string[] paths);
+
+		/// <summary>
+		/// This is the function signature for monitor configuration callback functions.
+		/// </summary>
+		/// <param name="monitor">
+		/// The monitor that was connected or disconnected.
+		/// </param>
+		/// <param name="event">
+		/// One of `GLFW_CONNECTED` or `GLFW_DISCONNECTED`.
+		/// </param>
+		public delegate void MonitorFun(IntPtr monitor, int @event);
+
+		/// <summary>
 		/// This function initializes the GLFW library.  Before most GLFW functions can
 		/// be used, GLFW must be initialized, and before an application terminates GLFW
 		/// should be terminated in order to free any resources allocated during or
 		/// after initialization.
+		/// </summary>
+		/// <remarks>
+		/// __OS X:__ This function will change the current directory of the
+		/// application to the `Contents/Resources` subdirectory of the application's
+		/// bundle, if present.  This can be disabled with a
+		/// [compile-time option](@ref compile_options_osx).
 		/// </remarks>
 		/// <returns>
 		/// `GL_TRUE` if successful, or `GL_FALSE` if an
@@ -284,24 +483,24 @@ namespace GLFWDotNet
 		public static extern int Init();
 
 		/// <summary>
-		/// Terminates the GLFW library.
-		/// </summary>
-		/// <remarks>
 		/// This function destroys all remaining windows and cursors, restores any
 		/// modified gamma ramps and frees any other allocated resources.  Once this
 		/// function is called, you must again call @ref glfwInit successfully before
 		/// you will be able to use most GLFW functions.
+		/// </summary>
+		/// <remarks>
+		/// This function may be called before @ref glfwInit.
 		/// </remarks>
 		[DllImport(Library, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void Terminate();
 
 		/// <summary>
-		/// Retrieves the version of the GLFW library.
-		/// </summary>
-		/// <remarks>
 		/// This function retrieves the major, minor and revision numbers of the GLFW
 		/// library.  It is intended for when you are using GLFW as a shared library and
 		/// want to ensure that you are using the minimum required version.
+		/// </summary>
+		/// <remarks>
+		/// This function may be called before @ref glfwInit.
 		/// </remarks>
 		/// <param name="major">
 		/// Where to store the major version number, or `NULL`.
@@ -316,13 +515,13 @@ namespace GLFWDotNet
 		public static extern void GetVersion(out int major, out int minor, out int rev);
 
 		/// <summary>
-		/// Returns a string describing the compile-time configuration.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the compile-time generated
 		/// [version string](@ref intro_version_string) of the GLFW library binary.  It
 		/// describes the version, platform, compiler and any platform-specific
 		/// compile-time options.
+		/// </summary>
+		/// <remarks>
+		/// This function may be called before @ref glfwInit.
 		/// </remarks>
 		/// <returns>
 		/// The GLFW version string.
@@ -331,11 +530,11 @@ namespace GLFWDotNet
 		public static extern string GetVersionString();
 
 		/// <summary>
-		/// Sets the error callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the error callback, which is called with an error code
 		/// and a human-readable description each time a GLFW error occurs.
+		/// </summary>
+		/// <remarks>
+		/// This function may be called before @ref glfwInit.
 		/// </remarks>
 		/// <param name="cbfun">
 		/// The new callback, or `NULL` to remove the currently set
@@ -348,13 +547,10 @@ namespace GLFWDotNet
 		public static extern ErrorFun SetErrorCallback(ErrorFun cbfun);
 
 		/// <summary>
-		/// Returns the currently connected monitors.
-		/// </summary>
-		/// <remarks>
 		/// This function returns an array of handles for all currently connected
 		/// monitors.  The primary monitor is always first in the returned array.  If no
 		/// monitors were found, this function returns `NULL`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="count">
 		/// Where to store the number of monitors in the returned
 		/// array.  This is set to zero if an error occurred.
@@ -367,11 +563,12 @@ namespace GLFWDotNet
 		public static extern IntPtr[] GetMonitors(out int count);
 
 		/// <summary>
-		/// Returns the primary monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the primary monitor.  This is usually the monitor
 		/// where elements like the task bar or global menu bar are located.
+		/// </summary>
+		/// <remarks>
+		/// The primary monitor is always first in the array returned by @ref
+		/// glfwGetMonitors.
 		/// </remarks>
 		/// <returns>
 		/// The primary monitor, or `NULL` if no monitors were found or if an
@@ -381,12 +578,9 @@ namespace GLFWDotNet
 		public static extern IntPtr GetPrimaryMonitor();
 
 		/// <summary>
-		/// Returns the position of the monitor's viewport on the virtual screen.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the position, in screen coordinates, of the upper-left
 		/// corner of the specified monitor.
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -400,11 +594,12 @@ namespace GLFWDotNet
 		public static extern void GetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
 
 		/// <summary>
-		/// Returns the physical size of the monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the size, in millimetres, of the display area of the
 		/// specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// __Windows:__ The OS calculates the returned physical size from the
+		/// current resolution and system DPI instead of querying the monitor EDID data.
 		/// </remarks>
 		/// <param name="monitor">
 		/// The monitor to query.
@@ -421,13 +616,10 @@ namespace GLFWDotNet
 		public static extern void GetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
 
 		/// <summary>
-		/// Returns the name of the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns a human-readable name, encoded as UTF-8, of the
 		/// specified monitor.  The name typically reflects the make and model of the
 		/// monitor and is not guaranteed to be unique among the connected monitors.
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -439,13 +631,10 @@ namespace GLFWDotNet
 		public static extern string GetMonitorName(IntPtr monitor);
 
 		/// <summary>
-		/// Sets the monitor configuration callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the monitor configuration callback, or removes the
 		/// currently set callback.  This is called when a monitor is connected to or
 		/// disconnected from the system.
-		/// </remarks>
+		/// </summary>
 		/// <param name="cbfun">
 		/// The new callback, or `NULL` to remove the currently set
 		/// callback.
@@ -458,14 +647,11 @@ namespace GLFWDotNet
 		public static extern MonitorFun SetMonitorCallback(MonitorFun cbfun);
 
 		/// <summary>
-		/// Returns the available video modes for the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns an array of all video modes supported by the specified
 		/// monitor.  The returned array is sorted in ascending order, first by color
 		/// bit depth (the sum of all channel depths) and then by resolution area (the
 		/// product of width and height).
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -481,13 +667,10 @@ namespace GLFWDotNet
 		public static extern VidMode GetVideoModes(IntPtr monitor, out int count);
 
 		/// <summary>
-		/// Returns the current mode of the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the current video mode of the specified monitor.  If
 		/// you have created a full screen window for that monitor, the return value
 		/// will depend on whether that window is iconified.
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -499,13 +682,10 @@ namespace GLFWDotNet
 		public static extern VidMode GetVideoMode(IntPtr monitor);
 
 		/// <summary>
-		/// Generates a gamma ramp and sets it for the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function generates a 256-element gamma ramp from the specified exponent
 		/// and then calls @ref glfwSetGammaRamp with it.  The value must be a finite
 		/// number greater than zero.
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor whose gamma ramp to set.
 		/// </param>
@@ -516,11 +696,8 @@ namespace GLFWDotNet
 		public static extern void SetGamma(IntPtr monitor, float gamma);
 
 		/// <summary>
-		/// Returns the current gamma ramp for the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the current gamma ramp of the specified monitor.
-		/// </remarks>
+		/// </summary>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -532,12 +709,12 @@ namespace GLFWDotNet
 		public static extern GammaRamp GetGammaRamp(IntPtr monitor);
 
 		/// <summary>
-		/// Sets the current gamma ramp for the specified monitor.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the current gamma ramp for the specified monitor.  The
 		/// original gamma ramp for that monitor is saved by GLFW the first time this
 		/// function is called and is restored by @ref glfwTerminate.
+		/// </summary>
+		/// <remarks>
+		/// __Windows:__ The gamma ramp size must be 256.
 		/// </remarks>
 		/// <param name="monitor">
 		/// The monitor whose gamma ramp to set.
@@ -549,24 +726,18 @@ namespace GLFWDotNet
 		public static extern void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
 
 		/// <summary>
-		/// Resets all window hints to their default values.
-		/// </summary>
-		/// <remarks>
 		/// This function resets all window hints to their
 		/// [default values](@ref window_hints_values).
-		/// </remarks>
+		/// </summary>
 		[DllImport(Library, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void DefaultWindowHints();
 
 		/// <summary>
-		/// Sets the specified window hint to the desired value.
-		/// </summary>
-		/// <remarks>
 		/// This function sets hints for the next call to @ref glfwCreateWindow.  The
 		/// hints, once set, retain their values until changed by a call to @ref
 		/// glfwWindowHint or @ref glfwDefaultWindowHints, or until the library is
 		/// terminated.
-		/// </remarks>
+		/// </summary>
 		/// <param name="target">
 		/// The [window hint](@ref window_hints) to set.
 		/// </param>
@@ -577,12 +748,15 @@ namespace GLFWDotNet
 		public static extern void WindowHint(int target, int hint);
 
 		/// <summary>
-		/// Creates a window and its associated context.
-		/// </summary>
-		/// <remarks>
 		/// This function creates a window and its associated OpenGL or OpenGL ES
 		/// context.  Most of the options controlling how the window and its context
 		/// should be created are specified with [window hints](@ref window_hints).
+		/// </summary>
+		/// <remarks>
+		/// __X11:__ Due to the asynchronous nature of X11, it may take
+		/// a moment for a window to reach its requested state.  This means you may not
+		/// be able to query the final size, position or other attributes directly after
+		/// window creation.
 		/// </remarks>
 		/// <param name="width">
 		/// The desired width, in screen coordinates, of the window.
@@ -611,12 +785,9 @@ namespace GLFWDotNet
 		public static extern IntPtr CreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
 
 		/// <summary>
-		/// Destroys the specified window and its context.
-		/// </summary>
-		/// <remarks>
 		/// This function destroys the specified window and its context.  On calling
 		/// this function, no further callbacks will be called for that window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to destroy.
 		/// </param>
@@ -624,11 +795,8 @@ namespace GLFWDotNet
 		public static extern void DestroyWindow(IntPtr window);
 
 		/// <summary>
-		/// Checks the close flag of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the value of the close flag of the specified window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -639,13 +807,10 @@ namespace GLFWDotNet
 		public static extern int WindowShouldClose(IntPtr window);
 
 		/// <summary>
-		/// Sets the close flag of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the value of the close flag of the specified window.
 		/// This can be used to override the user's attempt to close the window, or
 		/// to signal that it should be closed.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose flag to change.
 		/// </param>
@@ -656,11 +821,12 @@ namespace GLFWDotNet
 		public static extern void SetWindowShouldClose(IntPtr window, int value);
 
 		/// <summary>
-		/// Sets the title of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the window title, encoded as UTF-8, of the specified
 		/// window.
+		/// </summary>
+		/// <remarks>
+		/// __OS X:__ The window title will not be updated until the next time
+		/// you process events.
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose title to change.
@@ -672,12 +838,9 @@ namespace GLFWDotNet
 		public static extern void SetWindowTitle(IntPtr window, string title);
 
 		/// <summary>
-		/// Retrieves the position of the client area of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function retrieves the position, in screen coordinates, of the
 		/// upper-left corner of the client area of the specified window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -693,13 +856,10 @@ namespace GLFWDotNet
 		public static extern void GetWindowPos(IntPtr window, out int xpos, out int ypos);
 
 		/// <summary>
-		/// Sets the position of the client area of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the position, in screen coordinates, of the upper-left
 		/// corner of the client area of the specified windowed mode window.  If the
 		/// window is a full screen window, this function does nothing.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -713,13 +873,10 @@ namespace GLFWDotNet
 		public static extern void SetWindowPos(IntPtr window, int xpos, int ypos);
 
 		/// <summary>
-		/// Retrieves the size of the client area of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function retrieves the size, in screen coordinates, of the client area
 		/// of the specified window.  If you wish to retrieve the size of the
 		/// framebuffer of the window in pixels, see @ref glfwGetFramebufferSize.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose size to retrieve.
 		/// </param>
@@ -735,12 +892,9 @@ namespace GLFWDotNet
 		public static extern void GetWindowSize(IntPtr window, out int width, out int height);
 
 		/// <summary>
-		/// Sets the size of the client area of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the size, in screen coordinates, of the client area of
 		/// the specified window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to resize.
 		/// </param>
@@ -754,13 +908,10 @@ namespace GLFWDotNet
 		public static extern void SetWindowSize(IntPtr window, int width, int height);
 
 		/// <summary>
-		/// Retrieves the size of the framebuffer of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function retrieves the size, in pixels, of the framebuffer of the
 		/// specified window.  If you wish to retrieve the size of the window in screen
 		/// coordinates, see @ref glfwGetWindowSize.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose framebuffer to query.
 		/// </param>
@@ -776,14 +927,11 @@ namespace GLFWDotNet
 		public static extern void GetFramebufferSize(IntPtr window, out int width, out int height);
 
 		/// <summary>
-		/// Retrieves the size of the frame of the window.
-		/// </summary>
-		/// <remarks>
 		/// This function retrieves the size, in screen coordinates, of each edge of the
 		/// frame of the specified window.  This size includes the title bar, if the
 		/// window has one.  The size of the frame may vary depending on the
 		/// [window-related hints](@ref window_hints_wnd) used to create it.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose frame size to query.
 		/// </param>
@@ -807,13 +955,10 @@ namespace GLFWDotNet
 		public static extern void GetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
 
 		/// <summary>
-		/// Iconifies the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function iconifies (minimizes) the specified window if it was
 		/// previously restored.  If the window is already iconified, this function does
 		/// nothing.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to iconify.
 		/// </param>
@@ -821,12 +966,9 @@ namespace GLFWDotNet
 		public static extern void IconifyWindow(IntPtr window);
 
 		/// <summary>
-		/// Restores the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function restores the specified window if it was previously iconified
 		/// (minimized).  If the window is already restored, this function does nothing.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to restore.
 		/// </param>
@@ -834,13 +976,10 @@ namespace GLFWDotNet
 		public static extern void RestoreWindow(IntPtr window);
 
 		/// <summary>
-		/// Makes the specified window visible.
-		/// </summary>
-		/// <remarks>
 		/// This function makes the specified window visible if it was previously
 		/// hidden.  If the window is already visible or is in full screen mode, this
 		/// function does nothing.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to make visible.
 		/// </param>
@@ -848,13 +987,10 @@ namespace GLFWDotNet
 		public static extern void ShowWindow(IntPtr window);
 
 		/// <summary>
-		/// Hides the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function hides the specified window if it was previously visible.  If
 		/// the window is already hidden or is in full screen mode, this function does
 		/// nothing.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to hide.
 		/// </param>
@@ -862,12 +998,9 @@ namespace GLFWDotNet
 		public static extern void HideWindow(IntPtr window);
 
 		/// <summary>
-		/// Returns the monitor that the window uses for full screen mode.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the handle of the monitor that the specified window is
 		/// in full screen on.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -879,11 +1012,14 @@ namespace GLFWDotNet
 		public static extern IntPtr GetWindowMonitor(IntPtr window);
 
 		/// <summary>
-		/// Returns an attribute of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the value of an attribute of the specified window or
 		/// its OpenGL or OpenGL ES context.
+		/// </summary>
+		/// <remarks>
+		/// Zero is a valid value for many window and context related
+		/// attributes so you cannot use a return value of zero as an indication of
+		/// errors.  However, this function should not fail as long as it is passed
+		/// valid arguments and the library has been [initialized](@ref intro_init).
 		/// </remarks>
 		/// <param name="window">
 		/// The window to query.
@@ -900,13 +1036,10 @@ namespace GLFWDotNet
 		public static extern int GetWindowAttrib(IntPtr window, int attrib);
 
 		/// <summary>
-		/// Sets the user pointer of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the user-defined pointer of the specified window.  The
 		/// current value is retained until the window is destroyed.  The initial value
 		/// is `NULL`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose pointer to set.
 		/// </param>
@@ -917,12 +1050,9 @@ namespace GLFWDotNet
 		public static extern void SetWindowUserPointer(IntPtr window, IntPtr pointer);
 
 		/// <summary>
-		/// Returns the user pointer of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the current value of the user-defined pointer of the
 		/// specified window.  The initial value is `NULL`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose pointer to return.
 		/// </param>
@@ -930,13 +1060,10 @@ namespace GLFWDotNet
 		public static extern IntPtr GetWindowUserPointer(IntPtr window);
 
 		/// <summary>
-		/// Sets the position callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the position callback of the specified window, which is
 		/// called when the window is moved.  The callback is provided with the screen
 		/// position of the upper-left corner of the client area of the window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -952,13 +1079,10 @@ namespace GLFWDotNet
 		public static extern WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
 
 		/// <summary>
-		/// Sets the size callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the size callback of the specified window, which is
 		/// called when the window is resized.  The callback is provided with the size,
 		/// in screen coordinates, of the client area of the window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -974,12 +1098,13 @@ namespace GLFWDotNet
 		public static extern WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
 
 		/// <summary>
-		/// Sets the close callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the close callback of the specified window, which is
 		/// called when the user attempts to close the window, for example by clicking
 		/// the close widget in the title bar.
+		/// </summary>
+		/// <remarks>
+		/// __OS X:__ Selecting Quit from the application menu will
+		/// trigger the close callback for all windows.
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose callback to set.
@@ -996,13 +1121,10 @@ namespace GLFWDotNet
 		public static extern WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
 
 		/// <summary>
-		/// Sets the refresh callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the refresh callback of the specified window, which is
 		/// called when the client area of the window needs to be redrawn, for example
 		/// if the window has been exposed after having been covered by another window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1018,12 +1140,9 @@ namespace GLFWDotNet
 		public static extern WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
 
 		/// <summary>
-		/// Sets the focus callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the focus callback of the specified window, which is
 		/// called when the window gains or loses input focus.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1039,12 +1158,9 @@ namespace GLFWDotNet
 		public static extern WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
 
 		/// <summary>
-		/// Sets the iconify callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the iconification callback of the specified window, which
 		/// is called when the window is iconified or restored.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1060,12 +1176,9 @@ namespace GLFWDotNet
 		public static extern WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
 
 		/// <summary>
-		/// Sets the framebuffer resize callback for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the framebuffer resize callback of the specified window,
 		/// which is called when the framebuffer of the specified window is resized.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1081,48 +1194,36 @@ namespace GLFWDotNet
 		public static extern FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
 
 		/// <summary>
-		/// Processes all pending events.
-		/// </summary>
-		/// <remarks>
 		/// This function processes only those events that are already in the event
 		/// queue and then returns immediately.  Processing events will cause the window
 		/// and input callbacks associated with those events to be called.
-		/// </remarks>
+		/// </summary>
 		[DllImport(Library, EntryPoint = "glfwPollEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void PollEvents();
 
 		/// <summary>
-		/// Waits until events are queued and processes them.
-		/// </summary>
-		/// <remarks>
 		/// This function puts the calling thread to sleep until at least one event is
 		/// available in the event queue.  Once one or more events are available,
 		/// it behaves exactly like @ref glfwPollEvents, i.e. the events in the queue
 		/// are processed and the function then returns immediately.  Processing events
 		/// will cause the window and input callbacks associated with those events to be
 		/// called.
-		/// </remarks>
+		/// </summary>
 		[DllImport(Library, EntryPoint = "glfwWaitEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void WaitEvents();
 
 		/// <summary>
-		/// Posts an empty event to the event queue.
-		/// </summary>
-		/// <remarks>
 		/// This function posts an empty event from the current thread to the event
 		/// queue, causing @ref glfwWaitEvents to return.
-		/// </remarks>
+		/// </summary>
 		[DllImport(Library, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void PostEmptyEvent();
 
 		/// <summary>
-		/// Returns the value of an input option for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the value of an input option for the specified window.
 		/// The mode must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
 		/// `GLFW_STICKY_MOUSE_BUTTONS`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -1134,13 +1235,10 @@ namespace GLFWDotNet
 		public static extern int GetInputMode(IntPtr window, int mode);
 
 		/// <summary>
-		/// Sets an input option for the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets an input mode option for the specified window.  The mode
 		/// must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
 		/// `GLFW_STICKY_MOUSE_BUTTONS`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose input mode to set.
 		/// </param>
@@ -1155,15 +1253,11 @@ namespace GLFWDotNet
 		public static extern void SetInputMode(IntPtr window, int mode, int value);
 
 		/// <summary>
-		/// Returns the last reported state of a keyboard key for the specified
-		/// window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the last state reported for the specified key to the
 		/// specified window.  The returned state is one of `GLFW_PRESS` or
 		/// `GLFW_RELEASE`.  The higher-level action `GLFW_REPEAT` is only reported to
 		/// the key callback.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The desired window.
 		/// </param>
@@ -1178,14 +1272,10 @@ namespace GLFWDotNet
 		public static extern int GetKey(IntPtr window, int key);
 
 		/// <summary>
-		/// Returns the last reported state of a mouse button for the specified
-		/// window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the last state reported for the specified mouse button
 		/// to the specified window.  The returned state is one of `GLFW_PRESS` or
 		/// `GLFW_RELEASE`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The desired window.
 		/// </param>
@@ -1199,14 +1289,10 @@ namespace GLFWDotNet
 		public static extern int GetMouseButton(IntPtr window, int button);
 
 		/// <summary>
-		/// Retrieves the position of the cursor relative to the client area of
-		/// the window.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the position of the cursor, in screen coordinates,
 		/// relative to the upper-left corner of the client area of the specified
 		/// window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The desired window.
 		/// </param>
@@ -1222,14 +1308,15 @@ namespace GLFWDotNet
 		public static extern void GetCursorPos(IntPtr window, out double xpos, out double ypos);
 
 		/// <summary>
-		/// Sets the position of the cursor, relative to the client area of the
-		/// window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the position, in screen coordinates, of the cursor
 		/// relative to the upper-left corner of the client area of the specified
 		/// window.  The window must have input focus.  If the window does not have
 		/// input focus when this function is called, it fails silently.
+		/// </summary>
+		/// <remarks>
+		/// __X11:__ Due to the asynchronous nature of X11, it may take
+		/// a moment for the window focus event to arrive.  This means you may not be
+		/// able to set the cursor position directly after window creation.
 		/// </remarks>
 		/// <param name="window">
 		/// The desired window.
@@ -1246,13 +1333,10 @@ namespace GLFWDotNet
 		public static extern void SetCursorPos(IntPtr window, double xpos, double ypos);
 
 		/// <summary>
-		/// Creates a custom cursor.
-		/// </summary>
-		/// <remarks>
 		/// Creates a new custom cursor image that can be set for a window with @ref
 		/// glfwSetCursor.  The cursor can be destroyed with @ref glfwDestroyCursor.
 		/// Any remaining cursors are destroyed by @ref glfwTerminate.
-		/// </remarks>
+		/// </summary>
 		/// <param name="image">
 		/// The desired cursor image.
 		/// </param>
@@ -1270,12 +1354,9 @@ namespace GLFWDotNet
 		public static extern IntPtr CreateCursor(Image image, int xhot, int yhot);
 
 		/// <summary>
-		/// Creates a cursor with a standard shape.
-		/// </summary>
-		/// <remarks>
 		/// Returns a cursor with a [standard shape](@ref shapes), that can be set for
 		/// a window with @ref glfwSetCursor.
-		/// </remarks>
+		/// </summary>
 		/// <param name="shape">
 		/// One of the [standard shapes](@ref shapes).
 		/// </param>
@@ -1287,13 +1368,10 @@ namespace GLFWDotNet
 		public static extern IntPtr CreateStandardCursor(int shape);
 
 		/// <summary>
-		/// Destroys a cursor.
-		/// </summary>
-		/// <remarks>
 		/// This function destroys a cursor previously created with @ref
 		/// glfwCreateCursor.  Any remaining cursors will be destroyed by @ref
 		/// glfwTerminate.
-		/// </remarks>
+		/// </summary>
 		/// <param name="cursor">
 		/// The cursor object to destroy.
 		/// </param>
@@ -1301,14 +1379,11 @@ namespace GLFWDotNet
 		public static extern void DestroyCursor(IntPtr cursor);
 
 		/// <summary>
-		/// Sets the cursor for the window.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the cursor image to be used when the cursor is over the
 		/// client area of the specified window.  The set cursor will only be visible
 		/// when the [cursor mode](@ref cursor_mode) of the window is
 		/// `GLFW_CURSOR_NORMAL`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window to set the cursor for.
 		/// </param>
@@ -1320,12 +1395,9 @@ namespace GLFWDotNet
 		public static extern void SetCursor(IntPtr window, IntPtr cursor);
 
 		/// <summary>
-		/// Sets the key callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the key callback of the specified window, which is called
 		/// when a key is pressed, repeated or released.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1341,12 +1413,9 @@ namespace GLFWDotNet
 		public static extern KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
 
 		/// <summary>
-		/// Sets the Unicode character callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the character callback of the specified window, which is
 		/// called when a Unicode character is input.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1362,13 +1431,10 @@ namespace GLFWDotNet
 		public static extern CharFun SetCharCallback(IntPtr window, CharFun cbfun);
 
 		/// <summary>
-		/// Sets the Unicode character with modifiers callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the character with modifiers callback of the specified
 		/// window, which is called when a Unicode character is input regardless of what
 		/// modifier keys are used.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1384,12 +1450,9 @@ namespace GLFWDotNet
 		public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
 
 		/// <summary>
-		/// Sets the mouse button callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the mouse button callback of the specified window, which
 		/// is called when a mouse button is pressed or released.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1405,14 +1468,11 @@ namespace GLFWDotNet
 		public static extern MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
 
 		/// <summary>
-		/// Sets the cursor position callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the cursor position callback of the specified window,
 		/// which is called when the cursor is moved.  The callback is provided with the
 		/// position, in screen coordinates, relative to the upper-left corner of the
 		/// client area of the window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1428,13 +1488,10 @@ namespace GLFWDotNet
 		public static extern CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
 
 		/// <summary>
-		/// Sets the cursor enter/exit callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the cursor boundary crossing callback of the specified
 		/// window, which is called when the cursor enters or leaves the client area of
 		/// the window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1450,13 +1507,10 @@ namespace GLFWDotNet
 		public static extern CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
 
 		/// <summary>
-		/// Sets the scroll callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the scroll callback of the specified window, which is
 		/// called when a scrolling device is used, such as a mouse wheel or scrolling
 		/// area of a touchpad.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1472,12 +1526,9 @@ namespace GLFWDotNet
 		public static extern ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
 
 		/// <summary>
-		/// Sets the file drop callback.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the file drop callback of the specified window, which is
 		/// called when one or more dragged files are dropped on the window.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1493,11 +1544,8 @@ namespace GLFWDotNet
 		public static extern DropFun SetDropCallback(IntPtr window, DropFun cbfun);
 
 		/// <summary>
-		/// Returns whether the specified joystick is present.
-		/// </summary>
-		/// <remarks>
 		/// This function returns whether the specified joystick is present.
-		/// </remarks>
+		/// </summary>
 		/// <param name="joy">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
@@ -1508,12 +1556,9 @@ namespace GLFWDotNet
 		public static extern int JoystickPresent(int joy);
 
 		/// <summary>
-		/// Returns the values of all axes of the specified joystick.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the values of all axes of the specified joystick.
 		/// Each element in the array is a value between -1.0 and 1.0.
-		/// </remarks>
+		/// </summary>
 		/// <param name="joy">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
@@ -1528,12 +1573,9 @@ namespace GLFWDotNet
 		public static extern float[] GetJoystickAxes(int joy, out int count);
 
 		/// <summary>
-		/// Returns the state of all buttons of the specified joystick.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the state of all buttons of the specified joystick.
 		/// Each element in the array is either `GLFW_PRESS` or `GLFW_RELEASE`.
-		/// </remarks>
+		/// </summary>
 		/// <param name="joy">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
@@ -1548,13 +1590,10 @@ namespace GLFWDotNet
 		public static extern string GetJoystickButtons(int joy, out int count);
 
 		/// <summary>
-		/// Returns the name of the specified joystick.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the name, encoded as UTF-8, of the specified joystick.
 		/// The returned string is allocated and freed by GLFW.  You should not free it
 		/// yourself.
-		/// </remarks>
+		/// </summary>
 		/// <param name="joy">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
@@ -1566,12 +1605,9 @@ namespace GLFWDotNet
 		public static extern string GetJoystickName(int joy);
 
 		/// <summary>
-		/// Sets the clipboard to the specified string.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the system clipboard to the specified, UTF-8 encoded
 		/// string.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window that will own the clipboard contents.
 		/// </param>
@@ -1582,14 +1618,11 @@ namespace GLFWDotNet
 		public static extern void SetClipboardString(IntPtr window, string @string);
 
 		/// <summary>
-		/// Returns the contents of the clipboard as a string.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the contents of the system clipboard, if it contains
 		/// or is convertible to a UTF-8 encoded string.  If the clipboard is empty or
 		/// if its contents cannot be converted, `NULL` is returned and a @ref
 		/// GLFW_FORMAT_UNAVAILABLE error is generated.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window that will request the clipboard contents.
 		/// </param>
@@ -1601,13 +1634,10 @@ namespace GLFWDotNet
 		public static extern string GetClipboardString(IntPtr window);
 
 		/// <summary>
-		/// Returns the value of the GLFW timer.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the value of the GLFW timer.  Unless the timer has
 		/// been set using @ref glfwSetTime, the timer measures time elapsed since GLFW
 		/// was initialized.
-		/// </remarks>
+		/// </summary>
 		/// <returns>
 		/// The current value, in seconds, or zero if an
 		/// [error](@ref error_handling) occurred.
@@ -1616,12 +1646,14 @@ namespace GLFWDotNet
 		public static extern double GetTime();
 
 		/// <summary>
-		/// Sets the GLFW timer.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the value of the GLFW timer.  It then continues to count
 		/// up from that value.  The value must be a positive finite number less than
 		/// or equal to 18446744073.0, which is approximately 584.5 years.
+		/// </summary>
+		/// <remarks>
+		/// The upper limit of the timer is calculated as
+		/// floor((2<sup>64</sup> - 1) / 10<sup>9</sup>) and is due to implementations
+		/// storing nanoseconds in 64 bits.  The limit may be increased in the future.
 		/// </remarks>
 		/// <param name="time">
 		/// The new value, in seconds.
@@ -1630,15 +1662,11 @@ namespace GLFWDotNet
 		public static extern void SetTime(double time);
 
 		/// <summary>
-		/// Makes the context of the specified window current for the calling
-		/// thread.
-		/// </summary>
-		/// <remarks>
 		/// This function makes the OpenGL or OpenGL ES context of the specified window
 		/// current on the calling thread.  A context can only be made current on
 		/// a single thread at a time and each thread can have only a single current
 		/// context at a time.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose context to make current, or `NULL` to
 		/// detach the current context.
@@ -1647,12 +1675,9 @@ namespace GLFWDotNet
 		public static extern void MakeContextCurrent(IntPtr window);
 
 		/// <summary>
-		/// Returns the window whose context is current on the calling thread.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the window whose OpenGL or OpenGL ES context is
 		/// current on the calling thread.
-		/// </remarks>
+		/// </summary>
 		/// <returns>
 		/// The window whose context is current, or `NULL` if no window's
 		/// context is current.
@@ -1661,13 +1686,10 @@ namespace GLFWDotNet
 		public static extern IntPtr GetCurrentContext();
 
 		/// <summary>
-		/// Swaps the front and back buffers of the specified window.
-		/// </summary>
-		/// <remarks>
 		/// This function swaps the front and back buffers of the specified window.  If
 		/// the swap interval is greater than zero, the GPU driver waits the specified
 		/// number of screen updates before swapping the buffers.
-		/// </remarks>
+		/// </summary>
 		/// <param name="window">
 		/// The window whose buffers to swap.
 		/// </param>
@@ -1675,14 +1697,16 @@ namespace GLFWDotNet
 		public static extern void SwapBuffers(IntPtr window);
 
 		/// <summary>
-		/// Sets the swap interval for the current context.
-		/// </summary>
-		/// <remarks>
 		/// This function sets the swap interval for the current context, i.e. the
 		/// number of screen updates to wait from the time @ref glfwSwapBuffers was
 		/// called before swapping the buffers and returning.  This is sometimes called
 		/// _vertical synchronization_, _vertical retrace synchronization_ or just
 		/// _vsync_.
+		/// </summary>
+		/// <remarks>
+		/// Some GPU drivers do not honor the requested swap interval, either
+		/// because of a user setting that overrides the application's request or due to
+		/// bugs in the driver.
 		/// </remarks>
 		/// <param name="interval">
 		/// The minimum number of screen updates to wait for
@@ -1692,14 +1716,11 @@ namespace GLFWDotNet
 		public static extern void SwapInterval(int interval);
 
 		/// <summary>
-		/// Returns whether the specified extension is available.
-		/// </summary>
-		/// <remarks>
 		/// This function returns whether the specified
 		/// [client API extension](@ref context_glext) is supported by the current
 		/// OpenGL or OpenGL ES context.  It searches both for OpenGL and OpenGL ES
 		/// extension and platform-specific context creation API extensions.
-		/// </remarks>
+		/// </summary>
 		/// <param name="extension">
 		/// The ASCII encoded name of the extension.
 		/// </param>
@@ -1710,13 +1731,14 @@ namespace GLFWDotNet
 		public static extern int ExtensionSupported(string extension);
 
 		/// <summary>
-		/// Returns the address of the specified function for the current
-		/// context.
-		/// </summary>
-		/// <remarks>
 		/// This function returns the address of the specified
 		/// [core or extension function](@ref context_glext), if it is supported
 		/// by the current context.
+		/// </summary>
+		/// <remarks>
+		/// This function may return a non-`NULL` address despite the
+		/// associated version or extension not being available.  Always check the
+		/// context version or extension string first.
 		/// </remarks>
 		/// <param name="procname">
 		/// The ASCII encoded name of the function.

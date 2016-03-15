@@ -9,6 +9,25 @@ namespace Generator
 {
     class Program
     {
+        interface IDocs
+        {
+            string BriefDescription { get; set; }
+
+            string Description { get; set; }
+
+            string Remarks { get; set; }
+
+            string ReturnDescription { get; set; }
+
+            string Group { get; set; }
+
+            IEnumerable<KeyValuePair<string, string>> GetParamDocs();
+
+            void SetParamDescription(string name, string description);
+
+            void SetParamModifier(string name, ParamModifier modifier);
+        }
+
         class EnumData
         {
             public string Name { get; set; }
@@ -18,7 +37,7 @@ namespace Generator
             public override string ToString() => this.Name;
         }
 
-        class FunctionData
+        class FunctionData : IDocs
         {
             public string Group { get; set; }
 
@@ -34,21 +53,34 @@ namespace Generator
 
             public string Name { get; set; }
 
-            public List<FunctionParamData> Params { get; } = new List<FunctionParamData>();
+            public List<ParamData> Params { get; } = new List<ParamData>();
 
             public override string ToString() => this.Name;
+
+            public IEnumerable<KeyValuePair<string, string>> GetParamDocs() =>
+                this.Params.Select(x => new KeyValuePair<string, string>(x.Name, x.Description));
+
+            public void SetParamDescription(string name, string description)
+            {
+                this.Params.Single(x => x.Name == name).Description = description;
+            }
+
+            public void SetParamModifier(string name, ParamModifier modifier)
+            {
+                this.Params.Single(x => x.Name == name).Modifier = modifier;
+            }
         }
 
-        enum FunctionParamModifier
+        enum ParamModifier
         {
             None,
             In,
             Out
         }
 
-        class FunctionParamData
+        class ParamData
         {
-            public FunctionParamModifier Modifier { get; set; }
+            public ParamModifier Modifier { get; set; }
 
             public string Description { get; set; }
 
@@ -59,15 +91,42 @@ namespace Generator
             public override string ToString() => this.Name;
         }
 
-        class CallbackData
+        class CallbackData : IDocs
         {
+            public string Group { get; set; }
+
+            public string BriefDescription { get; set; }
+
+            public string Description { get; set; }
+
+            public string Remarks { get; set; }
+
+            public string ReturnDescription { get; set; }
+
             public string ReturnType { get; set; }
 
             public string Name { get; set; }
 
-            public string[] ParamTypes { get; set; }
+            public List<ParamData> Params { get; } = new List<ParamData>();
 
             public override string ToString() => this.Name;
+
+            public IEnumerable<KeyValuePair<string, string>> GetParamDocs() =>
+                this.Params.Select(x => new KeyValuePair<string, string>(x.Name, x.Description));
+
+            public void SetParamDescription(string name, string description)
+            {
+                // Abusing the fact that SetParamDescription is called first in order to
+                // the name from the docs.
+                var param = this.Params.First(x => x.Name == null);
+                param.Name = name;
+                param.Description = description;
+            }
+
+            public void SetParamModifier(string name, ParamModifier modifier)
+            {
+                var param = this.Params.First(x => x.Name == name).Modifier = modifier;
+            }
         }
 
         class StructData
@@ -131,7 +190,7 @@ namespace Generator
             {
                 while (parts[j] != ";")
                 {
-                    FunctionParamData paramData = new FunctionParamData();
+                    ParamData paramData = new ParamData();
 
                     paramData.Type = ParseType(parts, ref j);
                     j++;
@@ -143,12 +202,12 @@ namespace Generator
                 }
             }
 
-            ParseFunctionDocs(lines, i, function);
+            ParseDocs(lines, i, function);
 
             return function;
         }
 
-        enum FunctionDocState
+        enum DocsState
         {
             None,
             BriefDescription,
@@ -158,61 +217,60 @@ namespace Generator
             Return
         }
 
-        private static void ParseFunctionDocsFlush(
-            FunctionData functionData,
-            ref FunctionDocState state,
+        private static void ParseDocsFlush(
+            IDocs docs,
+            ref DocsState state,
             StringBuilder sb,
             string paramName,
-            FunctionParamModifier paramModifier)
+            ParamModifier paramModifier)
         {
             switch (state)
             {
-                case FunctionDocState.BriefDescription:
-                    functionData.BriefDescription = sb.ToString();
+                case DocsState.BriefDescription:
+                    docs.BriefDescription = sb.ToString();
                     break;
 
-                case FunctionDocState.Description:
-                    functionData.Description = sb.ToString();
+                case DocsState.Description:
+                    docs.Description = sb.ToString();
                     break;
 
-                case FunctionDocState.Param:
-                    var param = functionData.Params.Single(x => x.Name == paramName);
-                    param.Modifier = paramModifier;
-                    param.Description = sb.ToString();
+                case DocsState.Param:
+                    docs.SetParamDescription(paramName, sb.ToString());
+                    docs.SetParamModifier(paramName, paramModifier);
                     break;
 
-                case FunctionDocState.Remarks:
-                    functionData.Remarks = sb.ToString();
+                case DocsState.Remarks:
+                    docs.Remarks = sb.ToString();
                     break;
 
-                case FunctionDocState.Return:
-                    functionData.ReturnDescription = sb.ToString();
+                case DocsState.Return:
+                    docs.ReturnDescription = sb.ToString();
                     break;
             }
 
-            if (state == FunctionDocState.BriefDescription)
+            if (state == DocsState.BriefDescription)
             {
-                state = FunctionDocState.Description;
+                state = DocsState.Description;
             }
             else
             {
-                state = FunctionDocState.None;
+                state = DocsState.None;
             }
 
             sb.Clear();
         }
 
-        private static void ParseFunctionDocs(string[] lines, int i, FunctionData functionData)
+        private static void ParseDocs(string[] lines, int i, IDocs docs)
         {
             while (!lines[i].StartsWith("/*!"))
             {
                 i--;
             }
 
-            FunctionDocState state = FunctionDocState.None;
+            DocsState state = DocsState.None;
             StringBuilder sb = new StringBuilder(1024);
             string paramName = string.Empty;
-            FunctionParamModifier paramModifier = FunctionParamModifier.None;
+            ParamModifier paramModifier = ParamModifier.None;
 
             while (true)
             {
@@ -231,30 +289,30 @@ namespace Generator
 
                 if (trimmedLine.StartsWith("@brief"))
                 {
-                    state = FunctionDocState.BriefDescription;
+                    state = DocsState.BriefDescription;
                     sb.AppendLine(trimmedLine.Substring("@brief ".Length));
                 }
                 else if (trimmedLine.StartsWith("@ingroup"))
                 {
-                    functionData.Group = trimmedLine.Substring("@ingroup ".Length).Trim();
+                    docs.Group = trimmedLine.Substring("@ingroup ".Length).Trim();
                 }
                 else if (trimmedLine.StartsWith("@param"))
                 {
-                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+                    ParseDocsFlush(docs, ref state, sb, paramName, paramModifier);
 
-                    state = FunctionDocState.Param;
-                    paramModifier = FunctionParamModifier.None;
+                    state = DocsState.Param;
+                    paramModifier = ParamModifier.None;
 
                     trimmedLine = trimmedLine.Substring("@param".Length);
 
                     if (trimmedLine.StartsWith("[in]"))
                     {
-                        paramModifier = FunctionParamModifier.In;
+                        paramModifier = ParamModifier.In;
                         trimmedLine = trimmedLine.Substring("[in]".Length);
                     }
                     else if (trimmedLine.StartsWith("[out]"))
                     {
-                        paramModifier = FunctionParamModifier.Out;
+                        paramModifier = ParamModifier.Out;
                         trimmedLine = trimmedLine.Substring("[out]".Length);
                     }
 
@@ -267,23 +325,23 @@ namespace Generator
                 }
                 else if (trimmedLine.StartsWith("@remarks"))
                 {
-                    state = FunctionDocState.Remarks;
+                    state = DocsState.Remarks;
                     sb.AppendLine(trimmedLine.Substring("@remarks ".Length));
                 }
                 else if (trimmedLine.StartsWith("@return"))
                 {
-                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
-                    state = FunctionDocState.Return;
+                    ParseDocsFlush(docs, ref state, sb, paramName, paramModifier);
+                    state = DocsState.Return;
                     sb.AppendLine(trimmedLine.Substring("@return ".Length));
                 }
                 else if (lines[i].StartsWith(" */"))
                 {
-                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+                    ParseDocsFlush(docs, ref state, sb, paramName, paramModifier);
                     finished = true;
                 }
                 else if (trimmedLine == string.Empty || trimmedLine.StartsWith("@"))
                 {
-                    ParseFunctionDocsFlush(functionData, ref state, sb, paramName, paramModifier);
+                    ParseDocsFlush(docs, ref state, sb, paramName, paramModifier);
                 }
                 else
                 {
@@ -311,18 +369,16 @@ namespace Generator
             callback.Name = parts[j];
             j++;
 
-            List<string> argTypes = new List<string>();
-
             if (parts[j] != "void")
             {
                 while (parts[j] != ";")
                 {
-                    argTypes.Add(ParseType(parts, ref j));
+                    callback.Params.Add(new ParamData() { Type = ParseType(parts, ref j) });
                     j++;
                 }
             }
 
-            callback.ParamTypes = argTypes.ToArray();
+            ParseDocs(lines, i, callback);
 
             return callback;
         }
@@ -497,11 +553,11 @@ namespace Generator
             return GetType(type, structs);
         }
 
-        private static string GetParamType(string type, FunctionParamModifier modifier, List<StructData> structs)
+        private static string GetParamType(string type, ParamModifier modifier, List<StructData> structs)
         {
             type = GetType(type, structs);
 
-            if (modifier == FunctionParamModifier.Out)
+            if (modifier == ParamModifier.Out)
             {
                 type = "out " + type;
             }
@@ -514,10 +570,13 @@ namespace Generator
             return InflectGLFWName(function);
         }
 
-        private static string GetFunctionParamName(string name)
+        private static string GetParamName(string name)
         {
             switch (name)
             {
+                case "event":
+                    return "@event";
+
                 case "string":
                     return "@string";
             }
@@ -533,6 +592,34 @@ namespace Generator
                     Environment.NewLine + padding + "/// ",
                     input.TrimEnd().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 );
+        }
+
+        private static void WriteDocs(IDocs docs, StringBuilder sb)
+        {
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine(FormatDocs(docs.Description, "\t\t"));
+            sb.AppendLine("\t\t/// </summary>");
+
+            if (!string.IsNullOrEmpty(docs.Remarks))
+            {
+                sb.AppendLine("\t\t/// <remarks>");
+                sb.AppendLine(FormatDocs(docs.Remarks, "\t\t"));
+                sb.AppendLine("\t\t/// </remarks>");
+            }
+
+            foreach (var param in docs.GetParamDocs())
+            {
+                sb.AppendLine($"\t\t/// <param name=\"{param.Key}\">");
+                sb.AppendLine(FormatDocs(param.Value, "\t\t"));
+                sb.AppendLine("\t\t/// </param>");
+            }
+
+            if (!string.IsNullOrEmpty(docs.ReturnDescription))
+            {
+                sb.AppendLine("\t\t/// <returns>");
+                sb.AppendLine(FormatDocs(docs.ReturnDescription, "\t\t"));
+                sb.AppendLine("\t\t/// </returns>");
+            }
         }
 
         private static void Write(
@@ -575,7 +662,9 @@ namespace Generator
 
             foreach (var callback in callbacks)
             {
-                string parameters = string.Join(", ", callback.ParamTypes.Select((x, i) => GetParamType(x, FunctionParamModifier.None, structs) + " arg" + i));
+                WriteDocs(callback, sb);
+
+                string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
                 sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {GetFunctionName(callback.Name)}({parameters});");
 
@@ -584,28 +673,9 @@ namespace Generator
 
             foreach (var function in functions)
             {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetFunctionParamName(x.Name)));
+                WriteDocs(function, sb);
 
-                sb.AppendLine("\t\t/// <summary>");
-                sb.AppendLine(FormatDocs(function.BriefDescription, "\t\t"));
-                sb.AppendLine("\t\t/// </summary>");
-                sb.AppendLine("\t\t/// <remarks>");
-                sb.AppendLine(FormatDocs(function.Description, "\t\t"));
-                sb.AppendLine("\t\t/// </remarks>");
-
-                foreach (var param in function.Params)
-                {
-                    sb.AppendLine($"\t\t/// <param name=\"{param.Name}\">");
-                    sb.AppendLine(FormatDocs(param.Description, "\t\t"));
-                    sb.AppendLine("\t\t/// </param>");
-                }
-
-                if (!string.IsNullOrEmpty(function.ReturnDescription))
-                {
-                    sb.AppendLine("\t\t/// <returns>");
-                    sb.AppendLine(FormatDocs(function.ReturnDescription, "\t\t"));
-                    sb.AppendLine("\t\t/// </returns>");
-                }
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
                 sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
                 sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");

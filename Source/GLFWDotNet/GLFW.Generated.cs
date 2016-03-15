@@ -221,11 +221,11 @@ namespace GLFWDotNet
 		public const int DISCONNECTED = 0x00040002;
 		public const int DONT_CARE = -1;
 
-		public struct Vidmode
+		public struct VidMode
 		{
 		}
 
-		public struct Gammaramp
+		public struct GammaRamp
 		{
 		}
 
@@ -233,39 +233,39 @@ namespace GLFWDotNet
 		{
 		}
 
-		public delegate void Errorfun(int arg0, string arg1);
+		public delegate void ErrorFun(int arg0, string arg1);
 
-		public delegate void Windowposfun(IntPtr arg0, int arg1, int arg2);
+		public delegate void WindowPosFun(IntPtr arg0, int arg1, int arg2);
 
-		public delegate void Windowsizefun(IntPtr arg0, int arg1, int arg2);
+		public delegate void WindowSizeFun(IntPtr arg0, int arg1, int arg2);
 
-		public delegate void Windowclosefun(IntPtr arg0);
+		public delegate void WindowCloseFun(IntPtr arg0);
 
-		public delegate void Windowrefreshfun(IntPtr arg0);
+		public delegate void WindowRefreshFun(IntPtr arg0);
 
-		public delegate void Windowfocusfun(IntPtr arg0, int arg1);
+		public delegate void WindowFocusFun(IntPtr arg0, int arg1);
 
-		public delegate void Windowiconifyfun(IntPtr arg0, int arg1);
+		public delegate void WindowIconifyFun(IntPtr arg0, int arg1);
 
-		public delegate void Framebuffersizefun(IntPtr arg0, int arg1, int arg2);
+		public delegate void FramebufferSizeFun(IntPtr arg0, int arg1, int arg2);
 
-		public delegate void Mousebuttonfun(IntPtr arg0, int arg1, int arg2, int arg3);
+		public delegate void MouseButtonFun(IntPtr arg0, int arg1, int arg2, int arg3);
 
-		public delegate void Cursorposfun(IntPtr arg0, double arg1, double arg2);
+		public delegate void CursorPosFun(IntPtr arg0, double arg1, double arg2);
 
-		public delegate void Cursorenterfun(IntPtr arg0, int arg1);
+		public delegate void CursorEnterFun(IntPtr arg0, int arg1);
 
-		public delegate void Scrollfun(IntPtr arg0, double arg1, double arg2);
+		public delegate void ScrollFun(IntPtr arg0, double arg1, double arg2);
 
-		public delegate void Keyfun(IntPtr arg0, int arg1, int arg2, int arg3, int arg4);
+		public delegate void KeyFun(IntPtr arg0, int arg1, int arg2, int arg3, int arg4);
 
-		public delegate void Charfun(IntPtr arg0, uint arg1);
+		public delegate void CharFun(IntPtr arg0, uint arg1);
 
-		public delegate void Charmodsfun(IntPtr arg0, uint arg1, int arg2);
+		public delegate void CharModsFun(IntPtr arg0, uint arg1, int arg2);
 
-		public delegate void Dropfun(IntPtr arg0, int arg1, string[] arg2);
+		public delegate void DropFun(IntPtr arg0, int arg1, string[] arg2);
 
-		public delegate void Monitorfun(IntPtr arg0, int arg1);
+		public delegate void MonitorFun(IntPtr arg0, int arg1);
 
 		/// <summary>
 		/// Initializes the GLFW library.
@@ -345,7 +345,7 @@ namespace GLFWDotNet
 		/// The previously set callback, or `NULL` if no callback was set.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Errorfun SetErrorCallback(Errorfun cbfun);
+		public static extern ErrorFun SetErrorCallback(ErrorFun cbfun);
 
 		/// <summary>
 		/// Returns the currently connected monitors.
@@ -455,7 +455,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Monitorfun SetMonitorCallback(Monitorfun cbfun);
+		public static extern MonitorFun SetMonitorCallback(MonitorFun cbfun);
 
 		/// <summary>
 		/// Returns the available video modes for the specified monitor.
@@ -478,7 +478,7 @@ namespace GLFWDotNet
 		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetVideoModes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Vidmode GetVideoModes(IntPtr monitor, out int count);
+		public static extern VidMode GetVideoModes(IntPtr monitor, out int count);
 
 		/// <summary>
 		/// Returns the current mode of the specified monitor.
@@ -496,7 +496,7 @@ namespace GLFWDotNet
 		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetVideoMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Vidmode GetVideoMode(IntPtr monitor);
+		public static extern VidMode GetVideoMode(IntPtr monitor);
 
 		/// <summary>
 		/// Generates a gamma ramp and sets it for the specified monitor.
@@ -529,7 +529,7 @@ namespace GLFWDotNet
 		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Gammaramp GetGammaRamp(IntPtr monitor);
+		public static extern GammaRamp GetGammaRamp(IntPtr monitor);
 
 		/// <summary>
 		/// Sets the current gamma ramp for the specified monitor.
@@ -546,7 +546,7 @@ namespace GLFWDotNet
 		/// The gamma ramp to use.
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void SetGammaRamp(IntPtr monitor, Gammaramp ramp);
+		public static extern void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
 
 		/// <summary>
 		/// Resets all window hints to their default values.
@@ -949,7 +949,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowposfun SetWindowPosCallback(IntPtr window, Windowposfun cbfun);
+		public static extern WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
 
 		/// <summary>
 		/// Sets the size callback for the specified window.
@@ -971,7 +971,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowsizefun SetWindowSizeCallback(IntPtr window, Windowsizefun cbfun);
+		public static extern WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
 
 		/// <summary>
 		/// Sets the close callback for the specified window.
@@ -993,7 +993,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowclosefun SetWindowCloseCallback(IntPtr window, Windowclosefun cbfun);
+		public static extern WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
 
 		/// <summary>
 		/// Sets the refresh callback for the specified window.
@@ -1015,7 +1015,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowrefreshfun SetWindowRefreshCallback(IntPtr window, Windowrefreshfun cbfun);
+		public static extern WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
 
 		/// <summary>
 		/// Sets the focus callback for the specified window.
@@ -1036,7 +1036,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowfocusfun SetWindowFocusCallback(IntPtr window, Windowfocusfun cbfun);
+		public static extern WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
 
 		/// <summary>
 		/// Sets the iconify callback for the specified window.
@@ -1057,7 +1057,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Windowiconifyfun SetWindowIconifyCallback(IntPtr window, Windowiconifyfun cbfun);
+		public static extern WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
 
 		/// <summary>
 		/// Sets the framebuffer resize callback for the specified window.
@@ -1078,7 +1078,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Framebuffersizefun SetFramebufferSizeCallback(IntPtr window, Framebuffersizefun cbfun);
+		public static extern FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
 
 		/// <summary>
 		/// Processes all pending events.
@@ -1338,7 +1338,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Keyfun SetKeyCallback(IntPtr window, Keyfun cbfun);
+		public static extern KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
 
 		/// <summary>
 		/// Sets the Unicode character callback.
@@ -1359,7 +1359,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetCharCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Charfun SetCharCallback(IntPtr window, Charfun cbfun);
+		public static extern CharFun SetCharCallback(IntPtr window, CharFun cbfun);
 
 		/// <summary>
 		/// Sets the Unicode character with modifiers callback.
@@ -1381,7 +1381,7 @@ namespace GLFWDotNet
 		/// error occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Charmodsfun SetCharModsCallback(IntPtr window, Charmodsfun cbfun);
+		public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
 
 		/// <summary>
 		/// Sets the mouse button callback.
@@ -1402,7 +1402,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Mousebuttonfun SetMouseButtonCallback(IntPtr window, Mousebuttonfun cbfun);
+		public static extern MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
 
 		/// <summary>
 		/// Sets the cursor position callback.
@@ -1425,7 +1425,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Cursorposfun SetCursorPosCallback(IntPtr window, Cursorposfun cbfun);
+		public static extern CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
 
 		/// <summary>
 		/// Sets the cursor enter/exit callback.
@@ -1447,7 +1447,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Cursorenterfun SetCursorEnterCallback(IntPtr window, Cursorenterfun cbfun);
+		public static extern CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
 
 		/// <summary>
 		/// Sets the scroll callback.
@@ -1469,7 +1469,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Scrollfun SetScrollCallback(IntPtr window, Scrollfun cbfun);
+		public static extern ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
 
 		/// <summary>
 		/// Sets the file drop callback.
@@ -1490,7 +1490,7 @@ namespace GLFWDotNet
 		/// library had not been [initialized](@ref intro_init).
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetDropCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern Dropfun SetDropCallback(IntPtr window, Dropfun cbfun);
+		public static extern DropFun SetDropCallback(IntPtr window, DropFun cbfun);
 
 		/// <summary>
 		/// Returns whether the specified joystick is present.

@@ -389,12 +389,38 @@ namespace Generator
             }
         }
 
-        private static string TrimGLFWPrefix(string input)
+        private static string InflectGLFWName(string input)
         {
             if (input.StartsWith("glfw") || input.StartsWith("GLFW"))
             {
                 input = input.Substring("GLFW".Length);
                 input = input.Substring(0, 1).ToUpper() + input.Substring(1);
+
+                if (input.EndsWith("fun"))
+                {
+                    input = input.Substring(0, input.Length - "fun".Length) + "Fun";
+
+                    input = input
+                        .Replace("button", "Button")
+                        .Replace("close", "Close")
+                        .Replace("enter", "Enter")
+                        .Replace("focus", "Focus")
+                        .Replace("iconify", "Iconify")
+                        .Replace("mods", "Mods")
+                        .Replace("pos", "Pos")
+                        .Replace("refresh", "Refresh")
+                        .Replace("size", "Size");
+                }
+
+                if (input == "Vidmode")
+                {
+                    input = "VidMode";
+                }
+
+                if (input == "Gammaramp")
+                {
+                    input = "GammaRamp";
+                }
             }
 
             return input;
@@ -431,7 +457,7 @@ namespace Generator
                 }
             }
 
-            type = TrimGLFWPrefix(type);
+            type = InflectGLFWName(type);
 
             switch (type)
             {
@@ -485,7 +511,7 @@ namespace Generator
 
         private static string GetFunctionName(string function)
         {
-            return TrimGLFWPrefix(function);
+            return InflectGLFWName(function);
         }
 
         private static string GetFunctionParamName(string name)

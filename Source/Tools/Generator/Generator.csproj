@@ -47,9 +47,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Library\GLFW\glfw3.h">
+    <None Include="..\..\..\External\GLFW\glfw3.h">
       <Link>glfw3.h</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
   </ItemGroup>

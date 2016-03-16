@@ -47,8 +47,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Library\GLFW\x86\glfw3.dll">
-      <Link>glfw3.dll</Link>
+    <Content Include="..\..\External\GLFW\glfw3_x86.dll">
+      <Link>glfw3_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

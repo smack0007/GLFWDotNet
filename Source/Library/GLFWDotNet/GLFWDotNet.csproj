@@ -46,6 +46,8 @@
     <Compile Include="GLFW.cs" />
     <Compile Include="GLFW.Generated.cs" />
     <Compile Include="GLFWException.cs" />
+    <Compile Include="InputAction.cs" />
+    <Compile Include="Keys.Generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>

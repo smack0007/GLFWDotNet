@@ -28,13 +28,38 @@ namespace Generator
             void SetParamModifier(string name, ParamModifier modifier);
         }
 
-        class EnumData
+        class EnumData : IDocs
         {
+            public string BriefDescription { get; set; }
+
+            public string Description { get; set; }
+
+            public string Remarks { get; set; }
+
+            public string ReturnDescription { get; set; }
+
+            public string Group { get; set; }
+
             public string Name { get; set; }
 
             public string Value { get; set; }
 
             public override string ToString() => this.Name;
+
+            public IEnumerable<KeyValuePair<string, string>> GetParamDocs()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetParamDescription(string name, string description)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetParamModifier(string name, ParamModifier modifier)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         class FunctionData : IDocs
@@ -148,7 +173,23 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
-            Write(enums, functions, callbacks, structs);
+            WriteGLFWClass(enums, functions, callbacks, structs);
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_KEY")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring(8));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "D");
+
+                    if (name.StartsWith("Kp"))
+                        name = name.Replace("Kp", "KeyPad");
+
+                    return name;
+                },
+                "Keys");
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -417,11 +458,15 @@ namespace Generator
 
                     if (parts.Length == 3)
                     {
-                        enums.Add(new EnumData()
+                        var @enum = new EnumData()
                         {
                             Name = parts[1],
                             Value = parts[2]
-                        });
+                        };
+
+                        enums.Add(@enum);
+
+                        ParseDocs(lines, i, @enum);
                     }
                 }
                 else if (lines[i].StartsWith("GLFWAPI "))
@@ -622,7 +667,7 @@ namespace Generator
             }
         }
 
-        private static void Write(
+        private static void WriteGLFWClass(
             List<EnumData> enums,
             List<FunctionData> functions,
             List<CallbackData> callbacks,
@@ -689,6 +734,59 @@ namespace Generator
             sb.AppendLine("}");
 
             File.WriteAllText(@"..\..\..\..\Library\GLFWDotNet\GLFW.Generated.cs", sb.ToString());
+        }
+
+        private static string InflectEnumName(string input)
+        {
+            string[] parts = input.Split('_');
+            string[] temp = new string[parts.Length];
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 0)
+                {
+                    int capitalizeLength = 1;
+
+                    if (parts[i].Length > 1 && char.IsDigit(parts[i][0]))
+                        capitalizeLength = 2;
+
+                    temp[i] = parts[i].Substring(0, capitalizeLength).ToUpper() + parts[i].Substring(capitalizeLength).ToLower();
+                }
+            }
+
+            string name = string.Join(string.Empty, temp);
+
+            if (char.IsDigit(name[0]))
+                name = "_" + name;
+
+            return name;
+        }
+
+        private static void WriteEnumFile(
+            IEnumerable<EnumData> enums,
+            Func<string, string> inflectName,
+            string enumName)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.AppendLine("using System;");
+            sb.AppendLine();
+            sb.AppendLine("namespace GLFWDotNet");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic enum {enumName}");
+            sb.AppendLine("\t{");
+
+            foreach (var @enum in enums)
+            {
+                string leftName = inflectName(@enum.Name);
+                string rightName = @enum.Name.Substring(5);
+                sb.AppendLine($"\t\t{leftName} = GLFW.{rightName},");
+            }
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+
+            File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
         }
     }
 }

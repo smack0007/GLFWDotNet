@@ -54,7 +54,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GLFWDotNet\GLFWDotNet.csproj">
+    <ProjectReference Include="..\..\Library\GLFWDotNet\GLFWDotNet.csproj">
       <Project>{8c3e0eca-4716-4fee-adea-b697e2151d40}</Project>
       <Name>GLFWDotNet</Name>
     </ProjectReference>

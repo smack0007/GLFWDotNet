@@ -632,6 +632,7 @@ namespace Generator
 
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Runtime.InteropServices;");
+            sb.AppendLine("using System.Security;");
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
@@ -666,6 +667,7 @@ namespace Generator
 
                 string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
+                sb.AppendLine("\t\t[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]");
                 sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {GetFunctionName(callback.Name)}({parameters});");
 
                 sb.AppendLine();

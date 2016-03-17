@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace GLFWDotNet
 {
@@ -242,6 +243,7 @@ namespace GLFWDotNet
 		/// <param name="description">
 		/// A UTF-8 encoded string describing the error.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void ErrorFun(int error, string description);
 
 		/// <summary>
@@ -258,6 +260,7 @@ namespace GLFWDotNet
 		/// The new y-coordinate, in screen coordinates, of the
 		/// upper-left corner of the client area of the window.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowPosFun(IntPtr window, int xpos, int ypos);
 
 		/// <summary>
@@ -272,6 +275,7 @@ namespace GLFWDotNet
 		/// <param name="height">
 		/// The new height, in screen coordinates, of the window.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowSizeFun(IntPtr window, int width, int height);
 
 		/// <summary>
@@ -280,6 +284,7 @@ namespace GLFWDotNet
 		/// <param name="window">
 		/// The window that the user attempted to close.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowCloseFun(IntPtr window);
 
 		/// <summary>
@@ -288,6 +293,7 @@ namespace GLFWDotNet
 		/// <param name="window">
 		/// The window whose content needs to be refreshed.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowRefreshFun(IntPtr window);
 
 		/// <summary>
@@ -300,6 +306,7 @@ namespace GLFWDotNet
 		/// `GL_TRUE` if the window was given input focus, or
 		/// `GL_FALSE` if it lost it.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowFocusFun(IntPtr window, int focused);
 
 		/// <summary>
@@ -313,6 +320,7 @@ namespace GLFWDotNet
 		/// `GL_TRUE` if the window was iconified, or `GL_FALSE`
 		/// if it was restored.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowIconifyFun(IntPtr window, int iconified);
 
 		/// <summary>
@@ -328,6 +336,7 @@ namespace GLFWDotNet
 		/// <param name="height">
 		/// The new height, in pixels, of the framebuffer.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void FramebufferSizeFun(IntPtr window, int width, int height);
 
 		/// <summary>
@@ -347,6 +356,7 @@ namespace GLFWDotNet
 		/// Bit field describing which [modifier keys](@ref mods) were
 		/// held down.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void MouseButtonFun(IntPtr window, int button, int action, int mods);
 
 		/// <summary>
@@ -361,6 +371,7 @@ namespace GLFWDotNet
 		/// <param name="ypos">
 		/// The new y-coordinate, in screen coordinates, of the cursor.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CursorPosFun(IntPtr window, double xpos, double ypos);
 
 		/// <summary>
@@ -373,6 +384,7 @@ namespace GLFWDotNet
 		/// `GL_TRUE` if the cursor entered the window's client
 		/// area, or `GL_FALSE` if it left it.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CursorEnterFun(IntPtr window, int entered);
 
 		/// <summary>
@@ -387,6 +399,7 @@ namespace GLFWDotNet
 		/// <param name="yoffset">
 		/// The scroll offset along the y-axis.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void ScrollFun(IntPtr window, double xoffset, double yoffset);
 
 		/// <summary>
@@ -408,6 +421,7 @@ namespace GLFWDotNet
 		/// Bit field describing which [modifier keys](@ref mods) were
 		/// held down.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void KeyFun(IntPtr window, int key, int scancode, int action, int mods);
 
 		/// <summary>
@@ -419,6 +433,7 @@ namespace GLFWDotNet
 		/// <param name="codepoint">
 		/// The Unicode code point of the character.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CharFun(IntPtr window, uint codepoint);
 
 		/// <summary>
@@ -436,6 +451,7 @@ namespace GLFWDotNet
 		/// Bit field describing which [modifier keys](@ref mods) were
 		/// held down.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CharModsFun(IntPtr window, uint codepoint, int mods);
 
 		/// <summary>
@@ -450,6 +466,7 @@ namespace GLFWDotNet
 		/// <param name="paths">
 		/// The UTF-8 encoded file and/or directory path names.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void DropFun(IntPtr window, int count, string[] paths);
 
 		/// <summary>
@@ -461,6 +478,7 @@ namespace GLFWDotNet
 		/// <param name="event">
 		/// One of `GLFW_CONNECTED` or `GLFW_DISCONNECTED`.
 		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void MonitorFun(IntPtr monitor, int @event);
 
 		/// <summary>

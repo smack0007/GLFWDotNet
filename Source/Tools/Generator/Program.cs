@@ -176,10 +176,27 @@ namespace Generator
             WriteGLFWClass(enums, functions, callbacks, structs);
 
             WriteEnumFile(
-                enums.Where(x => x.Name.StartsWith("GLFW_KEY")),
+                enums.Where(x => x.Value.StartsWith("0x00022") || x.Value.StartsWith("0x00030") || x.Value.StartsWith("0x00031") || x.Value.StartsWith("0x00032") || x.Value.StartsWith("0x00035")
+                                 || x.Name == "GLFW_NO_ROBUSTNESS" || x.Name == "GLFW_OPENGL_ANY_PROFILE" || x.Name == "GLFW_ANY_RELEASE_BEHAVIOR"),
                 x =>
                 {
-                    string name = InflectEnumName(x.Substring(8));
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "ContextHints");
+
+            WriteEnumFile(
+                enums.Where(x => x.Value.StartsWith("0x00021")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "FramebufferHints");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
 
                     if (name.StartsWith("_"))
                         name = name.Replace("_", "D");
@@ -190,6 +207,48 @@ namespace Generator
                     return name;
                 },
                 "Keys");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOD")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_MOD".Length));
+                },
+                "KeyModifiers");
+                       
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_JOYSTICK") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_JOYSTICK".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "JoystickButtons");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOUSE_BUTTON") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_MOUSE_BUTTON".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "MouseButtons");
+
+            WriteEnumFile(
+                enums.Where(x => x.Value.StartsWith("0x00020")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "WindowHints");
         }
 
         private static string ParseType(string[] parts, ref int j)

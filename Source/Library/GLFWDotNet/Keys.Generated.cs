@@ -112,6 +112,5 @@ namespace GLFWDotNet
 		RightAlt = GLFW.KEY_RIGHT_ALT,
 		RightSuper = GLFW.KEY_RIGHT_SUPER,
 		Menu = GLFW.KEY_MENU,
-		Last = GLFW.KEY_LAST,
 	}
 }

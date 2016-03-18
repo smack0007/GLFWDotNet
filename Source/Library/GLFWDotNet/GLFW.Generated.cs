@@ -224,14 +224,27 @@ namespace GLFWDotNet
 
 		public struct VidMode
 		{
+			public int Width;
+			public int Height;
+			public int RedBits;
+			public int GreenBits;
+			public int BlueBits;
+			public int Refreshrate;
 		}
 
 		public struct GammaRamp
 		{
+			public ushort[] Red;
+			public ushort[] Green;
+			public ushort[] Blue;
+			public uint Size;
 		}
 
 		public struct Image
 		{
+			public int Width;
+			public int Height;
+			public string Pixels;
 		}
 
 		/// <summary>

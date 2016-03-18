@@ -160,6 +160,8 @@ namespace Generator
 
             public string Name { get; set; }
 
+            public List<ParamData> Members { get; } = new List<ParamData>();
+
             public override string ToString() => this.Name;
         }
 
@@ -494,9 +496,30 @@ namespace Generator
             {
                 @struct.IsOpaque = true;
             }
-            else
+            else if (lines[i + 1].StartsWith("{"))
             {
-                
+                i++;
+                while (!lines[i].StartsWith("}"))
+                {
+                    string line = lines[i].Trim();
+
+                    if (line.EndsWith(";"))
+                    {
+                        parts = line.Substring(0, line.Length - 1).Split(' ');
+                        int j = 0;
+
+                        var member = new ParamData();
+
+                        member.Type = ParseType(parts, ref j);
+                        j++;
+
+                        member.Name = parts[j];
+
+                        @struct.Members.Add(member);
+                    }
+
+                    i++;
+                }
             }
 
             return @struct;
@@ -549,6 +572,21 @@ namespace Generator
             }
         }
 
+        private static string ReplaceCommonWords(string input)
+        {
+            return input
+                .Replace("bits", "Bits")
+                .Replace("button", "Button")
+                .Replace("close", "Close")
+                .Replace("enter", "Enter")
+                .Replace("focus", "Focus")
+                .Replace("iconify", "Iconify")
+                .Replace("mods", "Mods")
+                .Replace("pos", "Pos")
+                .Replace("refresh", "Refresh")
+                .Replace("size", "Size");
+        }
+
         private static string InflectGLFWName(string input)
         {
             if (input.StartsWith("glfw") || input.StartsWith("GLFW"))
@@ -559,17 +597,7 @@ namespace Generator
                 if (input.EndsWith("fun"))
                 {
                     input = input.Substring(0, input.Length - "fun".Length) + "Fun";
-
-                    input = input
-                        .Replace("button", "Button")
-                        .Replace("close", "Close")
-                        .Replace("enter", "Enter")
-                        .Replace("focus", "Focus")
-                        .Replace("iconify", "Iconify")
-                        .Replace("mods", "Mods")
-                        .Replace("pos", "Pos")
-                        .Replace("refresh", "Refresh")
-                        .Replace("size", "Size");
+                    input = ReplaceCommonWords(input);
                 }
 
                 if (input == "Vidmode")
@@ -644,6 +672,9 @@ namespace Generator
 
                 case "unsigned char*":
                     return "string";
+
+                case "unsigned short*":
+                    return "ushort[]";
 
                 case "void*":
                     return "IntPtr";
@@ -760,6 +791,14 @@ namespace Generator
             {
                 sb.AppendLine($"\t\tpublic struct {GetType(@struct.Name, structs)}");
                 sb.AppendLine("\t\t{");
+
+                foreach (var member in @struct.Members)
+                {
+                    var name = InflectEnumName(member.Name);
+                    var type = GetParamType(member.Type, ParamModifier.None, structs);
+                    sb.AppendLine($"\t\t\tpublic {type} {name};");
+                }
+
                 sb.AppendLine("\t\t}");
 
                 sb.AppendLine();
@@ -818,7 +857,7 @@ namespace Generator
             if (char.IsDigit(name[0]))
                 name = "_" + name;
 
-            return name;
+            return ReplaceCommonWords(name);
         }
 
         private static void WriteEnumFile(

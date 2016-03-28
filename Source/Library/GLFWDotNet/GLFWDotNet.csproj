@@ -58,7 +58,7 @@
     <Compile Include="WindowHints.Generated.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\External\GLFW\glfw3_x86.dll">
+    <Content Include="..\..\..\External\GLFW\glfw3_x86.dll">
       <Link>glfw3_x86.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

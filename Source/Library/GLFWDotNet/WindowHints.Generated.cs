@@ -11,5 +11,6 @@ namespace GLFWDotNet
 		Decorated = GLFW.DECORATED,
 		AutoIconify = GLFW.AUTO_ICONIFY,
 		Floating = GLFW.FLOATING,
+		Maximized = GLFW.MAXIMIZED,
 	}
 }

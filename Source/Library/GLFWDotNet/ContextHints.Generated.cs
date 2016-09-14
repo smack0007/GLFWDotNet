@@ -13,6 +13,8 @@ namespace GLFWDotNet
 		OpenglDebugContext = GLFW.OPENGL_DEBUG_CONTEXT,
 		OpenglProfile = GLFW.OPENGL_PROFILE,
 		ContextReleaseBehavior = GLFW.CONTEXT_RELEASE_BEHAVIOR,
+		ContextNoError = GLFW.CONTEXT_NO_ERROR,
+		ContextCreationApi = GLFW.CONTEXT_CREATION_API,
 		OpenglApi = GLFW.OPENGL_API,
 		OpenglEsApi = GLFW.OPENGL_ES_API,
 		NoRobustness = GLFW.NO_ROBUSTNESS,

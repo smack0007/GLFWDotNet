@@ -667,6 +667,13 @@ namespace Generator
                 case "int*":
                     return "int";
 
+                case "uint32_t":
+                case "uint32_t*":
+                    return "uint";
+
+                case "uint64_t":
+                    return "ulong";
+
                 case "unsigned int":
                     return "uint";
 
@@ -675,6 +682,16 @@ namespace Generator
 
                 case "unsigned short*":
                     return "ushort[]";
+
+                case "VkAllocationCallbacks*":
+                case "VkInstance":
+                case "VkPhysicalDevice":
+                case "Vkproc":
+                case "VkSurfaceKHR*":
+                    return "IntPtr";
+
+                case "VkResult":
+                    return "int";
 
                 case "void*":
                     return "IntPtr";

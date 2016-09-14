@@ -7,8 +7,10 @@ namespace GLFWDotNet
 	public static partial class GLFW
 	{
 		public const int VERSION_MAJOR = 3;
-		public const int VERSION_MINOR = 1;
-		public const int VERSION_REVISION = 2;
+		public const int VERSION_MINOR = 2;
+		public const int VERSION_REVISION = 1;
+		public const int TRUE = 1;
+		public const int FALSE = 0;
 		public const int RELEASE = 0;
 		public const int PRESS = 1;
 		public const int REPEAT = 2;
@@ -163,6 +165,7 @@ namespace GLFWDotNet
 		public const int VERSION_UNAVAILABLE = 0x00010007;
 		public const int PLATFORM_ERROR = 0x00010008;
 		public const int FORMAT_UNAVAILABLE = 0x00010009;
+		public const int NO_WINDOW_CONTEXT = 0x0001000A;
 		public const int FOCUSED = 0x00020001;
 		public const int ICONIFIED = 0x00020002;
 		public const int RESIZABLE = 0x00020003;
@@ -170,6 +173,7 @@ namespace GLFWDotNet
 		public const int DECORATED = 0x00020005;
 		public const int AUTO_ICONIFY = 0x00020006;
 		public const int FLOATING = 0x00020007;
+		public const int MAXIMIZED = 0x00020008;
 		public const int RED_BITS = 0x00021001;
 		public const int GREEN_BITS = 0x00021002;
 		public const int BLUE_BITS = 0x00021003;
@@ -195,6 +199,9 @@ namespace GLFWDotNet
 		public const int OPENGL_DEBUG_CONTEXT = 0x00022007;
 		public const int OPENGL_PROFILE = 0x00022008;
 		public const int CONTEXT_RELEASE_BEHAVIOR = 0x00022009;
+		public const int CONTEXT_NO_ERROR = 0x0002200A;
+		public const int CONTEXT_CREATION_API = 0x0002200B;
+		public const int NO_API = 0;
 		public const int OPENGL_API = 0x00030001;
 		public const int OPENGL_ES_API = 0x00030002;
 		public const int NO_ROBUSTNESS = 0;
@@ -212,6 +219,8 @@ namespace GLFWDotNet
 		public const int ANY_RELEASE_BEHAVIOR = 0;
 		public const int RELEASE_BEHAVIOR_FLUSH = 0x00035001;
 		public const int RELEASE_BEHAVIOR_NONE = 0x00035002;
+		public const int NATIVE_CONTEXT_API = 0x00036001;
+		public const int EGL_CONTEXT_API = 0x00036002;
 		public const int ARROW_CURSOR = 0x00036001;
 		public const int IBEAM_CURSOR = 0x00036002;
 		public const int CROSSHAIR_CURSOR = 0x00036003;
@@ -316,8 +325,8 @@ namespace GLFWDotNet
 		/// The window that gained or lost input focus.
 		/// </param>
 		/// <param name="focused">
-		/// `GL_TRUE` if the window was given input focus, or
-		/// `GL_FALSE` if it lost it.
+		/// `GLFW_TRUE` if the window was given input focus, or
+		/// `GLFW_FALSE` if it lost it.
 		/// </param>
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowFocusFun(IntPtr window, int focused);
@@ -330,8 +339,8 @@ namespace GLFWDotNet
 		/// The window that was iconified or restored.
 		/// </param>
 		/// <param name="iconified">
-		/// `GL_TRUE` if the window was iconified, or `GL_FALSE`
-		/// if it was restored.
+		/// `GLFW_TRUE` if the window was iconified, or
+		/// `GLFW_FALSE` if it was restored.
 		/// </param>
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void WindowIconifyFun(IntPtr window, int iconified);
@@ -379,10 +388,12 @@ namespace GLFWDotNet
 		/// The window that received the event.
 		/// </param>
 		/// <param name="xpos">
-		/// The new x-coordinate, in screen coordinates, of the cursor.
+		/// The new cursor x-coordinate, relative to the left edge of
+		/// the client area.
 		/// </param>
 		/// <param name="ypos">
-		/// The new y-coordinate, in screen coordinates, of the cursor.
+		/// The new cursor y-coordinate, relative to the top edge of the
+		/// client area.
 		/// </param>
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CursorPosFun(IntPtr window, double xpos, double ypos);
@@ -394,8 +405,8 @@ namespace GLFWDotNet
 		/// The window that received the event.
 		/// </param>
 		/// <param name="entered">
-		/// `GL_TRUE` if the cursor entered the window's client
-		/// area, or `GL_FALSE` if it left it.
+		/// `GLFW_TRUE` if the cursor entered the window's client
+		/// area, or `GLFW_FALSE` if it left it.
 		/// </param>
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void CursorEnterFun(IntPtr window, int entered);
@@ -495,19 +506,26 @@ namespace GLFWDotNet
 		public delegate void MonitorFun(IntPtr monitor, int @event);
 
 		/// <summary>
+		/// This is the function signature for joystick configuration callback
+		/// functions.
+		/// </summary>
+		/// <param name="joy">
+		/// The joystick that was connected or disconnected.
+		/// </param>
+		/// <param name="event">
+		/// One of `GLFW_CONNECTED` or `GLFW_DISCONNECTED`.
+		/// </param>
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+		public delegate void JoystickFun(int joy, int @event);
+
+		/// <summary>
 		/// This function initializes the GLFW library.  Before most GLFW functions can
 		/// be used, GLFW must be initialized, and before an application terminates GLFW
 		/// should be terminated in order to free any resources allocated during or
 		/// after initialization.
 		/// </summary>
-		/// <remarks>
-		/// __OS X:__ This function will change the current directory of the
-		/// application to the `Contents/Resources` subdirectory of the application's
-		/// bundle, if present.  This can be disabled with a
-		/// [compile-time option](@ref compile_options_osx).
-		/// </remarks>
 		/// <returns>
-		/// `GL_TRUE` if successful, or `GL_FALSE` if an
+		/// `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
 		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwInit", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
@@ -519,9 +537,6 @@ namespace GLFWDotNet
 		/// function is called, you must again call @ref glfwInit successfully before
 		/// you will be able to use most GLFW functions.
 		/// </summary>
-		/// <remarks>
-		/// This function may be called before @ref glfwInit.
-		/// </remarks>
 		[DllImport(Library, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void Terminate();
 
@@ -530,9 +545,6 @@ namespace GLFWDotNet
 		/// library.  It is intended for when you are using GLFW as a shared library and
 		/// want to ensure that you are using the minimum required version.
 		/// </summary>
-		/// <remarks>
-		/// This function may be called before @ref glfwInit.
-		/// </remarks>
 		/// <param name="major">
 		/// Where to store the major version number, or `NULL`.
 		/// </param>
@@ -549,13 +561,11 @@ namespace GLFWDotNet
 		/// This function returns the compile-time generated
 		/// [version string](@ref intro_version_string) of the GLFW library binary.  It
 		/// describes the version, platform, compiler and any platform-specific
-		/// compile-time options.
+		/// compile-time options.  It should not be confused with the OpenGL or OpenGL
+		/// ES version string, queried with `glGetString`.
 		/// </summary>
-		/// <remarks>
-		/// This function may be called before @ref glfwInit.
-		/// </remarks>
 		/// <returns>
-		/// The GLFW version string.
+		/// The ASCII encoded GLFW version string.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetVersionString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern string GetVersionString();
@@ -564,9 +574,6 @@ namespace GLFWDotNet
 		/// This function sets the error callback, which is called with an error code
 		/// and a human-readable description each time a GLFW error occurs.
 		/// </summary>
-		/// <remarks>
-		/// This function may be called before @ref glfwInit.
-		/// </remarks>
 		/// <param name="cbfun">
 		/// The new callback, or `NULL` to remove the currently set
 		/// callback.
@@ -597,10 +604,6 @@ namespace GLFWDotNet
 		/// This function returns the primary monitor.  This is usually the monitor
 		/// where elements like the task bar or global menu bar are located.
 		/// </summary>
-		/// <remarks>
-		/// The primary monitor is always first in the array returned by @ref
-		/// glfwGetMonitors.
-		/// </remarks>
 		/// <returns>
 		/// The primary monitor, or `NULL` if no monitors were found or if an
 		/// [error](@ref error_handling) occurred.
@@ -628,10 +631,6 @@ namespace GLFWDotNet
 		/// This function returns the size, in millimetres, of the display area of the
 		/// specified monitor.
 		/// </summary>
-		/// <remarks>
-		/// __Windows:__ The OS calculates the returned physical size from the
-		/// current resolution and system DPI instead of querying the monitor EDID data.
-		/// </remarks>
 		/// <param name="monitor">
 		/// The monitor to query.
 		/// </param>
@@ -744,9 +743,6 @@ namespace GLFWDotNet
 		/// original gamma ramp for that monitor is saved by GLFW the first time this
 		/// function is called and is restored by @ref glfwTerminate.
 		/// </summary>
-		/// <remarks>
-		/// __Windows:__ The gamma ramp size must be 256.
-		/// </remarks>
 		/// <param name="monitor">
 		/// The monitor whose gamma ramp to set.
 		/// </param>
@@ -769,26 +765,20 @@ namespace GLFWDotNet
 		/// glfwWindowHint or @ref glfwDefaultWindowHints, or until the library is
 		/// terminated.
 		/// </summary>
-		/// <param name="target">
+		/// <param name="hint">
 		/// The [window hint](@ref window_hints) to set.
 		/// </param>
-		/// <param name="hint">
+		/// <param name="value">
 		/// The new value of the window hint.
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwWindowHint", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void WindowHint(int target, int hint);
+		public static extern void WindowHint(int hint, int value);
 
 		/// <summary>
 		/// This function creates a window and its associated OpenGL or OpenGL ES
 		/// context.  Most of the options controlling how the window and its context
 		/// should be created are specified with [window hints](@ref window_hints).
 		/// </summary>
-		/// <remarks>
-		/// __X11:__ Due to the asynchronous nature of X11, it may take
-		/// a moment for a window to reach its requested state.  This means you may not
-		/// be able to query the final size, position or other attributes directly after
-		/// window creation.
-		/// </remarks>
 		/// <param name="width">
 		/// The desired width, in screen coordinates, of the window.
 		/// This must be greater than zero.
@@ -801,7 +791,7 @@ namespace GLFWDotNet
 		/// The initial, UTF-8 encoded window title.
 		/// </param>
 		/// <param name="monitor">
-		/// The monitor to use for full screen mode, or `NULL` to use
+		/// The monitor to use for full screen mode, or `NULL` for
 		/// windowed mode.
 		/// </param>
 		/// <param name="share">
@@ -855,10 +845,6 @@ namespace GLFWDotNet
 		/// This function sets the window title, encoded as UTF-8, of the specified
 		/// window.
 		/// </summary>
-		/// <remarks>
-		/// __OS X:__ The window title will not be updated until the next time
-		/// you process events.
-		/// </remarks>
 		/// <param name="window">
 		/// The window whose title to change.
 		/// </param>
@@ -867,6 +853,26 @@ namespace GLFWDotNet
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetWindowTitle(IntPtr window, string title);
+
+		/// <summary>
+		/// This function sets the icon of the specified window.  If passed an array of
+		/// candidate images, those of or closest to the sizes desired by the system are
+		/// selected.  If no images are specified, the window reverts to its default
+		/// icon.
+		/// </summary>
+		/// <param name="window">
+		/// The window whose icon to set.
+		/// </param>
+		/// <param name="count">
+		/// The number of images in the specified array, or zero to
+		/// revert to the default window icon.
+		/// </param>
+		/// <param name="images">
+		/// The images to create the icon from.  This is ignored if
+		/// count is zero.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowIcon", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowIcon(IntPtr window, int count, Image images);
 
 		/// <summary>
 		/// This function retrieves the position, in screen coordinates, of the
@@ -923,6 +929,54 @@ namespace GLFWDotNet
 		public static extern void GetWindowSize(IntPtr window, out int width, out int height);
 
 		/// <summary>
+		/// This function sets the size limits of the client area of the specified
+		/// window.  If the window is full screen, the size limits only take effect
+		/// once it is made windowed.  If the window is not resizable, this function
+		/// does nothing.
+		/// </summary>
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="minwidth">
+		/// The minimum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="minheight">
+		/// The minimum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxwidth">
+		/// The maximum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxheight">
+		/// The maximum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowSizeLimits", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
+
+		/// <summary>
+		/// This function sets the required aspect ratio of the client area of the
+		/// specified window.  If the window is full screen, the aspect ratio only takes
+		/// effect once it is made windowed.  If the window is not resizable, this
+		/// function does nothing.
+		/// </summary>
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="numer">
+		/// The numerator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="denom">
+		/// The denominator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowAspectRatio", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowAspectRatio(IntPtr window, int numer, int denom);
+
+		/// <summary>
 		/// This function sets the size, in screen coordinates, of the client area of
 		/// the specified window.
 		/// </summary>
@@ -930,10 +984,12 @@ namespace GLFWDotNet
 		/// The window to resize.
 		/// </param>
 		/// <param name="width">
-		/// The desired width of the specified window.
+		/// The desired width, in screen coordinates, of the window
+		/// client area.
 		/// </param>
 		/// <param name="height">
-		/// The desired height of the specified window.
+		/// The desired height, in screen coordinates, of the window
+		/// client area.
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwSetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetWindowSize(IntPtr window, int width, int height);
@@ -998,13 +1054,24 @@ namespace GLFWDotNet
 
 		/// <summary>
 		/// This function restores the specified window if it was previously iconified
-		/// (minimized).  If the window is already restored, this function does nothing.
+		/// (minimized) or maximized.  If the window is already restored, this function
+		/// does nothing.
 		/// </summary>
 		/// <param name="window">
 		/// The window to restore.
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwRestoreWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void RestoreWindow(IntPtr window);
+
+		/// <summary>
+		/// This function maximizes the specified window if it was previously not
+		/// maximized.  If the window is already maximized, this function does nothing.
+		/// </summary>
+		/// <param name="window">
+		/// The window to maximize.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwMaximizeWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void MaximizeWindow(IntPtr window);
 
 		/// <summary>
 		/// This function makes the specified window visible if it was previously
@@ -1029,6 +1096,16 @@ namespace GLFWDotNet
 		public static extern void HideWindow(IntPtr window);
 
 		/// <summary>
+		/// This function brings the specified window to front and sets input focus.
+		/// The window should already be visible and not iconified.
+		/// </summary>
+		/// <param name="window">
+		/// The window to give input focus.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwFocusWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void FocusWindow(IntPtr window);
+
+		/// <summary>
 		/// This function returns the handle of the monitor that the specified window is
 		/// in full screen on.
 		/// </summary>
@@ -1036,22 +1113,49 @@ namespace GLFWDotNet
 		/// The window to query.
 		/// </param>
 		/// <returns>
-		/// The monitor, or `NULL` if the window is in windowed mode or an error
-		/// occurred.
+		/// The monitor, or `NULL` if the window is in windowed mode or an
+		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr GetWindowMonitor(IntPtr window);
 
 		/// <summary>
+		/// This function sets the monitor that the window uses for full screen mode or,
+		/// if the monitor is `NULL`, makes it windowed mode.
+		/// </summary>
+		/// <param name="window">
+		/// The window whose monitor, size or video mode to set.
+		/// </param>
+		/// <param name="monitor">
+		/// The desired monitor, or `NULL` to set windowed mode.
+		/// </param>
+		/// <param name="xpos">
+		/// The desired x-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The desired y-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="width">
+		/// The desired with, in screen coordinates, of the client area
+		/// or video mode.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the client
+		/// area or video mode.
+		/// </param>
+		/// <param name="refreshRate">
+		/// The desired refresh rate, in Hz, of the video mode,
+		/// or `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
+
+		/// <summary>
 		/// This function returns the value of an attribute of the specified window or
 		/// its OpenGL or OpenGL ES context.
 		/// </summary>
-		/// <remarks>
-		/// Zero is a valid value for many window and context related
-		/// attributes so you cannot use a return value of zero as an indication of
-		/// errors.  However, this function should not fail as long as it is passed
-		/// valid arguments and the library has been [initialized](@ref intro_init).
-		/// </remarks>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
@@ -1133,10 +1237,6 @@ namespace GLFWDotNet
 		/// called when the user attempts to close the window, for example by clicking
 		/// the close widget in the title bar.
 		/// </summary>
-		/// <remarks>
-		/// __OS X:__ Selecting Quit from the application menu will
-		/// trigger the close callback for all windows.
-		/// </remarks>
 		/// <param name="window">
 		/// The window whose callback to set.
 		/// </param>
@@ -1244,8 +1344,22 @@ namespace GLFWDotNet
 		public static extern void WaitEvents();
 
 		/// <summary>
+		/// This function puts the calling thread to sleep until at least one event is
+		/// available in the event queue, or until the specified timeout is reached.  If
+		/// one or more events are available, it behaves exactly like @ref
+		/// glfwPollEvents, i.e. the events in the queue are processed and the function
+		/// then returns immediately.  Processing events will cause the window and input
+		/// callbacks associated with those events to be called.
+		/// </summary>
+		/// <param name="timeout">
+		/// The maximum amount of time, in seconds, to wait.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwWaitEventsTimeout", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void WaitEventsTimeout(double timeout);
+
+		/// <summary>
 		/// This function posts an empty event from the current thread to the event
-		/// queue, causing @ref glfwWaitEvents to return.
+		/// queue, causing @ref glfwWaitEvents or @ref glfwWaitEventsTimeout to return.
 		/// </summary>
 		[DllImport(Library, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void PostEmptyEvent();
@@ -1282,6 +1396,22 @@ namespace GLFWDotNet
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwSetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetInputMode(IntPtr window, int mode, int value);
+
+		/// <summary>
+		/// This function returns the localized name of the specified printable key.
+		/// This is intended for displaying key bindings to the user.
+		/// </summary>
+		/// <param name="key">
+		/// The key to query, or `GLFW_KEY_UNKNOWN`.
+		/// </param>
+		/// <param name="scancode">
+		/// The scancode of the key to query.
+		/// </param>
+		/// <returns>
+		/// The localized name of the key, or `NULL`.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetKeyName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetKeyName(int key, int scancode);
 
 		/// <summary>
 		/// This function returns the last state reported for the specified key to the
@@ -1344,11 +1474,6 @@ namespace GLFWDotNet
 		/// window.  The window must have input focus.  If the window does not have
 		/// input focus when this function is called, it fails silently.
 		/// </summary>
-		/// <remarks>
-		/// __X11:__ Due to the asynchronous nature of X11, it may take
-		/// a moment for the window focus event to arrive.  This means you may not be
-		/// able to set the cursor position directly after window creation.
-		/// </remarks>
 		/// <param name="window">
 		/// The desired window.
 		/// </param>
@@ -1475,7 +1600,7 @@ namespace GLFWDotNet
 		/// </param>
 		/// <returns>
 		/// The previously set callback, or `NULL` if no callback was set or an
-		/// error occurred.
+		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
@@ -1581,7 +1706,7 @@ namespace GLFWDotNet
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
 		/// <returns>
-		/// `GL_TRUE` if the joystick is present, or `GL_FALSE` otherwise.
+		/// `GLFW_TRUE` if the joystick is present, or `GLFW_FALSE` otherwise.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwJoystickPresent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int JoystickPresent(int joy);
@@ -1595,10 +1720,12 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="count">
 		/// Where to store the number of axis values in the returned
-		/// array.  This is set to zero if an error occurred.
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
 		/// </param>
 		/// <returns>
-		/// An array of axis values, or `NULL` if the joystick is not present.
+		/// An array of axis values, or `NULL` if the joystick is not present or
+		/// an [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern float[] GetJoystickAxes(int joy, out int count);
@@ -1612,10 +1739,12 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="count">
 		/// Where to store the number of button states in the returned
-		/// array.  This is set to zero if an error occurred.
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
 		/// </param>
 		/// <returns>
-		/// An array of button states, or `NULL` if the joystick is not present.
+		/// An array of button states, or `NULL` if the joystick is not present
+		/// or an [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern string GetJoystickButtons(int joy, out int count);
@@ -1630,10 +1759,26 @@ namespace GLFWDotNet
 		/// </param>
 		/// <returns>
 		/// The UTF-8 encoded name of the joystick, or `NULL` if the joystick
-		/// is not present.
+		/// is not present or an [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetJoystickName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern string GetJoystickName(int joy);
+
+		/// <summary>
+		/// This function sets the joystick configuration callback, or removes the
+		/// currently set callback.  This is called when a joystick is connected to or
+		/// disconnected from the system.
+		/// </summary>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetJoystickCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern JoystickFun SetJoystickCallback(JoystickFun cbfun);
 
 		/// <summary>
 		/// This function sets the system clipboard to the specified, UTF-8 encoded
@@ -1681,16 +1826,33 @@ namespace GLFWDotNet
 		/// up from that value.  The value must be a positive finite number less than
 		/// or equal to 18446744073.0, which is approximately 584.5 years.
 		/// </summary>
-		/// <remarks>
-		/// The upper limit of the timer is calculated as
-		/// floor((2<sup>64</sup> - 1) / 10<sup>9</sup>) and is due to implementations
-		/// storing nanoseconds in 64 bits.  The limit may be increased in the future.
-		/// </remarks>
 		/// <param name="time">
 		/// The new value, in seconds.
 		/// </param>
 		[DllImport(Library, EntryPoint = "glfwSetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void SetTime(double time);
+
+		/// <summary>
+		/// This function returns the current value of the raw timer, measured in
+		/// 1&nbsp;/&nbsp;frequency seconds.  To get the frequency, call @ref
+		/// glfwGetTimerFrequency.
+		/// </summary>
+		/// <returns>
+		/// The value of the timer, or zero if an 
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetTimerValue", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong GetTimerValue();
+
+		/// <summary>
+		/// This function returns the frequency, in Hz, of the raw timer.
+		/// </summary>
+		/// <returns>
+		/// The frequency of the timer, in Hz, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetTimerFrequency", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong GetTimerFrequency();
 
 		/// <summary>
 		/// This function makes the OpenGL or OpenGL ES context of the specified window
@@ -1717,9 +1879,10 @@ namespace GLFWDotNet
 		public static extern IntPtr GetCurrentContext();
 
 		/// <summary>
-		/// This function swaps the front and back buffers of the specified window.  If
-		/// the swap interval is greater than zero, the GPU driver waits the specified
-		/// number of screen updates before swapping the buffers.
+		/// This function swaps the front and back buffers of the specified window when
+		/// rendering with OpenGL or OpenGL ES.  If the swap interval is greater than
+		/// zero, the GPU driver waits the specified number of screen updates before
+		/// swapping the buffers.
 		/// </summary>
 		/// <param name="window">
 		/// The window whose buffers to swap.
@@ -1728,17 +1891,12 @@ namespace GLFWDotNet
 		public static extern void SwapBuffers(IntPtr window);
 
 		/// <summary>
-		/// This function sets the swap interval for the current context, i.e. the
-		/// number of screen updates to wait from the time @ref glfwSwapBuffers was
-		/// called before swapping the buffers and returning.  This is sometimes called
-		/// _vertical synchronization_, _vertical retrace synchronization_ or just
-		/// _vsync_.
+		/// This function sets the swap interval for the current OpenGL or OpenGL ES
+		/// context, i.e. the number of screen updates to wait from the time @ref
+		/// glfwSwapBuffers was called before swapping the buffers and returning.  This
+		/// is sometimes called _vertical synchronization_, _vertical retrace
+		/// synchronization_ or just _vsync_.
 		/// </summary>
-		/// <remarks>
-		/// Some GPU drivers do not honor the requested swap interval, either
-		/// because of a user setting that overrides the application's request or due to
-		/// bugs in the driver.
-		/// </remarks>
 		/// <param name="interval">
 		/// The minimum number of screen updates to wait for
 		/// until the buffers are swapped by @ref glfwSwapBuffers.
@@ -1748,38 +1906,136 @@ namespace GLFWDotNet
 
 		/// <summary>
 		/// This function returns whether the specified
-		/// [client API extension](@ref context_glext) is supported by the current
-		/// OpenGL or OpenGL ES context.  It searches both for OpenGL and OpenGL ES
-		/// extension and platform-specific context creation API extensions.
+		/// [API extension](@ref context_glext) is supported by the current OpenGL or
+		/// OpenGL ES context.  It searches both for client API extension and context
+		/// creation API extensions.
 		/// </summary>
 		/// <param name="extension">
 		/// The ASCII encoded name of the extension.
 		/// </param>
 		/// <returns>
-		/// `GL_TRUE` if the extension is available, or `GL_FALSE` otherwise.
+		/// `GLFW_TRUE` if the extension is available, or `GLFW_FALSE`
+		/// otherwise.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwExtensionSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int ExtensionSupported(string extension);
 
 		/// <summary>
-		/// This function returns the address of the specified
+		/// This function returns the address of the specified OpenGL or OpenGL ES
 		/// [core or extension function](@ref context_glext), if it is supported
 		/// by the current context.
 		/// </summary>
-		/// <remarks>
-		/// This function may return a non-`NULL` address despite the
-		/// associated version or extension not being available.  Always check the
-		/// context version or extension string first.
-		/// </remarks>
 		/// <param name="procname">
 		/// The ASCII encoded name of the function.
 		/// </param>
 		/// <returns>
-		/// The address of the function, or `NULL` if an [error](@ref
-		/// error_handling) occurred.
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		[DllImport(Library, EntryPoint = "glfwGetProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr GetProcAddress(string procname);
+
+		/// <summary>
+		/// This function returns whether the Vulkan loader has been found.  This check
+		/// is performed by @ref glfwInit.
+		/// </summary>
+		/// <returns>
+		/// `GLFW_TRUE` if Vulkan is available, or `GLFW_FALSE` otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwVulkanSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int VulkanSupported();
+
+		/// <summary>
+		/// This function returns an array of names of Vulkan instance extensions required
+		/// by GLFW for creating Vulkan surfaces for GLFW windows.  If successful, the
+		/// list will always contains `VK_KHR_surface`, so if you don't require any
+		/// additional extensions you can pass this list directly to the
+		/// `VkInstanceCreateInfo` struct.
+		/// </summary>
+		/// <remarks>
+		/// Additional extensions may be required by future versions of GLFW.
+		/// You should check if any extensions you wish to enable are already in the
+		/// returned array, as it is an error to specify an extension more than once in
+		/// the `VkInstanceCreateInfo` struct.
+		/// </remarks>
+		/// <param name="count">
+		/// Where to store the number of extensions in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of ASCII encoded extension names, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetRequiredInstanceExtensions", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string[] GetRequiredInstanceExtensions(out uint count);
+
+		/// <summary>
+		/// This function returns the address of the specified Vulkan core or extension
+		/// function for the specified instance.  If instance is set to `NULL` it can
+		/// return any function exported from the Vulkan loader, including at least the
+		/// following functions:
+		/// </summary>
+		/// <param name="instance">
+		/// The Vulkan instance to query, or `NULL` to retrieve
+		/// functions related to instance creation.
+		/// </param>
+		/// <param name="procname">
+		/// The ASCII encoded name of the function.
+		/// </param>
+		/// <returns>
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetInstanceProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetInstanceProcAddress(IntPtr instance, string procname);
+
+		/// <summary>
+		/// This function returns whether the specified queue family of the specified
+		/// physical device supports presentation to the platform GLFW was built for.
+		/// </summary>
+		/// <param name="instance">
+		/// The instance that the physical device belongs to.
+		/// </param>
+		/// <param name="device">
+		/// The physical device that the queue family belongs to.
+		/// </param>
+		/// <param name="queuefamily">
+		/// The index of the queue family to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the queue family supports presentation, or
+		/// `GLFW_FALSE` otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetPhysicalDevicePresentationSupport", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
+
+		/// <summary>
+		/// This function creates a Vulkan surface for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// If an error occurs before the creation call is made, GLFW returns
+		/// the Vulkan error code most appropriate for the error.  Appropriate use of
+		/// </remarks>
+		/// <param name="instance">
+		/// The Vulkan instance to create the surface in.
+		/// </param>
+		/// <param name="window">
+		/// The window to create the surface for.
+		/// </param>
+		/// <param name="allocator">
+		/// The allocator to use, or `NULL` to use the default
+		/// allocator.
+		/// </param>
+		/// <param name="surface">
+		/// Where to store the handle of the surface.  This is set
+		/// to `VK_NULL_HANDLE` if an error occurred.
+		/// </param>
+		/// <returns>
+		/// `VK_SUCCESS` if successful, or a Vulkan error code if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwCreateWindowSurface", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
 
 	}
 }

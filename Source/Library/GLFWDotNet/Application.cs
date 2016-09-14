@@ -20,6 +20,7 @@ namespace GLFWDotNet
                 return false;
 
             GLFW.SetErrorCallback(errorCallback);
+
             return true;
         }
 

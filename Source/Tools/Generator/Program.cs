@@ -746,31 +746,34 @@ namespace Generator
                 );
         }
 
-        private static void WriteDocs(IDocs docs, StringBuilder sb)
+        private static void WriteDocs(IDocs docs, StringBuilder sb, string padding, bool descriptionOnly = false)
         {
-            sb.AppendLine("\t\t/// <summary>");
-            sb.AppendLine(FormatDocs(docs.Description, "\t\t"));
-            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine($"{padding}/// <summary>");
+            sb.AppendLine(FormatDocs(docs.Description, padding));
+            sb.AppendLine($"{padding}/// </summary>");
+
+            if (descriptionOnly)
+                return;
 
             if (!string.IsNullOrEmpty(docs.Remarks))
             {
-                sb.AppendLine("\t\t/// <remarks>");
-                sb.AppendLine(FormatDocs(docs.Remarks, "\t\t"));
-                sb.AppendLine("\t\t/// </remarks>");
+                sb.AppendLine($"{padding}/// <remarks>");
+                sb.AppendLine(FormatDocs(docs.Remarks, padding));
+                sb.AppendLine($"{padding}/// </remarks>");
             }
 
             foreach (var param in docs.GetParamDocs())
             {
-                sb.AppendLine($"\t\t/// <param name=\"{param.Key}\">");
-                sb.AppendLine(FormatDocs(param.Value, "\t\t"));
-                sb.AppendLine("\t\t/// </param>");
+                sb.AppendLine($"{padding}/// <param name=\"{param.Key}\">");
+                sb.AppendLine(FormatDocs(param.Value, padding));
+                sb.AppendLine($"{padding}/// </param>");
             }
 
             if (!string.IsNullOrEmpty(docs.ReturnDescription))
             {
-                sb.AppendLine("\t\t/// <returns>");
-                sb.AppendLine(FormatDocs(docs.ReturnDescription, "\t\t"));
-                sb.AppendLine("\t\t/// </returns>");
+                sb.AppendLine($"{padding}/// <returns>");
+                sb.AppendLine(FormatDocs(docs.ReturnDescription, padding));
+                sb.AppendLine($"{padding}/// </returns>");
             }
         }
 
@@ -823,7 +826,7 @@ namespace Generator
 
             foreach (var callback in callbacks)
             {
-                WriteDocs(callback, sb);
+                WriteDocs(callback, sb, "\t\t");
 
                 string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
@@ -833,17 +836,85 @@ namespace Generator
                 sb.AppendLine();
             }
 
+            sb.AppendLine("\t\tstatic class X86");
+            sb.AppendLine("\t\t{");
+
             foreach (var function in functions)
             {
-                WriteDocs(function, sb);
-
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
-                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
-                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
+                sb.AppendLine($"\t\t\t[DllImport(LibraryX86, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
+                sb.AppendLine($"\t\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
 
                 sb.AppendLine();
             }
+
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\tstatic class X64");
+            sb.AppendLine("\t\t{");
+
+            foreach (var function in functions)
+            {
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+
+                sb.AppendLine($"\t\t\t[DllImport(LibraryX64, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
+                sb.AppendLine($"\t\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
+
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\tpublic static class Delegates");
+            sb.AppendLine("\t\t{");
+
+            foreach (var function in functions)
+            {
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+                
+                sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
+
+            foreach (var function in functions)
+            {
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+
+                WriteDocs(function, sb, "\t\t", descriptionOnly: true);
+                sb.AppendLine($"\t\tpublic static readonly Delegates.{GetFunctionName(function.Name)} {GetFunctionName(function.Name)};");
+
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("\t\tstatic GLFW()");
+            sb.AppendLine("\t\t{");
+
+            sb.AppendLine("\t\t\tif (Environment.Is64BitProcess)");
+            sb.AppendLine("\t\t\t{");
+
+            foreach (var function in functions)
+            {
+                sb.AppendLine($"\t\t\t\t{GetFunctionName(function.Name)} = X64.{GetFunctionName(function.Name)};");
+            }
+
+            sb.AppendLine("\t\t\t}");
+            sb.AppendLine("\t\t\telse");
+            sb.AppendLine("\t\t\t{");
+
+            foreach (var function in functions)
+            {
+                sb.AppendLine($"\t\t\t\t{GetFunctionName(function.Name)} = X86.{GetFunctionName(function.Name)};");
+            }
+
+            sb.AppendLine("\t\t\t}");
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
 
             sb.AppendLine("\t}");
             sb.AppendLine("}");

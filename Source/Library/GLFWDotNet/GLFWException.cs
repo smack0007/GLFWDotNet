@@ -4,7 +4,7 @@ namespace GLFWDotNet
 {
     public class GLFWException : InvalidOperationException
     {
-        public int ErrorCode { get; }
+        public int? ErrorCode { get; }
 
         public GLFWException(string message)
             : base(message)

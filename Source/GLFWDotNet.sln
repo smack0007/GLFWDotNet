@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLFWDotNet", "Library\GLFWDotNet\GLFWDotNet.csproj", "{8C3E0ECA-4716-4FEE-ADEA-B697E2151D40}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Tools\Generator\Generator.csproj", "{602A49CA-FC13-4F9F-9DC4-ED9EA3CBEFA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "Samples\HelloWorld\HelloWorld.csproj", "{2903525E-C3E6-4AF8-9C16-38F03FC94E51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperClasses", "Samples\HelperClasses\HelperClasses.csproj", "{F6CDCA91-774A-41B4-AA08-F479AD9AA203}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{22DFB173-8802-4C66-9345-6E1D60EBB028}"
 EndProject
@@ -35,10 +33,6 @@ Global
 		{2903525E-C3E6-4AF8-9C16-38F03FC94E51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2903525E-C3E6-4AF8-9C16-38F03FC94E51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2903525E-C3E6-4AF8-9C16-38F03FC94E51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6CDCA91-774A-41B4-AA08-F479AD9AA203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6CDCA91-774A-41B4-AA08-F479AD9AA203}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6CDCA91-774A-41B4-AA08-F479AD9AA203}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6CDCA91-774A-41B4-AA08-F479AD9AA203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +41,5 @@ Global
 		{8C3E0ECA-4716-4FEE-ADEA-B697E2151D40} = {22DFB173-8802-4C66-9345-6E1D60EBB028}
 		{602A49CA-FC13-4F9F-9DC4-ED9EA3CBEFA9} = {5E54689F-14CF-4C7D-802B-6E8516B225B2}
 		{2903525E-C3E6-4AF8-9C16-38F03FC94E51} = {B218290B-7F6A-4727-B34B-740EDA309399}
-		{F6CDCA91-774A-41B4-AA08-F479AD9AA203} = {B218290B-7F6A-4727-B34B-740EDA309399}
 	EndGlobalSection
 EndGlobal

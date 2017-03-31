@@ -15,9 +15,8 @@ namespace HelloWorld
         {
             if (GLFW.Init() == 0)
                 return -1;
-                        
-            int major, minor, revision;
-            GLFW.GetVersion(out major, out minor, out revision);
+
+            GLFW.GetVersion(out int major, out int minor, out int revision);
             GLFW.WindowHint(GLFW.CLIENT_API, GLFW.OPENGL_API);
             GLFW.WindowHint(GLFW.OPENGL_PROFILE, GLFW.OPENGL_CORE_PROFILE);
             GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 4);
@@ -39,7 +38,7 @@ namespace HelloWorld
             var versionString = Marshal.PtrToStringAnsi(getString(VERSION));
             var rendererString = Marshal.PtrToStringAnsi(getString(RENDERER));
 
-            GLFW.SetWindowTitle(window, title + " " + versionString + " " + rendererString);
+            GLFW.SetWindowTitle(window, $"{title} {versionString} {rendererString}");
 
             while (GLFW.WindowShouldClose(window) == 0)
             {

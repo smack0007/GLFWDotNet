@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Generator
 {
@@ -708,7 +707,17 @@ namespace Generator
             List<CallbackData> callbacks,
             List<StructData> structs)
         {
+            string[] license = File.ReadAllLines("License.txt");
+
             StringBuilder sb = new StringBuilder(1024);
+
+            foreach (var line in license)
+            {
+                sb.Append("// ");
+                sb.AppendLine(line);
+            }
+
+            sb.AppendLine();
 
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Runtime.InteropServices;");
@@ -718,6 +727,9 @@ namespace Generator
             sb.AppendLine("{");
             sb.AppendLine("\tpublic static partial class GLFW");
             sb.AppendLine("\t{");
+            sb.AppendLine("\t\tprivate const string LibraryX86 = \"glfw3_x86.dll\";");
+            sb.AppendLine("\t\tprivate const string LibraryX64 = \"glfw3_x64.dll\";");
+            sb.AppendLine();
 
             foreach (var @enum in enums)
             {
@@ -844,7 +856,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText(@"..\..\..\..\Library\GLFWDotNet\GLFW.Generated.cs", sb.ToString());
+            File.WriteAllText(@"..\..\..\..\Library\GLFWDotNet\GLFW.cs", sb.ToString());
         }
 
         private static string InflectEnumName(string input)

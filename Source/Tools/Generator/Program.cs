@@ -174,7 +174,7 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
-            WriteGLFWClass(enums, functions, callbacks, structs);
+            Write(enums, functions, callbacks, structs);
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -701,7 +701,7 @@ namespace Generator
             }
         }
 
-        private static void WriteGLFWClass(
+        private static void Write(
             List<EnumData> enums,
             List<FunctionData> functions,
             List<CallbackData> callbacks,
@@ -725,7 +725,7 @@ namespace Generator
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
-            sb.AppendLine("\tpublic static partial class GLFW");
+            sb.AppendLine("\tpublic static class GLFW");
             sb.AppendLine("\t{");
             sb.AppendLine("\t\tprivate const string LibraryX86 = \"glfw3_x86.dll\";");
             sb.AppendLine("\t\tprivate const string LibraryX64 = \"glfw3_x64.dll\";");

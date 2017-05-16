@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using GLDotNet;
 using GLFWDotNet;
+using GLFWDotNet.Samples;
 
 namespace HelloWorld
 {
@@ -33,10 +34,10 @@ namespace HelloWorld
 
             GLFW.MakeContextCurrent(window);
 
-            IntPtr proc = GLFW.GetProcAddress("glGetString");
-            var getString = (GetString)Marshal.GetDelegateForFunctionPointer(proc, typeof(GetString));
-            var versionString = Marshal.PtrToStringAnsi(getString(VERSION));
-            var rendererString = Marshal.PtrToStringAnsi(getString(RENDERER));
+            GL gl = new GL(new GLFWPlatformContext(window, 4, 0));
+
+            var versionString = gl.GetString(GL.VERSION);
+            var rendererString = gl.GetString(GL.RENDERER);
 
             GLFW.SetWindowTitle(window, $"{title} {versionString} {rendererString}");
 

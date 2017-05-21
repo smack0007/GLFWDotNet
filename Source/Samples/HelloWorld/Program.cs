@@ -7,11 +7,6 @@ namespace HelloWorld
 {
     public static class Program
     {
-        private const uint RENDERER = 0x1F01;
-        private const uint VERSION = 0x1F02;
-
-        private delegate IntPtr GetString(uint name);
-
         public static int Main(string[] args)
         {
             if (GLFW.Init() == 0)
@@ -36,8 +31,8 @@ namespace HelloWorld
 
             GL gl = new GL(new GLFWPlatformContext(window, 4, 0));
 
-            var versionString = gl.GetString(GL.VERSION);
-            var rendererString = gl.GetString(GL.RENDERER);
+            var versionString = gl.GetString(StringName.VERSION);
+            var rendererString = gl.GetString(StringName.RENDERER);
 
             GLFW.SetWindowTitle(window, $"{title} {versionString} {rendererString}");
 

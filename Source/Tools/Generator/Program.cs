@@ -175,6 +175,81 @@ namespace Generator
             Parse(lines, enums, functions, callbacks, structs);
 
             Write(enums, functions, callbacks, structs);
+
+            WriteEnumFile(
+                enums.Where(x => x.Value.StartsWith("0x00022") || x.Value.StartsWith("0x00030") || x.Value.StartsWith("0x00031") || x.Value.StartsWith("0x00032") || x.Value.StartsWith("0x00035")
+                                 || x.Name == "GLFW_NO_ROBUSTNESS" || x.Name == "GLFW_OPENGL_ANY_PROFILE" || x.Name == "GLFW_ANY_RELEASE_BEHAVIOR"),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "ContextHints");
+
+            WriteEnumFile(
+                enums.Where(x => x.Value.StartsWith("0x00021")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "FramebufferHints");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "D");
+
+                    if (name.StartsWith("Kp"))
+                        name = name.Replace("Kp", "KeyPad");
+
+                    return name;
+                },
+                "Keys");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOD")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_MOD".Length));
+                },
+                "KeyModifiers");
+                       
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_JOYSTICK") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_JOYSTICK".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "JoystickButtons");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOUSE_BUTTON") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_MOUSE_BUTTON".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "MouseButtons");
+
+            WriteEnumFile(
+                enums.Where(x => x.Value.StartsWith("0x00020")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_".Length));
+                },
+                "WindowHints");
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -725,7 +800,7 @@ namespace Generator
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
-            sb.AppendLine("\tpublic static class GLFW");
+            sb.AppendLine("\tpublic static partial class GLFW");
             sb.AppendLine("\t{");
             sb.AppendLine("\t\tprivate const string LibraryX86 = \"glfw3_x86.dll\";");
             sb.AppendLine("\t\tprivate const string LibraryX64 = \"glfw3_x64.dll\";");
@@ -883,6 +958,33 @@ namespace Generator
                 name = "_" + name;
 
             return ReplaceCommonWords(name);
+        }
+
+        private static void WriteEnumFile(
+            IEnumerable<EnumData> enums,
+            Func<string, string> inflectName,
+            string enumName)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.AppendLine("using System;");
+            sb.AppendLine();
+            sb.AppendLine("namespace GLFWDotNet");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic enum {enumName}");
+            sb.AppendLine("\t{");
+
+            foreach (var @enum in enums)
+            {
+                string leftName = inflectName(@enum.Name);
+                string rightName = @enum.Name.Substring(5);
+                sb.AppendLine($"\t\t{leftName} = GLFW.{rightName},");
+            }
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+
+            File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
         }
     }
 }

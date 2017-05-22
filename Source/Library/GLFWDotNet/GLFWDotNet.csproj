@@ -48,6 +48,9 @@
     <Compile Include="GLFWException.cs" />
     <Compile Include="InputAction.cs" />
     <Compile Include="JoystickButtons.Generated.cs" />
+    <Compile Include="KeyActionEventArgs.cs" />
+    <Compile Include="Keyboard.cs" />
+    <Compile Include="Keyboard.Generated.cs" />
     <Compile Include="KeyModifiers.Generated.cs" />
     <Compile Include="Keys.Generated.cs" />
     <Compile Include="MouseButtons.Generated.cs" />

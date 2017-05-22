@@ -12,7 +12,15 @@ namespace HelperClasses
             MainWindow window = new MainWindow();
             window.MakeContextCurrent();
 
-            Application.Run(window);
+            Keyboard keyboard = new Keyboard(window);
+
+            Application.Run(window, () =>
+            {
+                if (keyboard[Keys.Escape])
+                {
+                    window.Close();
+                }
+            });
 
             Application.Terminate();
         }

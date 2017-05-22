@@ -29,11 +29,19 @@ namespace GLFWDotNet
             GLFW.Terminate();
         }
 
-        public static void Run(Window window)
+        public static void Run(Window window, Action idle)
         {
+            if (window == null)
+                throw new ArgumentNullException(nameof(window));
+
+            if (idle == null)
+                throw new ArgumentNullException(nameof(idle));
+
             while (!window.ShouldClose())
             {
                 GLFW.PollEvents();
+
+                idle();
             }
         }
     }

@@ -193,21 +193,27 @@ namespace Generator
                 },
                 "FramebufferHints");
 
+            var keyEnums = enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST"));
+
+            Func<string, string> inflectKeyEnum = x =>
+            {
+                string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
+
+                if (name.StartsWith("_"))
+                    name = name.Replace("_", "D");
+
+                if (name.StartsWith("Kp"))
+                    name = name.Replace("Kp", "KeyPad");
+
+                return name;
+            };
+
             WriteEnumFile(
-                enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST")),
-                x =>
-                {
-                    string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
-
-                    if (name.StartsWith("_"))
-                        name = name.Replace("_", "D");
-
-                    if (name.StartsWith("Kp"))
-                        name = name.Replace("Kp", "KeyPad");
-
-                    return name;
-                },
+                keyEnums,
+                inflectKeyEnum,
                 "Keys");
+
+            WriteKeyboardMethods(keyEnums, inflectKeyEnum);
 
             WriteEnumFile(
                 enums.Where(x => x.Name.StartsWith("GLFW_MOD")),
@@ -985,6 +991,45 @@ namespace Generator
             sb.AppendLine("}");
 
             File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
+        }
+
+        private static void WriteKeyboardMethods(IEnumerable<EnumData> keyEnums, Func<string, string> inflectName)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.AppendLine("using System;");
+            sb.AppendLine();
+            sb.AppendLine("namespace GLFWDotNet");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic partial class Keyboard");
+            sb.AppendLine("\t{");
+
+            var keysToMap = keyEnums.Skip(1).ToArray();
+
+            sb.AppendLine($"\t\tprivate readonly bool[] keyMap = new bool[{keysToMap.Length}];");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\tprivate int GetKeyMapIndex(Keys key)");
+            sb.AppendLine("\t\t{");
+            sb.AppendLine("\t\t\tswitch(key)");
+            sb.AppendLine("\t\t\t{");
+
+            for (int i = 0; i < keysToMap.Length; i++)
+            {
+                string name = inflectName(keysToMap[i].Name);
+                sb.AppendLine($"\t\t\t\tcase Keys.{name}: return {i};");
+            }
+
+            sb.AppendLine("\t\t\t}");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\t\treturn -1;");
+            sb.AppendLine("\t\t}");
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+
+            File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\Keyboard.Generated.cs", sb.ToString());
         }
     }
 }

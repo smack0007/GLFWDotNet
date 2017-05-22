@@ -8,6 +8,9 @@ namespace GLFWDotNet
         private int width, height;
         private int x, y;
 
+        GLFW.KeyFun keyCallback;
+        private readonly KeyActionEventArgs keyActionEventArgs = new KeyActionEventArgs();
+
         GLFW.WindowSizeFun windowSizeCallback;
         GLFW.WindowPosFun windowPosCallback;
 
@@ -83,9 +86,11 @@ namespace GLFWDotNet
             }
         }
 
-        public event EventHandler SizeChanged;
-
+        public event EventHandler<KeyActionEventArgs> KeyAction;
+                
         public event EventHandler PositionChanged;
+
+        public event EventHandler SizeChanged;
 
         public Window()
         {
@@ -103,11 +108,14 @@ namespace GLFWDotNet
             this.x = xpos;
             this.y = ypos;
 
-            this.windowSizeCallback = this.OnWindowSize;
-            GLFW.SetWindowSizeCallback(this.Handle, this.windowSizeCallback);
+            this.keyCallback = this.OnKey;
+            GLFW.SetKeyCallback(this.Handle, this.keyCallback);
 
             this.windowPosCallback = this.OnWindowPos;
             GLFW.SetWindowPosCallback(this.Handle, this.windowPosCallback);
+
+            this.windowSizeCallback = this.OnWindowSize;
+            GLFW.SetWindowSizeCallback(this.Handle, this.windowSizeCallback);
         }
 
         ~Window()
@@ -125,11 +133,14 @@ namespace GLFWDotNet
         {
             if (disposing)
             {
-                if (this.windowSizeCallback != null)
-                {
-                    GLFW.SetWindowSizeCallback(this.Handle, null);
-                    this.windowSizeCallback = null;
-                }
+                GLFW.SetKeyCallback(this.Handle, null);
+                this.keyCallback = null;
+
+                GLFW.SetWindowPosCallback(this.Handle, null);
+                this.windowPosCallback = null;
+
+                GLFW.SetWindowSizeCallback(this.Handle, null);
+                this.windowSizeCallback = null;
             }
         }
 
@@ -138,9 +149,28 @@ namespace GLFWDotNet
             GLFW.MakeContextCurrent(this.Handle);
         }
 
+        public void Close()
+        {
+            GLFW.SetWindowShouldClose(this.Handle, 1);
+        }
+
         public bool ShouldClose()
         {
             return GLFW.WindowShouldClose(this.Handle) != 0;
+        }
+
+        private void OnKey(IntPtr window, int key, int scanCode, int action, int mods)
+        {
+            this.OnKeyAction((Keys)key, scanCode, (InputAction)action, (KeyModifiers)mods);
+        }
+
+        protected virtual void OnKeyAction(Keys key, int scanCode, InputAction action, KeyModifiers modifiers)
+        {
+            this.keyActionEventArgs.Key = key;
+            this.keyActionEventArgs.ScanCode = scanCode;
+            this.keyActionEventArgs.Action = action;
+            this.keyActionEventArgs.Modifiers = modifiers;
+            this.KeyAction?.Invoke(this, this.keyActionEventArgs);
         }
 
         private void OnWindowSize(IntPtr handle, int width, int height)

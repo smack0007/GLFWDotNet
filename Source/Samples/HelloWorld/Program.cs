@@ -31,8 +31,8 @@ namespace HelloWorld
 
             GL gl = new GL(new GLFWPlatformContext(window, 4, 0));
 
-            var versionString = gl.GetString(StringName.VERSION);
-            var rendererString = gl.GetString(StringName.RENDERER);
+            var versionString = gl.GetString(StringName.Version);
+            var rendererString = gl.GetString(StringName.Renderer);
 
             GLFW.SetWindowTitle(window, $"{title} {versionString} {rendererString}");
 

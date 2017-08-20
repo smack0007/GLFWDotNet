@@ -166,7 +166,7 @@ namespace Generator
 
         public static void Main(string[] args)
         {
-            var lines = File.ReadAllLines("glfw3.h");
+            var lines = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "glfw3.h"));
             var enums = new List<EnumData>();
             var functions = new List<FunctionData>();
             var callbacks = new List<CallbackData>();
@@ -788,7 +788,7 @@ namespace Generator
             List<CallbackData> callbacks,
             List<StructData> structs)
         {
-            string[] license = File.ReadAllLines("License.txt");
+            string[] license = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "License.txt"));
 
             StringBuilder sb = new StringBuilder(1024);
 
@@ -937,7 +937,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText(@"..\..\..\..\Library\GLFWDotNet\GLFW.cs", sb.ToString());
+            File.WriteAllText(@"..\..\Library\GLFWDotNet\GLFW.cs", sb.ToString());
         }
 
         private static string InflectEnumName(string input)
@@ -990,7 +990,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
+            File.WriteAllText($@"..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
         }
 
         private static void WriteKeyboardMethods(IEnumerable<EnumData> keyEnums, Func<string, string> inflectName)
@@ -1029,7 +1029,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText($@"..\..\..\..\Library\GLFWDotNet\Keyboard.Generated.cs", sb.ToString());
+            File.WriteAllText($@"..\..\Library\GLFWDotNet\Keyboard.Generated.cs", sb.ToString());
         }
     }
 }

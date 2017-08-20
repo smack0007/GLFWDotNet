@@ -1,0 +1,19 @@
+<Project>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Library\GLFWDotNet\GLFWDotNet.csproj" />
+        
+        <Reference Include="GLDotNet">
+            <HintPath>..\..\..\External\GLDotNet\GLDotNet.dll</HintPath>
+        </Reference>
+
+        <Compile Include="..\Common\GLFWPlatformContext.cs" />
+        
+        <!-- Copies glfw DLLs -->
+        <None Include="..\..\..\External\GLFW\glfw3_x64.dll" Link="glfw3_x64.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="..\..\..\External\GLFW\glfw3_x86.dll" Link="glfw3_x86.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>

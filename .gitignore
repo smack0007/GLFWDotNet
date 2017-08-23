@@ -26,6 +26,7 @@
 *.opensdf
 *.unsuccessfulbuild
 .vs/
+.vscode/
 ipch/
 obj/
 [Bb]in

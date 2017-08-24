@@ -7,13 +7,13 @@
         </Reference>
 
         <Compile Include="..\Common\GLFWPlatformContext.cs" />
-        
-        <!-- Copies glfw DLLs -->
-        <None Include="..\..\..\External\GLFW\glfw3_x64.dll" Link="glfw3_x64.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="..\..\..\External\GLFW\glfw3_x86.dll" Link="glfw3_x86.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
+
+    <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
+        <Copy SourceFiles="..\..\..\External\GLFW\x64\glfw3.dll"
+              DestinationFolder="$(TargetDir)x64\" />
+
+        <Copy SourceFiles="..\..\..\External\GLFW\x86\glfw3.dll"
+              DestinationFolder="$(TargetDir)x86\" />
+    </Target>
 </Project>

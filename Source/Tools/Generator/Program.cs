@@ -801,15 +801,18 @@ namespace Generator
             sb.AppendLine();
 
             sb.AppendLine("using System;");
+            sb.AppendLine("using System.IO;");
+            sb.AppendLine("using System.Reflection;");
             sb.AppendLine("using System.Runtime.InteropServices;");
+            sb.AppendLine("using System.Runtime.Loader;");
             sb.AppendLine("using System.Security;");
+
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
             sb.AppendLine("\tpublic static partial class GLFW");
             sb.AppendLine("\t{");
-            sb.AppendLine("\t\tprivate const string LibraryX86 = \"glfw3_x86.dll\";");
-            sb.AppendLine("\t\tprivate const string LibraryX64 = \"glfw3_x64.dll\";");
+            sb.AppendLine("\t\tprivate const string Library = \"glfw3\";");
             sb.AppendLine();
 
             foreach (var @enum in enums)
@@ -853,87 +856,35 @@ namespace Generator
 
                 sb.AppendLine();
             }
-
-            sb.AppendLine("\t\tstatic class X86");
-            sb.AppendLine("\t\t{");
-
+                        
             foreach (var function in functions)
             {
+                WriteDocs(function, sb, "\t\t");
+
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
-                sb.AppendLine($"\t\t\t[DllImport(LibraryX86, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
-                sb.AppendLine($"\t\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
+                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
+                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
 
                 sb.AppendLine();
             }
 
+            sb.AppendLine("\t\tprivate class GLFWAssemblyLoadContext : AssemblyLoadContext");
+            sb.AppendLine("\t\t{");
+            sb.AppendLine("\t\t\tinternal void Init()");
+            sb.AppendLine("\t\t\t{");
+            sb.AppendLine("\t\t\t\tthis.LoadUnmanagedDllFromPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? \"x64\" : \"x86\", Library));");
+            sb.AppendLine("\t\t\t}");
+            sb.AppendLine();
+            sb.AppendLine("\t\t\tprotected override Assembly Load(AssemblyName assemblyName) => null;");
             sb.AppendLine("\t\t}");
             sb.AppendLine();
-
-            sb.AppendLine("\t\tstatic class X64");
-            sb.AppendLine("\t\t{");
-
-            foreach (var function in functions)
-            {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
-
-                sb.AppendLine($"\t\t\t[DllImport(LibraryX64, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
-                sb.AppendLine($"\t\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
-
-                sb.AppendLine();
-            }
-
-            sb.AppendLine("\t\t}");
-            sb.AppendLine();
-
-            sb.AppendLine("\t\tpublic static class Delegates");
-            sb.AppendLine("\t\t{");
-
-            foreach (var function in functions)
-            {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
-                
-                sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
-                sb.AppendLine();
-            }
-
-            sb.AppendLine("\t\t}");
-            sb.AppendLine();
-
-            foreach (var function in functions)
-            {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
-
-                WriteDocs(function, sb, "\t\t", descriptionOnly: true);
-                sb.AppendLine($"\t\tpublic static readonly Delegates.{GetFunctionName(function.Name)} {GetFunctionName(function.Name)};");
-
-                sb.AppendLine();
-            }
 
             sb.AppendLine("\t\tstatic GLFW()");
             sb.AppendLine("\t\t{");
-
-            sb.AppendLine("\t\t\tif (Environment.Is64BitProcess)");
-            sb.AppendLine("\t\t\t{");
-
-            foreach (var function in functions)
-            {
-                sb.AppendLine($"\t\t\t\t{GetFunctionName(function.Name)} = X64.{GetFunctionName(function.Name)};");
-            }
-
-            sb.AppendLine("\t\t\t}");
-            sb.AppendLine("\t\t\telse");
-            sb.AppendLine("\t\t\t{");
-
-            foreach (var function in functions)
-            {
-                sb.AppendLine($"\t\t\t\t{GetFunctionName(function.Name)} = X86.{GetFunctionName(function.Name)};");
-            }
-
-            sb.AppendLine("\t\t\t}");
+            sb.AppendLine("\t\t\tnew GLFWAssemblyLoadContext().Init();");
             sb.AppendLine("\t\t}");
-            sb.AppendLine();
-
+            
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 

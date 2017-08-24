@@ -20,15 +20,17 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using System.Security;
 
 namespace GLFWDotNet
 {
 	public static partial class GLFW
 	{
-		private const string LibraryX86 = "glfw3_x86.dll";
-		private const string LibraryX64 = "glfw3_x64.dll";
+		private const string Library = "glfw3";
 
 		public const int VERSION_MAJOR = 3;
 		public const int VERSION_MINOR = 2;
@@ -542,785 +544,18 @@ namespace GLFWDotNet
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void JoystickFun(int joy, int @event);
 
-		static class X86
-		{
-			[DllImport(LibraryX86, EntryPoint = "glfwInit", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int Init();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void Terminate();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetVersion", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetVersion(out int major, out int minor, out int rev);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetVersionString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetVersionString();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ErrorFun SetErrorCallback(ErrorFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetMonitors", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr[] GetMonitors(out int count);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetPrimaryMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetPrimaryMonitor();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetMonitorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetMonitorPhysicalSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetMonitorName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetMonitorName(IntPtr monitor);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern MonitorFun SetMonitorCallback(MonitorFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetVideoModes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern VidMode GetVideoModes(IntPtr monitor, out int count);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetVideoMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern VidMode GetVideoMode(IntPtr monitor);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetGamma", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetGamma(IntPtr monitor, float gamma);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern GammaRamp GetGammaRamp(IntPtr monitor);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DefaultWindowHints();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwWindowHint", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WindowHint(int hint, int value);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwCreateWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwDestroyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DestroyWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int WindowShouldClose(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowShouldClose(IntPtr window, int value);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowTitle(IntPtr window, string title);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowIcon", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowIcon(IntPtr window, int count, Image images);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowPos(IntPtr window, out int xpos, out int ypos);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowPos(IntPtr window, int xpos, int ypos);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowSize(IntPtr window, out int width, out int height);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowSizeLimits", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowAspectRatio", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowAspectRatio(IntPtr window, int numer, int denom);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowSize(IntPtr window, int width, int height);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetFramebufferSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetFramebufferSize(IntPtr window, out int width, out int height);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowFrameSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwIconifyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void IconifyWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwRestoreWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void RestoreWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwMaximizeWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void MaximizeWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwShowWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void ShowWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwHideWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void HideWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwFocusWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void FocusWindow(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetWindowMonitor(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowAttrib", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetWindowAttrib(IntPtr window, int attrib);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowUserPointer(IntPtr window, IntPtr pointer);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetWindowUserPointer(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwPollEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void PollEvents();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwWaitEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WaitEvents();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwWaitEventsTimeout", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WaitEventsTimeout(double timeout);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void PostEmptyEvent();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetInputMode(IntPtr window, int mode);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetInputMode(IntPtr window, int mode, int value);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetKeyName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetKeyName(int key, int scancode);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetKey", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetKey(IntPtr window, int key);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetMouseButton", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetMouseButton(IntPtr window, int button);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetCursorPos(IntPtr window, out double xpos, out double ypos);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetCursorPos(IntPtr window, double xpos, double ypos);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwCreateCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateCursor(Image image, int xhot, int yhot);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwCreateStandardCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateStandardCursor(int shape);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwDestroyCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DestroyCursor(IntPtr cursor);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetCursor(IntPtr window, IntPtr cursor);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCharCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CharFun SetCharCallback(IntPtr window, CharFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetDropCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern DropFun SetDropCallback(IntPtr window, DropFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwJoystickPresent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int JoystickPresent(int joy);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern float[] GetJoystickAxes(int joy, out int count);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetJoystickButtons(int joy, out int count);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetJoystickName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetJoystickName(int joy);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetJoystickCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern JoystickFun SetJoystickCallback(JoystickFun cbfun);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetClipboardString(IntPtr window, string @string);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetClipboardString(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern double GetTime();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetTime(double time);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetTimerValue", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ulong GetTimerValue();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetTimerFrequency", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ulong GetTimerFrequency();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwMakeContextCurrent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void MakeContextCurrent(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetCurrentContext", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetCurrentContext();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSwapBuffers", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SwapBuffers(IntPtr window);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwSwapInterval", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SwapInterval(int interval);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwExtensionSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int ExtensionSupported(string extension);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetProcAddress(string procname);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwVulkanSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int VulkanSupported();
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetRequiredInstanceExtensions", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string[] GetRequiredInstanceExtensions(out uint count);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetInstanceProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetInstanceProcAddress(IntPtr instance, string procname);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwGetPhysicalDevicePresentationSupport", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
-
-			[DllImport(LibraryX86, EntryPoint = "glfwCreateWindowSurface", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
-
-		}
-
-		static class X64
-		{
-			[DllImport(LibraryX64, EntryPoint = "glfwInit", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int Init();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void Terminate();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetVersion", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetVersion(out int major, out int minor, out int rev);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetVersionString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetVersionString();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ErrorFun SetErrorCallback(ErrorFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetMonitors", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr[] GetMonitors(out int count);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetPrimaryMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetPrimaryMonitor();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetMonitorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetMonitorPhysicalSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetMonitorName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetMonitorName(IntPtr monitor);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern MonitorFun SetMonitorCallback(MonitorFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetVideoModes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern VidMode GetVideoModes(IntPtr monitor, out int count);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetVideoMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern VidMode GetVideoMode(IntPtr monitor);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetGamma", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetGamma(IntPtr monitor, float gamma);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern GammaRamp GetGammaRamp(IntPtr monitor);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DefaultWindowHints();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwWindowHint", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WindowHint(int hint, int value);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwCreateWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwDestroyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DestroyWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int WindowShouldClose(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowShouldClose(IntPtr window, int value);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowTitle(IntPtr window, string title);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowIcon", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowIcon(IntPtr window, int count, Image images);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowPos(IntPtr window, out int xpos, out int ypos);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowPos(IntPtr window, int xpos, int ypos);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowSize(IntPtr window, out int width, out int height);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowSizeLimits", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowAspectRatio", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowAspectRatio(IntPtr window, int numer, int denom);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowSize(IntPtr window, int width, int height);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetFramebufferSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetFramebufferSize(IntPtr window, out int width, out int height);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowFrameSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwIconifyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void IconifyWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwRestoreWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void RestoreWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwMaximizeWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void MaximizeWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwShowWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void ShowWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwHideWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void HideWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwFocusWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void FocusWindow(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetWindowMonitor(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowAttrib", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetWindowAttrib(IntPtr window, int attrib);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetWindowUserPointer(IntPtr window, IntPtr pointer);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetWindowUserPointer(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwPollEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void PollEvents();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwWaitEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WaitEvents();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwWaitEventsTimeout", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void WaitEventsTimeout(double timeout);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void PostEmptyEvent();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetInputMode(IntPtr window, int mode);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetInputMode(IntPtr window, int mode, int value);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetKeyName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetKeyName(int key, int scancode);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetKey", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetKey(IntPtr window, int key);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetMouseButton", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetMouseButton(IntPtr window, int button);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void GetCursorPos(IntPtr window, out double xpos, out double ypos);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetCursorPos(IntPtr window, double xpos, double ypos);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwCreateCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateCursor(Image image, int xhot, int yhot);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwCreateStandardCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr CreateStandardCursor(int shape);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwDestroyCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void DestroyCursor(IntPtr cursor);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetCursor(IntPtr window, IntPtr cursor);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCharCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CharFun SetCharCallback(IntPtr window, CharFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetDropCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern DropFun SetDropCallback(IntPtr window, DropFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwJoystickPresent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int JoystickPresent(int joy);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern float[] GetJoystickAxes(int joy, out int count);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetJoystickButtons(int joy, out int count);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetJoystickName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetJoystickName(int joy);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetJoystickCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern JoystickFun SetJoystickCallback(JoystickFun cbfun);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetClipboardString(IntPtr window, string @string);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string GetClipboardString(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern double GetTime();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SetTime(double time);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetTimerValue", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ulong GetTimerValue();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetTimerFrequency", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern ulong GetTimerFrequency();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwMakeContextCurrent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void MakeContextCurrent(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetCurrentContext", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetCurrentContext();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSwapBuffers", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SwapBuffers(IntPtr window);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwSwapInterval", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern void SwapInterval(int interval);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwExtensionSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int ExtensionSupported(string extension);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetProcAddress(string procname);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwVulkanSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int VulkanSupported();
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetRequiredInstanceExtensions", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern string[] GetRequiredInstanceExtensions(out uint count);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetInstanceProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern IntPtr GetInstanceProcAddress(IntPtr instance, string procname);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwGetPhysicalDevicePresentationSupport", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int GetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
-
-			[DllImport(LibraryX64, EntryPoint = "glfwCreateWindowSurface", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-			public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
-
-		}
-
-		public static class Delegates
-		{
-			public delegate int Init();
-
-			public delegate void Terminate();
-
-			public delegate void GetVersion(out int major, out int minor, out int rev);
-
-			public delegate string GetVersionString();
-
-			public delegate ErrorFun SetErrorCallback(ErrorFun cbfun);
-
-			public delegate IntPtr[] GetMonitors(out int count);
-
-			public delegate IntPtr GetPrimaryMonitor();
-
-			public delegate void GetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
-
-			public delegate void GetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
-
-			public delegate string GetMonitorName(IntPtr monitor);
-
-			public delegate MonitorFun SetMonitorCallback(MonitorFun cbfun);
-
-			public delegate VidMode GetVideoModes(IntPtr monitor, out int count);
-
-			public delegate VidMode GetVideoMode(IntPtr monitor);
-
-			public delegate void SetGamma(IntPtr monitor, float gamma);
-
-			public delegate GammaRamp GetGammaRamp(IntPtr monitor);
-
-			public delegate void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
-
-			public delegate void DefaultWindowHints();
-
-			public delegate void WindowHint(int hint, int value);
-
-			public delegate IntPtr CreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
-
-			public delegate void DestroyWindow(IntPtr window);
-
-			public delegate int WindowShouldClose(IntPtr window);
-
-			public delegate void SetWindowShouldClose(IntPtr window, int value);
-
-			public delegate void SetWindowTitle(IntPtr window, string title);
-
-			public delegate void SetWindowIcon(IntPtr window, int count, Image images);
-
-			public delegate void GetWindowPos(IntPtr window, out int xpos, out int ypos);
-
-			public delegate void SetWindowPos(IntPtr window, int xpos, int ypos);
-
-			public delegate void GetWindowSize(IntPtr window, out int width, out int height);
-
-			public delegate void SetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
-
-			public delegate void SetWindowAspectRatio(IntPtr window, int numer, int denom);
-
-			public delegate void SetWindowSize(IntPtr window, int width, int height);
-
-			public delegate void GetFramebufferSize(IntPtr window, out int width, out int height);
-
-			public delegate void GetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
-
-			public delegate void IconifyWindow(IntPtr window);
-
-			public delegate void RestoreWindow(IntPtr window);
-
-			public delegate void MaximizeWindow(IntPtr window);
-
-			public delegate void ShowWindow(IntPtr window);
-
-			public delegate void HideWindow(IntPtr window);
-
-			public delegate void FocusWindow(IntPtr window);
-
-			public delegate IntPtr GetWindowMonitor(IntPtr window);
-
-			public delegate void SetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
-
-			public delegate int GetWindowAttrib(IntPtr window, int attrib);
-
-			public delegate void SetWindowUserPointer(IntPtr window, IntPtr pointer);
-
-			public delegate IntPtr GetWindowUserPointer(IntPtr window);
-
-			public delegate WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
-
-			public delegate WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
-
-			public delegate WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
-
-			public delegate WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
-
-			public delegate WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
-
-			public delegate WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
-
-			public delegate FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
-
-			public delegate void PollEvents();
-
-			public delegate void WaitEvents();
-
-			public delegate void WaitEventsTimeout(double timeout);
-
-			public delegate void PostEmptyEvent();
-
-			public delegate int GetInputMode(IntPtr window, int mode);
-
-			public delegate void SetInputMode(IntPtr window, int mode, int value);
-
-			public delegate string GetKeyName(int key, int scancode);
-
-			public delegate int GetKey(IntPtr window, int key);
-
-			public delegate int GetMouseButton(IntPtr window, int button);
-
-			public delegate void GetCursorPos(IntPtr window, out double xpos, out double ypos);
-
-			public delegate void SetCursorPos(IntPtr window, double xpos, double ypos);
-
-			public delegate IntPtr CreateCursor(Image image, int xhot, int yhot);
-
-			public delegate IntPtr CreateStandardCursor(int shape);
-
-			public delegate void DestroyCursor(IntPtr cursor);
-
-			public delegate void SetCursor(IntPtr window, IntPtr cursor);
-
-			public delegate KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
-
-			public delegate CharFun SetCharCallback(IntPtr window, CharFun cbfun);
-
-			public delegate CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
-
-			public delegate MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
-
-			public delegate CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
-
-			public delegate CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
-
-			public delegate ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
-
-			public delegate DropFun SetDropCallback(IntPtr window, DropFun cbfun);
-
-			public delegate int JoystickPresent(int joy);
-
-			public delegate float[] GetJoystickAxes(int joy, out int count);
-
-			public delegate string GetJoystickButtons(int joy, out int count);
-
-			public delegate string GetJoystickName(int joy);
-
-			public delegate JoystickFun SetJoystickCallback(JoystickFun cbfun);
-
-			public delegate void SetClipboardString(IntPtr window, string @string);
-
-			public delegate string GetClipboardString(IntPtr window);
-
-			public delegate double GetTime();
-
-			public delegate void SetTime(double time);
-
-			public delegate ulong GetTimerValue();
-
-			public delegate ulong GetTimerFrequency();
-
-			public delegate void MakeContextCurrent(IntPtr window);
-
-			public delegate IntPtr GetCurrentContext();
-
-			public delegate void SwapBuffers(IntPtr window);
-
-			public delegate void SwapInterval(int interval);
-
-			public delegate int ExtensionSupported(string extension);
-
-			public delegate IntPtr GetProcAddress(string procname);
-
-			public delegate int VulkanSupported();
-
-			public delegate string[] GetRequiredInstanceExtensions(out uint count);
-
-			public delegate IntPtr GetInstanceProcAddress(IntPtr instance, string procname);
-
-			public delegate int GetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
-
-			public delegate int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
-
-		}
-
 		/// <summary>
 		/// This function initializes the GLFW library.  Before most GLFW functions can
 		/// be used, GLFW must be initialized, and before an application terminates GLFW
 		/// should be terminated in order to free any resources allocated during or
 		/// after initialization.
 		/// </summary>
-		public static readonly Delegates.Init Init;
+		/// <returns>
+		/// `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwInit", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int Init();
 
 		/// <summary>
 		/// This function destroys all remaining windows and cursors, restores any
@@ -1328,14 +563,25 @@ namespace GLFWDotNet
 		/// function is called, you must again call @ref glfwInit successfully before
 		/// you will be able to use most GLFW functions.
 		/// </summary>
-		public static readonly Delegates.Terminate Terminate;
+		[DllImport(Library, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void Terminate();
 
 		/// <summary>
 		/// This function retrieves the major, minor and revision numbers of the GLFW
 		/// library.  It is intended for when you are using GLFW as a shared library and
 		/// want to ensure that you are using the minimum required version.
 		/// </summary>
-		public static readonly Delegates.GetVersion GetVersion;
+		/// <param name="major">
+		/// Where to store the major version number, or `NULL`.
+		/// </param>
+		/// <param name="minor">
+		/// Where to store the minor version number, or `NULL`.
+		/// </param>
+		/// <param name="rev">
+		/// Where to store the revision number, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetVersion", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetVersion(out int major, out int minor, out int rev);
 
 		/// <summary>
 		/// This function returns the compile-time generated
@@ -1344,52 +590,117 @@ namespace GLFWDotNet
 		/// compile-time options.  It should not be confused with the OpenGL or OpenGL
 		/// ES version string, queried with `glGetString`.
 		/// </summary>
-		public static readonly Delegates.GetVersionString GetVersionString;
+		/// <returns>
+		/// The ASCII encoded GLFW version string.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetVersionString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetVersionString();
 
 		/// <summary>
 		/// This function sets the error callback, which is called with an error code
 		/// and a human-readable description each time a GLFW error occurs.
 		/// </summary>
-		public static readonly Delegates.SetErrorCallback SetErrorCallback;
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ErrorFun SetErrorCallback(ErrorFun cbfun);
 
 		/// <summary>
 		/// This function returns an array of handles for all currently connected
 		/// monitors.  The primary monitor is always first in the returned array.  If no
 		/// monitors were found, this function returns `NULL`.
 		/// </summary>
-		public static readonly Delegates.GetMonitors GetMonitors;
+		/// <param name="count">
+		/// Where to store the number of monitors in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of monitor handles, or `NULL` if no monitors were found or
+		/// if an [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetMonitors", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr[] GetMonitors(out int count);
 
 		/// <summary>
 		/// This function returns the primary monitor.  This is usually the monitor
 		/// where elements like the task bar or global menu bar are located.
 		/// </summary>
-		public static readonly Delegates.GetPrimaryMonitor GetPrimaryMonitor;
+		/// <returns>
+		/// The primary monitor, or `NULL` if no monitors were found or if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetPrimaryMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetPrimaryMonitor();
 
 		/// <summary>
 		/// This function returns the position, in screen coordinates, of the upper-left
 		/// corner of the specified monitor.
 		/// </summary>
-		public static readonly Delegates.GetMonitorPos GetMonitorPos;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the monitor x-coordinate, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the monitor y-coordinate, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetMonitorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
 
 		/// <summary>
 		/// This function returns the size, in millimetres, of the display area of the
 		/// specified monitor.
 		/// </summary>
-		public static readonly Delegates.GetMonitorPhysicalSize GetMonitorPhysicalSize;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="widthMM">
+		/// Where to store the width, in millimetres, of the
+		/// monitor's display area, or `NULL`.
+		/// </param>
+		/// <param name="heightMM">
+		/// Where to store the height, in millimetres, of the
+		/// monitor's display area, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetMonitorPhysicalSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
 
 		/// <summary>
 		/// This function returns a human-readable name, encoded as UTF-8, of the
 		/// specified monitor.  The name typically reflects the make and model of the
 		/// monitor and is not guaranteed to be unique among the connected monitors.
 		/// </summary>
-		public static readonly Delegates.GetMonitorName GetMonitorName;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded name of the monitor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetMonitorName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetMonitorName(IntPtr monitor);
 
 		/// <summary>
 		/// This function sets the monitor configuration callback, or removes the
 		/// currently set callback.  This is called when a monitor is connected to or
 		/// disconnected from the system.
 		/// </summary>
-		public static readonly Delegates.SetMonitorCallback SetMonitorCallback;
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern MonitorFun SetMonitorCallback(MonitorFun cbfun);
 
 		/// <summary>
 		/// This function returns an array of all video modes supported by the specified
@@ -1397,39 +708,82 @@ namespace GLFWDotNet
 		/// bit depth (the sum of all channel depths) and then by resolution area (the
 		/// product of width and height).
 		/// </summary>
-		public static readonly Delegates.GetVideoModes GetVideoModes;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of video modes in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of video modes, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetVideoModes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern VidMode GetVideoModes(IntPtr monitor, out int count);
 
 		/// <summary>
 		/// This function returns the current video mode of the specified monitor.  If
 		/// you have created a full screen window for that monitor, the return value
 		/// will depend on whether that window is iconified.
 		/// </summary>
-		public static readonly Delegates.GetVideoMode GetVideoMode;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The current mode of the monitor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetVideoMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern VidMode GetVideoMode(IntPtr monitor);
 
 		/// <summary>
 		/// This function generates a 256-element gamma ramp from the specified exponent
 		/// and then calls @ref glfwSetGammaRamp with it.  The value must be a finite
 		/// number greater than zero.
 		/// </summary>
-		public static readonly Delegates.SetGamma SetGamma;
+		/// <param name="monitor">
+		/// The monitor whose gamma ramp to set.
+		/// </param>
+		/// <param name="gamma">
+		/// The desired exponent.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetGamma", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetGamma(IntPtr monitor, float gamma);
 
 		/// <summary>
 		/// This function returns the current gamma ramp of the specified monitor.
 		/// </summary>
-		public static readonly Delegates.GetGammaRamp GetGammaRamp;
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The current gamma ramp, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern GammaRamp GetGammaRamp(IntPtr monitor);
 
 		/// <summary>
 		/// This function sets the current gamma ramp for the specified monitor.  The
 		/// original gamma ramp for that monitor is saved by GLFW the first time this
 		/// function is called and is restored by @ref glfwTerminate.
 		/// </summary>
-		public static readonly Delegates.SetGammaRamp SetGammaRamp;
+		/// <param name="monitor">
+		/// The monitor whose gamma ramp to set.
+		/// </param>
+		/// <param name="ramp">
+		/// The gamma ramp to use.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetGammaRamp(IntPtr monitor, GammaRamp ramp);
 
 		/// <summary>
 		/// This function resets all window hints to their
 		/// [default values](@ref window_hints_values).
 		/// </summary>
-		public static readonly Delegates.DefaultWindowHints DefaultWindowHints;
+		[DllImport(Library, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DefaultWindowHints();
 
 		/// <summary>
 		/// This function sets hints for the next call to @ref glfwCreateWindow.  The
@@ -1437,38 +791,94 @@ namespace GLFWDotNet
 		/// glfwWindowHint or @ref glfwDefaultWindowHints, or until the library is
 		/// terminated.
 		/// </summary>
-		public static readonly Delegates.WindowHint WindowHint;
+		/// <param name="hint">
+		/// The [window hint](@ref window_hints) to set.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the window hint.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwWindowHint", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void WindowHint(int hint, int value);
 
 		/// <summary>
 		/// This function creates a window and its associated OpenGL or OpenGL ES
 		/// context.  Most of the options controlling how the window and its context
 		/// should be created are specified with [window hints](@ref window_hints).
 		/// </summary>
-		public static readonly Delegates.CreateWindow CreateWindow;
+		/// <param name="width">
+		/// The desired width, in screen coordinates, of the window.
+		/// This must be greater than zero.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the window.
+		/// This must be greater than zero.
+		/// </param>
+		/// <param name="title">
+		/// The initial, UTF-8 encoded window title.
+		/// </param>
+		/// <param name="monitor">
+		/// The monitor to use for full screen mode, or `NULL` for
+		/// windowed mode.
+		/// </param>
+		/// <param name="share">
+		/// The window whose context to share resources with, or `NULL`
+		/// to not share resources.
+		/// </param>
+		/// <returns>
+		/// The handle of the created window, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwCreateWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr CreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
 
 		/// <summary>
 		/// This function destroys the specified window and its context.  On calling
 		/// this function, no further callbacks will be called for that window.
 		/// </summary>
-		public static readonly Delegates.DestroyWindow DestroyWindow;
+		/// <param name="window">
+		/// The window to destroy.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwDestroyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DestroyWindow(IntPtr window);
 
 		/// <summary>
 		/// This function returns the value of the close flag of the specified window.
 		/// </summary>
-		public static readonly Delegates.WindowShouldClose WindowShouldClose;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The value of the close flag.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int WindowShouldClose(IntPtr window);
 
 		/// <summary>
 		/// This function sets the value of the close flag of the specified window.
 		/// This can be used to override the user's attempt to close the window, or
 		/// to signal that it should be closed.
 		/// </summary>
-		public static readonly Delegates.SetWindowShouldClose SetWindowShouldClose;
+		/// <param name="window">
+		/// The window whose flag to change.
+		/// </param>
+		/// <param name="value">
+		/// The new value.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowShouldClose(IntPtr window, int value);
 
 		/// <summary>
 		/// This function sets the window title, encoded as UTF-8, of the specified
 		/// window.
 		/// </summary>
-		public static readonly Delegates.SetWindowTitle SetWindowTitle;
+		/// <param name="window">
+		/// The window whose title to change.
+		/// </param>
+		/// <param name="title">
+		/// The UTF-8 encoded window title.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowTitle(IntPtr window, string title);
 
 		/// <summary>
 		/// This function sets the icon of the specified window.  If passed an array of
@@ -1476,27 +886,73 @@ namespace GLFWDotNet
 		/// selected.  If no images are specified, the window reverts to its default
 		/// icon.
 		/// </summary>
-		public static readonly Delegates.SetWindowIcon SetWindowIcon;
+		/// <param name="window">
+		/// The window whose icon to set.
+		/// </param>
+		/// <param name="count">
+		/// The number of images in the specified array, or zero to
+		/// revert to the default window icon.
+		/// </param>
+		/// <param name="images">
+		/// The images to create the icon from.  This is ignored if
+		/// count is zero.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowIcon", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowIcon(IntPtr window, int count, Image images);
 
 		/// <summary>
 		/// This function retrieves the position, in screen coordinates, of the
 		/// upper-left corner of the client area of the specified window.
 		/// </summary>
-		public static readonly Delegates.GetWindowPos GetWindowPos;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the x-coordinate of the upper-left corner of
+		/// the client area, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the y-coordinate of the upper-left corner of
+		/// the client area, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetWindowPos(IntPtr window, out int xpos, out int ypos);
 
 		/// <summary>
 		/// This function sets the position, in screen coordinates, of the upper-left
 		/// corner of the client area of the specified windowed mode window.  If the
 		/// window is a full screen window, this function does nothing.
 		/// </summary>
-		public static readonly Delegates.SetWindowPos SetWindowPos;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="xpos">
+		/// The x-coordinate of the upper-left corner of the client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The y-coordinate of the upper-left corner of the client area.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowPos(IntPtr window, int xpos, int ypos);
 
 		/// <summary>
 		/// This function retrieves the size, in screen coordinates, of the client area
 		/// of the specified window.  If you wish to retrieve the size of the
 		/// framebuffer of the window in pixels, see @ref glfwGetFramebufferSize.
 		/// </summary>
-		public static readonly Delegates.GetWindowSize GetWindowSize;
+		/// <param name="window">
+		/// The window whose size to retrieve.
+		/// </param>
+		/// <param name="width">
+		/// Where to store the width, in screen coordinates, of the
+		/// client area, or `NULL`.
+		/// </param>
+		/// <param name="height">
+		/// Where to store the height, in screen coordinates, of the
+		/// client area, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetWindowSize(IntPtr window, out int width, out int height);
 
 		/// <summary>
 		/// This function sets the size limits of the client area of the specified
@@ -1504,7 +960,27 @@ namespace GLFWDotNet
 		/// once it is made windowed.  If the window is not resizable, this function
 		/// does nothing.
 		/// </summary>
-		public static readonly Delegates.SetWindowSizeLimits SetWindowSizeLimits;
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="minwidth">
+		/// The minimum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="minheight">
+		/// The minimum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxwidth">
+		/// The maximum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxheight">
+		/// The maximum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowSizeLimits", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
 
 		/// <summary>
 		/// This function sets the required aspect ratio of the client area of the
@@ -1512,20 +988,56 @@ namespace GLFWDotNet
 		/// effect once it is made windowed.  If the window is not resizable, this
 		/// function does nothing.
 		/// </summary>
-		public static readonly Delegates.SetWindowAspectRatio SetWindowAspectRatio;
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="numer">
+		/// The numerator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="denom">
+		/// The denominator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowAspectRatio", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowAspectRatio(IntPtr window, int numer, int denom);
 
 		/// <summary>
 		/// This function sets the size, in screen coordinates, of the client area of
 		/// the specified window.
 		/// </summary>
-		public static readonly Delegates.SetWindowSize SetWindowSize;
+		/// <param name="window">
+		/// The window to resize.
+		/// </param>
+		/// <param name="width">
+		/// The desired width, in screen coordinates, of the window
+		/// client area.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the window
+		/// client area.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowSize(IntPtr window, int width, int height);
 
 		/// <summary>
 		/// This function retrieves the size, in pixels, of the framebuffer of the
 		/// specified window.  If you wish to retrieve the size of the window in screen
 		/// coordinates, see @ref glfwGetWindowSize.
 		/// </summary>
-		public static readonly Delegates.GetFramebufferSize GetFramebufferSize;
+		/// <param name="window">
+		/// The window whose framebuffer to query.
+		/// </param>
+		/// <param name="width">
+		/// Where to store the width, in pixels, of the framebuffer,
+		/// or `NULL`.
+		/// </param>
+		/// <param name="height">
+		/// Where to store the height, in pixels, of the framebuffer,
+		/// or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetFramebufferSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetFramebufferSize(IntPtr window, out int width, out int height);
 
 		/// <summary>
 		/// This function retrieves the size, in screen coordinates, of each edge of the
@@ -1533,131 +1045,318 @@ namespace GLFWDotNet
 		/// window has one.  The size of the frame may vary depending on the
 		/// [window-related hints](@ref window_hints_wnd) used to create it.
 		/// </summary>
-		public static readonly Delegates.GetWindowFrameSize GetWindowFrameSize;
+		/// <param name="window">
+		/// The window whose frame size to query.
+		/// </param>
+		/// <param name="left">
+		/// Where to store the size, in screen coordinates, of the left
+		/// edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="top">
+		/// Where to store the size, in screen coordinates, of the top
+		/// edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="right">
+		/// Where to store the size, in screen coordinates, of the
+		/// right edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="bottom">
+		/// Where to store the size, in screen coordinates, of the
+		/// bottom edge of the window frame, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetWindowFrameSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
 
 		/// <summary>
 		/// This function iconifies (minimizes) the specified window if it was
 		/// previously restored.  If the window is already iconified, this function does
 		/// nothing.
 		/// </summary>
-		public static readonly Delegates.IconifyWindow IconifyWindow;
+		/// <param name="window">
+		/// The window to iconify.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwIconifyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void IconifyWindow(IntPtr window);
 
 		/// <summary>
 		/// This function restores the specified window if it was previously iconified
 		/// (minimized) or maximized.  If the window is already restored, this function
 		/// does nothing.
 		/// </summary>
-		public static readonly Delegates.RestoreWindow RestoreWindow;
+		/// <param name="window">
+		/// The window to restore.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwRestoreWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void RestoreWindow(IntPtr window);
 
 		/// <summary>
 		/// This function maximizes the specified window if it was previously not
 		/// maximized.  If the window is already maximized, this function does nothing.
 		/// </summary>
-		public static readonly Delegates.MaximizeWindow MaximizeWindow;
+		/// <param name="window">
+		/// The window to maximize.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwMaximizeWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void MaximizeWindow(IntPtr window);
 
 		/// <summary>
 		/// This function makes the specified window visible if it was previously
 		/// hidden.  If the window is already visible or is in full screen mode, this
 		/// function does nothing.
 		/// </summary>
-		public static readonly Delegates.ShowWindow ShowWindow;
+		/// <param name="window">
+		/// The window to make visible.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwShowWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void ShowWindow(IntPtr window);
 
 		/// <summary>
 		/// This function hides the specified window if it was previously visible.  If
 		/// the window is already hidden or is in full screen mode, this function does
 		/// nothing.
 		/// </summary>
-		public static readonly Delegates.HideWindow HideWindow;
+		/// <param name="window">
+		/// The window to hide.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwHideWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void HideWindow(IntPtr window);
 
 		/// <summary>
 		/// This function brings the specified window to front and sets input focus.
 		/// The window should already be visible and not iconified.
 		/// </summary>
-		public static readonly Delegates.FocusWindow FocusWindow;
+		/// <param name="window">
+		/// The window to give input focus.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwFocusWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void FocusWindow(IntPtr window);
 
 		/// <summary>
 		/// This function returns the handle of the monitor that the specified window is
 		/// in full screen on.
 		/// </summary>
-		public static readonly Delegates.GetWindowMonitor GetWindowMonitor;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The monitor, or `NULL` if the window is in windowed mode or an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetWindowMonitor(IntPtr window);
 
 		/// <summary>
 		/// This function sets the monitor that the window uses for full screen mode or,
 		/// if the monitor is `NULL`, makes it windowed mode.
 		/// </summary>
-		public static readonly Delegates.SetWindowMonitor SetWindowMonitor;
+		/// <param name="window">
+		/// The window whose monitor, size or video mode to set.
+		/// </param>
+		/// <param name="monitor">
+		/// The desired monitor, or `NULL` to set windowed mode.
+		/// </param>
+		/// <param name="xpos">
+		/// The desired x-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The desired y-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="width">
+		/// The desired with, in screen coordinates, of the client area
+		/// or video mode.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the client
+		/// area or video mode.
+		/// </param>
+		/// <param name="refreshRate">
+		/// The desired refresh rate, in Hz, of the video mode,
+		/// or `GLFW_DONT_CARE`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
 
 		/// <summary>
 		/// This function returns the value of an attribute of the specified window or
 		/// its OpenGL or OpenGL ES context.
 		/// </summary>
-		public static readonly Delegates.GetWindowAttrib GetWindowAttrib;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="attrib">
+		/// The [window attribute](@ref window_attribs) whose value to
+		/// return.
+		/// </param>
+		/// <returns>
+		/// The value of the attribute, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetWindowAttrib", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetWindowAttrib(IntPtr window, int attrib);
 
 		/// <summary>
 		/// This function sets the user-defined pointer of the specified window.  The
 		/// current value is retained until the window is destroyed.  The initial value
 		/// is `NULL`.
 		/// </summary>
-		public static readonly Delegates.SetWindowUserPointer SetWindowUserPointer;
+		/// <param name="window">
+		/// The window whose pointer to set.
+		/// </param>
+		/// <param name="pointer">
+		/// The new value.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetWindowUserPointer(IntPtr window, IntPtr pointer);
 
 		/// <summary>
 		/// This function returns the current value of the user-defined pointer of the
 		/// specified window.  The initial value is `NULL`.
 		/// </summary>
-		public static readonly Delegates.GetWindowUserPointer GetWindowUserPointer;
+		/// <param name="window">
+		/// The window whose pointer to return.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetWindowUserPointer(IntPtr window);
 
 		/// <summary>
 		/// This function sets the position callback of the specified window, which is
 		/// called when the window is moved.  The callback is provided with the screen
 		/// position of the upper-left corner of the client area of the window.
 		/// </summary>
-		public static readonly Delegates.SetWindowPosCallback SetWindowPosCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowPosFun SetWindowPosCallback(IntPtr window, WindowPosFun cbfun);
 
 		/// <summary>
 		/// This function sets the size callback of the specified window, which is
 		/// called when the window is resized.  The callback is provided with the size,
 		/// in screen coordinates, of the client area of the window.
 		/// </summary>
-		public static readonly Delegates.SetWindowSizeCallback SetWindowSizeCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowSizeFun SetWindowSizeCallback(IntPtr window, WindowSizeFun cbfun);
 
 		/// <summary>
 		/// This function sets the close callback of the specified window, which is
 		/// called when the user attempts to close the window, for example by clicking
 		/// the close widget in the title bar.
 		/// </summary>
-		public static readonly Delegates.SetWindowCloseCallback SetWindowCloseCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowCloseFun SetWindowCloseCallback(IntPtr window, WindowCloseFun cbfun);
 
 		/// <summary>
 		/// This function sets the refresh callback of the specified window, which is
 		/// called when the client area of the window needs to be redrawn, for example
 		/// if the window has been exposed after having been covered by another window.
 		/// </summary>
-		public static readonly Delegates.SetWindowRefreshCallback SetWindowRefreshCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowRefreshFun SetWindowRefreshCallback(IntPtr window, WindowRefreshFun cbfun);
 
 		/// <summary>
 		/// This function sets the focus callback of the specified window, which is
 		/// called when the window gains or loses input focus.
 		/// </summary>
-		public static readonly Delegates.SetWindowFocusCallback SetWindowFocusCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowFocusFun SetWindowFocusCallback(IntPtr window, WindowFocusFun cbfun);
 
 		/// <summary>
 		/// This function sets the iconification callback of the specified window, which
 		/// is called when the window is iconified or restored.
 		/// </summary>
-		public static readonly Delegates.SetWindowIconifyCallback SetWindowIconifyCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern WindowIconifyFun SetWindowIconifyCallback(IntPtr window, WindowIconifyFun cbfun);
 
 		/// <summary>
 		/// This function sets the framebuffer resize callback of the specified window,
 		/// which is called when the framebuffer of the specified window is resized.
 		/// </summary>
-		public static readonly Delegates.SetFramebufferSizeCallback SetFramebufferSizeCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern FramebufferSizeFun SetFramebufferSizeCallback(IntPtr window, FramebufferSizeFun cbfun);
 
 		/// <summary>
 		/// This function processes only those events that are already in the event
 		/// queue and then returns immediately.  Processing events will cause the window
 		/// and input callbacks associated with those events to be called.
 		/// </summary>
-		public static readonly Delegates.PollEvents PollEvents;
+		[DllImport(Library, EntryPoint = "glfwPollEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void PollEvents();
 
 		/// <summary>
 		/// This function puts the calling thread to sleep until at least one event is
@@ -1667,7 +1366,8 @@ namespace GLFWDotNet
 		/// will cause the window and input callbacks associated with those events to be
 		/// called.
 		/// </summary>
-		public static readonly Delegates.WaitEvents WaitEvents;
+		[DllImport(Library, EntryPoint = "glfwWaitEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void WaitEvents();
 
 		/// <summary>
 		/// This function puts the calling thread to sleep until at least one event is
@@ -1677,33 +1377,67 @@ namespace GLFWDotNet
 		/// then returns immediately.  Processing events will cause the window and input
 		/// callbacks associated with those events to be called.
 		/// </summary>
-		public static readonly Delegates.WaitEventsTimeout WaitEventsTimeout;
+		/// <param name="timeout">
+		/// The maximum amount of time, in seconds, to wait.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwWaitEventsTimeout", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void WaitEventsTimeout(double timeout);
 
 		/// <summary>
 		/// This function posts an empty event from the current thread to the event
 		/// queue, causing @ref glfwWaitEvents or @ref glfwWaitEventsTimeout to return.
 		/// </summary>
-		public static readonly Delegates.PostEmptyEvent PostEmptyEvent;
+		[DllImport(Library, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void PostEmptyEvent();
 
 		/// <summary>
 		/// This function returns the value of an input option for the specified window.
 		/// The mode must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
 		/// `GLFW_STICKY_MOUSE_BUTTONS`.
 		/// </summary>
-		public static readonly Delegates.GetInputMode GetInputMode;
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="mode">
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetInputMode(IntPtr window, int mode);
 
 		/// <summary>
 		/// This function sets an input mode option for the specified window.  The mode
 		/// must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
 		/// `GLFW_STICKY_MOUSE_BUTTONS`.
 		/// </summary>
-		public static readonly Delegates.SetInputMode SetInputMode;
+		/// <param name="window">
+		/// The window whose input mode to set.
+		/// </param>
+		/// <param name="mode">
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the specified input mode.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetInputMode(IntPtr window, int mode, int value);
 
 		/// <summary>
 		/// This function returns the localized name of the specified printable key.
 		/// This is intended for displaying key bindings to the user.
 		/// </summary>
-		public static readonly Delegates.GetKeyName GetKeyName;
+		/// <param name="key">
+		/// The key to query, or `GLFW_KEY_UNKNOWN`.
+		/// </param>
+		/// <param name="scancode">
+		/// The scancode of the key to query.
+		/// </param>
+		/// <returns>
+		/// The localized name of the key, or `NULL`.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetKeyName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetKeyName(int key, int scancode);
 
 		/// <summary>
 		/// This function returns the last state reported for the specified key to the
@@ -1711,21 +1445,54 @@ namespace GLFWDotNet
 		/// `GLFW_RELEASE`.  The higher-level action `GLFW_REPEAT` is only reported to
 		/// the key callback.
 		/// </summary>
-		public static readonly Delegates.GetKey GetKey;
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="key">
+		/// The desired [keyboard key](@ref keys).  `GLFW_KEY_UNKNOWN` is
+		/// not a valid key for this function.
+		/// </param>
+		/// <returns>
+		/// One of `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetKey", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetKey(IntPtr window, int key);
 
 		/// <summary>
 		/// This function returns the last state reported for the specified mouse button
 		/// to the specified window.  The returned state is one of `GLFW_PRESS` or
 		/// `GLFW_RELEASE`.
 		/// </summary>
-		public static readonly Delegates.GetMouseButton GetMouseButton;
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="button">
+		/// The desired [mouse button](@ref buttons).
+		/// </param>
+		/// <returns>
+		/// One of `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetMouseButton", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetMouseButton(IntPtr window, int button);
 
 		/// <summary>
 		/// This function returns the position of the cursor, in screen coordinates,
 		/// relative to the upper-left corner of the client area of the specified
 		/// window.
 		/// </summary>
-		public static readonly Delegates.GetCursorPos GetCursorPos;
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the cursor x-coordinate, relative to the
+		/// left edge of the client area, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the cursor y-coordinate, relative to the to
+		/// top edge of the client area, or `NULL`.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwGetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void GetCursorPos(IntPtr window, out double xpos, out double ypos);
 
 		/// <summary>
 		/// This function sets the position, in screen coordinates, of the cursor
@@ -1733,27 +1500,65 @@ namespace GLFWDotNet
 		/// window.  The window must have input focus.  If the window does not have
 		/// input focus when this function is called, it fails silently.
 		/// </summary>
-		public static readonly Delegates.SetCursorPos SetCursorPos;
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="xpos">
+		/// The desired x-coordinate, relative to the left edge of the
+		/// client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The desired y-coordinate, relative to the top edge of the
+		/// client area.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetCursorPos(IntPtr window, double xpos, double ypos);
 
 		/// <summary>
 		/// Creates a new custom cursor image that can be set for a window with @ref
 		/// glfwSetCursor.  The cursor can be destroyed with @ref glfwDestroyCursor.
 		/// Any remaining cursors are destroyed by @ref glfwTerminate.
 		/// </summary>
-		public static readonly Delegates.CreateCursor CreateCursor;
+		/// <param name="image">
+		/// The desired cursor image.
+		/// </param>
+		/// <param name="xhot">
+		/// The desired x-coordinate, in pixels, of the cursor hotspot.
+		/// </param>
+		/// <param name="yhot">
+		/// The desired y-coordinate, in pixels, of the cursor hotspot.
+		/// </param>
+		/// <returns>
+		/// The handle of the created cursor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwCreateCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr CreateCursor(Image image, int xhot, int yhot);
 
 		/// <summary>
 		/// Returns a cursor with a [standard shape](@ref shapes), that can be set for
 		/// a window with @ref glfwSetCursor.
 		/// </summary>
-		public static readonly Delegates.CreateStandardCursor CreateStandardCursor;
+		/// <param name="shape">
+		/// One of the [standard shapes](@ref shapes).
+		/// </param>
+		/// <returns>
+		/// A new cursor ready to use or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwCreateStandardCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr CreateStandardCursor(int shape);
 
 		/// <summary>
 		/// This function destroys a cursor previously created with @ref
 		/// glfwCreateCursor.  Any remaining cursors will be destroyed by @ref
 		/// glfwTerminate.
 		/// </summary>
-		public static readonly Delegates.DestroyCursor DestroyCursor;
+		/// <param name="cursor">
+		/// The cursor object to destroy.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwDestroyCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DestroyCursor(IntPtr cursor);
 
 		/// <summary>
 		/// This function sets the cursor image to be used when the cursor is over the
@@ -1761,32 +1566,88 @@ namespace GLFWDotNet
 		/// when the [cursor mode](@ref cursor_mode) of the window is
 		/// `GLFW_CURSOR_NORMAL`.
 		/// </summary>
-		public static readonly Delegates.SetCursor SetCursor;
+		/// <param name="window">
+		/// The window to set the cursor for.
+		/// </param>
+		/// <param name="cursor">
+		/// The cursor to set, or `NULL` to switch back to the default
+		/// arrow cursor.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetCursor(IntPtr window, IntPtr cursor);
 
 		/// <summary>
 		/// This function sets the key callback of the specified window, which is called
 		/// when a key is pressed, repeated or released.
 		/// </summary>
-		public static readonly Delegates.SetKeyCallback SetKeyCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new key callback, or `NULL` to remove the currently
+		/// set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern KeyFun SetKeyCallback(IntPtr window, KeyFun cbfun);
 
 		/// <summary>
 		/// This function sets the character callback of the specified window, which is
 		/// called when a Unicode character is input.
 		/// </summary>
-		public static readonly Delegates.SetCharCallback SetCharCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetCharCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern CharFun SetCharCallback(IntPtr window, CharFun cbfun);
 
 		/// <summary>
 		/// This function sets the character with modifiers callback of the specified
 		/// window, which is called when a Unicode character is input regardless of what
 		/// modifier keys are used.
 		/// </summary>
-		public static readonly Delegates.SetCharModsCallback SetCharModsCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern CharModsFun SetCharModsCallback(IntPtr window, CharModsFun cbfun);
 
 		/// <summary>
 		/// This function sets the mouse button callback of the specified window, which
 		/// is called when a mouse button is pressed or released.
 		/// </summary>
-		public static readonly Delegates.SetMouseButtonCallback SetMouseButtonCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern MouseButtonFun SetMouseButtonCallback(IntPtr window, MouseButtonFun cbfun);
 
 		/// <summary>
 		/// This function sets the cursor position callback of the specified window,
@@ -1794,64 +1655,169 @@ namespace GLFWDotNet
 		/// position, in screen coordinates, relative to the upper-left corner of the
 		/// client area of the window.
 		/// </summary>
-		public static readonly Delegates.SetCursorPosCallback SetCursorPosCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern CursorPosFun SetCursorPosCallback(IntPtr window, CursorPosFun cbfun);
 
 		/// <summary>
 		/// This function sets the cursor boundary crossing callback of the specified
 		/// window, which is called when the cursor enters or leaves the client area of
 		/// the window.
 		/// </summary>
-		public static readonly Delegates.SetCursorEnterCallback SetCursorEnterCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern CursorEnterFun SetCursorEnterCallback(IntPtr window, CursorEnterFun cbfun);
 
 		/// <summary>
 		/// This function sets the scroll callback of the specified window, which is
 		/// called when a scrolling device is used, such as a mouse wheel or scrolling
 		/// area of a touchpad.
 		/// </summary>
-		public static readonly Delegates.SetScrollCallback SetScrollCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new scroll callback, or `NULL` to remove the currently
+		/// set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ScrollFun SetScrollCallback(IntPtr window, ScrollFun cbfun);
 
 		/// <summary>
 		/// This function sets the file drop callback of the specified window, which is
 		/// called when one or more dragged files are dropped on the window.
 		/// </summary>
-		public static readonly Delegates.SetDropCallback SetDropCallback;
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new file drop callback, or `NULL` to remove the
+		/// currently set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetDropCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern DropFun SetDropCallback(IntPtr window, DropFun cbfun);
 
 		/// <summary>
 		/// This function returns whether the specified joystick is present.
 		/// </summary>
-		public static readonly Delegates.JoystickPresent JoystickPresent;
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the joystick is present, or `GLFW_FALSE` otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwJoystickPresent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int JoystickPresent(int joy);
 
 		/// <summary>
 		/// This function returns the values of all axes of the specified joystick.
 		/// Each element in the array is a value between -1.0 and 1.0.
 		/// </summary>
-		public static readonly Delegates.GetJoystickAxes GetJoystickAxes;
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of axis values in the returned
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
+		/// </param>
+		/// <returns>
+		/// An array of axis values, or `NULL` if the joystick is not present or
+		/// an [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern float[] GetJoystickAxes(int joy, out int count);
 
 		/// <summary>
 		/// This function returns the state of all buttons of the specified joystick.
 		/// Each element in the array is either `GLFW_PRESS` or `GLFW_RELEASE`.
 		/// </summary>
-		public static readonly Delegates.GetJoystickButtons GetJoystickButtons;
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of button states in the returned
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
+		/// </param>
+		/// <returns>
+		/// An array of button states, or `NULL` if the joystick is not present
+		/// or an [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetJoystickButtons(int joy, out int count);
 
 		/// <summary>
 		/// This function returns the name, encoded as UTF-8, of the specified joystick.
 		/// The returned string is allocated and freed by GLFW.  You should not free it
 		/// yourself.
 		/// </summary>
-		public static readonly Delegates.GetJoystickName GetJoystickName;
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded name of the joystick, or `NULL` if the joystick
+		/// is not present or an [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetJoystickName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetJoystickName(int joy);
 
 		/// <summary>
 		/// This function sets the joystick configuration callback, or removes the
 		/// currently set callback.  This is called when a joystick is connected to or
 		/// disconnected from the system.
 		/// </summary>
-		public static readonly Delegates.SetJoystickCallback SetJoystickCallback;
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwSetJoystickCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern JoystickFun SetJoystickCallback(JoystickFun cbfun);
 
 		/// <summary>
 		/// This function sets the system clipboard to the specified, UTF-8 encoded
 		/// string.
 		/// </summary>
-		public static readonly Delegates.SetClipboardString SetClipboardString;
+		/// <param name="window">
+		/// The window that will own the clipboard contents.
+		/// </param>
+		/// <param name="string">
+		/// A UTF-8 encoded string.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetClipboardString(IntPtr window, string @string);
 
 		/// <summary>
 		/// This function returns the contents of the system clipboard, if it contains
@@ -1859,33 +1825,60 @@ namespace GLFWDotNet
 		/// if its contents cannot be converted, `NULL` is returned and a @ref
 		/// GLFW_FORMAT_UNAVAILABLE error is generated.
 		/// </summary>
-		public static readonly Delegates.GetClipboardString GetClipboardString;
+		/// <param name="window">
+		/// The window that will request the clipboard contents.
+		/// </param>
+		/// <returns>
+		/// The contents of the clipboard as a UTF-8 encoded string, or `NULL`
+		/// if an [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string GetClipboardString(IntPtr window);
 
 		/// <summary>
 		/// This function returns the value of the GLFW timer.  Unless the timer has
 		/// been set using @ref glfwSetTime, the timer measures time elapsed since GLFW
 		/// was initialized.
 		/// </summary>
-		public static readonly Delegates.GetTime GetTime;
+		/// <returns>
+		/// The current value, in seconds, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern double GetTime();
 
 		/// <summary>
 		/// This function sets the value of the GLFW timer.  It then continues to count
 		/// up from that value.  The value must be a positive finite number less than
 		/// or equal to 18446744073.0, which is approximately 584.5 years.
 		/// </summary>
-		public static readonly Delegates.SetTime SetTime;
+		/// <param name="time">
+		/// The new value, in seconds.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SetTime(double time);
 
 		/// <summary>
 		/// This function returns the current value of the raw timer, measured in
 		/// 1&nbsp;/&nbsp;frequency seconds.  To get the frequency, call @ref
 		/// glfwGetTimerFrequency.
 		/// </summary>
-		public static readonly Delegates.GetTimerValue GetTimerValue;
+		/// <returns>
+		/// The value of the timer, or zero if an 
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetTimerValue", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong GetTimerValue();
 
 		/// <summary>
 		/// This function returns the frequency, in Hz, of the raw timer.
 		/// </summary>
-		public static readonly Delegates.GetTimerFrequency GetTimerFrequency;
+		/// <returns>
+		/// The frequency of the timer, in Hz, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetTimerFrequency", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern ulong GetTimerFrequency();
 
 		/// <summary>
 		/// This function makes the OpenGL or OpenGL ES context of the specified window
@@ -1893,13 +1886,23 @@ namespace GLFWDotNet
 		/// a single thread at a time and each thread can have only a single current
 		/// context at a time.
 		/// </summary>
-		public static readonly Delegates.MakeContextCurrent MakeContextCurrent;
+		/// <param name="window">
+		/// The window whose context to make current, or `NULL` to
+		/// detach the current context.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwMakeContextCurrent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void MakeContextCurrent(IntPtr window);
 
 		/// <summary>
 		/// This function returns the window whose OpenGL or OpenGL ES context is
 		/// current on the calling thread.
 		/// </summary>
-		public static readonly Delegates.GetCurrentContext GetCurrentContext;
+		/// <returns>
+		/// The window whose context is current, or `NULL` if no window's
+		/// context is current.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetCurrentContext", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetCurrentContext();
 
 		/// <summary>
 		/// This function swaps the front and back buffers of the specified window when
@@ -1907,7 +1910,11 @@ namespace GLFWDotNet
 		/// zero, the GPU driver waits the specified number of screen updates before
 		/// swapping the buffers.
 		/// </summary>
-		public static readonly Delegates.SwapBuffers SwapBuffers;
+		/// <param name="window">
+		/// The window whose buffers to swap.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSwapBuffers", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SwapBuffers(IntPtr window);
 
 		/// <summary>
 		/// This function sets the swap interval for the current OpenGL or OpenGL ES
@@ -1916,7 +1923,12 @@ namespace GLFWDotNet
 		/// is sometimes called _vertical synchronization_, _vertical retrace
 		/// synchronization_ or just _vsync_.
 		/// </summary>
-		public static readonly Delegates.SwapInterval SwapInterval;
+		/// <param name="interval">
+		/// The minimum number of screen updates to wait for
+		/// until the buffers are swapped by @ref glfwSwapBuffers.
+		/// </param>
+		[DllImport(Library, EntryPoint = "glfwSwapInterval", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void SwapInterval(int interval);
 
 		/// <summary>
 		/// This function returns whether the specified
@@ -1924,20 +1936,40 @@ namespace GLFWDotNet
 		/// OpenGL ES context.  It searches both for client API extension and context
 		/// creation API extensions.
 		/// </summary>
-		public static readonly Delegates.ExtensionSupported ExtensionSupported;
+		/// <param name="extension">
+		/// The ASCII encoded name of the extension.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the extension is available, or `GLFW_FALSE`
+		/// otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwExtensionSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int ExtensionSupported(string extension);
 
 		/// <summary>
 		/// This function returns the address of the specified OpenGL or OpenGL ES
 		/// [core or extension function](@ref context_glext), if it is supported
 		/// by the current context.
 		/// </summary>
-		public static readonly Delegates.GetProcAddress GetProcAddress;
+		/// <param name="procname">
+		/// The ASCII encoded name of the function.
+		/// </param>
+		/// <returns>
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetProcAddress(string procname);
 
 		/// <summary>
 		/// This function returns whether the Vulkan loader has been found.  This check
 		/// is performed by @ref glfwInit.
 		/// </summary>
-		public static readonly Delegates.VulkanSupported VulkanSupported;
+		/// <returns>
+		/// `GLFW_TRUE` if Vulkan is available, or `GLFW_FALSE` otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwVulkanSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int VulkanSupported();
 
 		/// <summary>
 		/// This function returns an array of names of Vulkan instance extensions required
@@ -1946,7 +1978,22 @@ namespace GLFWDotNet
 		/// additional extensions you can pass this list directly to the
 		/// `VkInstanceCreateInfo` struct.
 		/// </summary>
-		public static readonly Delegates.GetRequiredInstanceExtensions GetRequiredInstanceExtensions;
+		/// <remarks>
+		/// Additional extensions may be required by future versions of GLFW.
+		/// You should check if any extensions you wish to enable are already in the
+		/// returned array, as it is an error to specify an extension more than once in
+		/// the `VkInstanceCreateInfo` struct.
+		/// </remarks>
+		/// <param name="count">
+		/// Where to store the number of extensions in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of ASCII encoded extension names, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetRequiredInstanceExtensions", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern string[] GetRequiredInstanceExtensions(out uint count);
 
 		/// <summary>
 		/// This function returns the address of the specified Vulkan core or extension
@@ -1954,218 +2001,81 @@ namespace GLFWDotNet
 		/// return any function exported from the Vulkan loader, including at least the
 		/// following functions:
 		/// </summary>
-		public static readonly Delegates.GetInstanceProcAddress GetInstanceProcAddress;
+		/// <param name="instance">
+		/// The Vulkan instance to query, or `NULL` to retrieve
+		/// functions related to instance creation.
+		/// </param>
+		/// <param name="procname">
+		/// The ASCII encoded name of the function.
+		/// </param>
+		/// <returns>
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetInstanceProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetInstanceProcAddress(IntPtr instance, string procname);
 
 		/// <summary>
 		/// This function returns whether the specified queue family of the specified
 		/// physical device supports presentation to the platform GLFW was built for.
 		/// </summary>
-		public static readonly Delegates.GetPhysicalDevicePresentationSupport GetPhysicalDevicePresentationSupport;
+		/// <param name="instance">
+		/// The instance that the physical device belongs to.
+		/// </param>
+		/// <param name="device">
+		/// The physical device that the queue family belongs to.
+		/// </param>
+		/// <param name="queuefamily">
+		/// The index of the queue family to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the queue family supports presentation, or
+		/// `GLFW_FALSE` otherwise.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwGetPhysicalDevicePresentationSupport", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int GetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
 
 		/// <summary>
 		/// This function creates a Vulkan surface for the specified window.
 		/// </summary>
-		public static readonly Delegates.CreateWindowSurface CreateWindowSurface;
+		/// <remarks>
+		/// If an error occurs before the creation call is made, GLFW returns
+		/// the Vulkan error code most appropriate for the error.  Appropriate use of
+		/// </remarks>
+		/// <param name="instance">
+		/// The Vulkan instance to create the surface in.
+		/// </param>
+		/// <param name="window">
+		/// The window to create the surface for.
+		/// </param>
+		/// <param name="allocator">
+		/// The allocator to use, or `NULL` to use the default
+		/// allocator.
+		/// </param>
+		/// <param name="surface">
+		/// Where to store the handle of the surface.  This is set
+		/// to `VK_NULL_HANDLE` if an error occurred.
+		/// </param>
+		/// <returns>
+		/// `VK_SUCCESS` if successful, or a Vulkan error code if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		[DllImport(Library, EntryPoint = "glfwCreateWindowSurface", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+		public static extern int CreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
+
+		private class GLFWAssemblyLoadContext : AssemblyLoadContext
+		{
+			internal void Init()
+			{
+				this.LoadUnmanagedDllFromPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "x64" : "x86", Library));
+			}
+
+			protected override Assembly Load(AssemblyName assemblyName) => null;
+		}
 
 		static GLFW()
 		{
-			if (Environment.Is64BitProcess)
-			{
-				Init = X64.Init;
-				Terminate = X64.Terminate;
-				GetVersion = X64.GetVersion;
-				GetVersionString = X64.GetVersionString;
-				SetErrorCallback = X64.SetErrorCallback;
-				GetMonitors = X64.GetMonitors;
-				GetPrimaryMonitor = X64.GetPrimaryMonitor;
-				GetMonitorPos = X64.GetMonitorPos;
-				GetMonitorPhysicalSize = X64.GetMonitorPhysicalSize;
-				GetMonitorName = X64.GetMonitorName;
-				SetMonitorCallback = X64.SetMonitorCallback;
-				GetVideoModes = X64.GetVideoModes;
-				GetVideoMode = X64.GetVideoMode;
-				SetGamma = X64.SetGamma;
-				GetGammaRamp = X64.GetGammaRamp;
-				SetGammaRamp = X64.SetGammaRamp;
-				DefaultWindowHints = X64.DefaultWindowHints;
-				WindowHint = X64.WindowHint;
-				CreateWindow = X64.CreateWindow;
-				DestroyWindow = X64.DestroyWindow;
-				WindowShouldClose = X64.WindowShouldClose;
-				SetWindowShouldClose = X64.SetWindowShouldClose;
-				SetWindowTitle = X64.SetWindowTitle;
-				SetWindowIcon = X64.SetWindowIcon;
-				GetWindowPos = X64.GetWindowPos;
-				SetWindowPos = X64.SetWindowPos;
-				GetWindowSize = X64.GetWindowSize;
-				SetWindowSizeLimits = X64.SetWindowSizeLimits;
-				SetWindowAspectRatio = X64.SetWindowAspectRatio;
-				SetWindowSize = X64.SetWindowSize;
-				GetFramebufferSize = X64.GetFramebufferSize;
-				GetWindowFrameSize = X64.GetWindowFrameSize;
-				IconifyWindow = X64.IconifyWindow;
-				RestoreWindow = X64.RestoreWindow;
-				MaximizeWindow = X64.MaximizeWindow;
-				ShowWindow = X64.ShowWindow;
-				HideWindow = X64.HideWindow;
-				FocusWindow = X64.FocusWindow;
-				GetWindowMonitor = X64.GetWindowMonitor;
-				SetWindowMonitor = X64.SetWindowMonitor;
-				GetWindowAttrib = X64.GetWindowAttrib;
-				SetWindowUserPointer = X64.SetWindowUserPointer;
-				GetWindowUserPointer = X64.GetWindowUserPointer;
-				SetWindowPosCallback = X64.SetWindowPosCallback;
-				SetWindowSizeCallback = X64.SetWindowSizeCallback;
-				SetWindowCloseCallback = X64.SetWindowCloseCallback;
-				SetWindowRefreshCallback = X64.SetWindowRefreshCallback;
-				SetWindowFocusCallback = X64.SetWindowFocusCallback;
-				SetWindowIconifyCallback = X64.SetWindowIconifyCallback;
-				SetFramebufferSizeCallback = X64.SetFramebufferSizeCallback;
-				PollEvents = X64.PollEvents;
-				WaitEvents = X64.WaitEvents;
-				WaitEventsTimeout = X64.WaitEventsTimeout;
-				PostEmptyEvent = X64.PostEmptyEvent;
-				GetInputMode = X64.GetInputMode;
-				SetInputMode = X64.SetInputMode;
-				GetKeyName = X64.GetKeyName;
-				GetKey = X64.GetKey;
-				GetMouseButton = X64.GetMouseButton;
-				GetCursorPos = X64.GetCursorPos;
-				SetCursorPos = X64.SetCursorPos;
-				CreateCursor = X64.CreateCursor;
-				CreateStandardCursor = X64.CreateStandardCursor;
-				DestroyCursor = X64.DestroyCursor;
-				SetCursor = X64.SetCursor;
-				SetKeyCallback = X64.SetKeyCallback;
-				SetCharCallback = X64.SetCharCallback;
-				SetCharModsCallback = X64.SetCharModsCallback;
-				SetMouseButtonCallback = X64.SetMouseButtonCallback;
-				SetCursorPosCallback = X64.SetCursorPosCallback;
-				SetCursorEnterCallback = X64.SetCursorEnterCallback;
-				SetScrollCallback = X64.SetScrollCallback;
-				SetDropCallback = X64.SetDropCallback;
-				JoystickPresent = X64.JoystickPresent;
-				GetJoystickAxes = X64.GetJoystickAxes;
-				GetJoystickButtons = X64.GetJoystickButtons;
-				GetJoystickName = X64.GetJoystickName;
-				SetJoystickCallback = X64.SetJoystickCallback;
-				SetClipboardString = X64.SetClipboardString;
-				GetClipboardString = X64.GetClipboardString;
-				GetTime = X64.GetTime;
-				SetTime = X64.SetTime;
-				GetTimerValue = X64.GetTimerValue;
-				GetTimerFrequency = X64.GetTimerFrequency;
-				MakeContextCurrent = X64.MakeContextCurrent;
-				GetCurrentContext = X64.GetCurrentContext;
-				SwapBuffers = X64.SwapBuffers;
-				SwapInterval = X64.SwapInterval;
-				ExtensionSupported = X64.ExtensionSupported;
-				GetProcAddress = X64.GetProcAddress;
-				VulkanSupported = X64.VulkanSupported;
-				GetRequiredInstanceExtensions = X64.GetRequiredInstanceExtensions;
-				GetInstanceProcAddress = X64.GetInstanceProcAddress;
-				GetPhysicalDevicePresentationSupport = X64.GetPhysicalDevicePresentationSupport;
-				CreateWindowSurface = X64.CreateWindowSurface;
-			}
-			else
-			{
-				Init = X86.Init;
-				Terminate = X86.Terminate;
-				GetVersion = X86.GetVersion;
-				GetVersionString = X86.GetVersionString;
-				SetErrorCallback = X86.SetErrorCallback;
-				GetMonitors = X86.GetMonitors;
-				GetPrimaryMonitor = X86.GetPrimaryMonitor;
-				GetMonitorPos = X86.GetMonitorPos;
-				GetMonitorPhysicalSize = X86.GetMonitorPhysicalSize;
-				GetMonitorName = X86.GetMonitorName;
-				SetMonitorCallback = X86.SetMonitorCallback;
-				GetVideoModes = X86.GetVideoModes;
-				GetVideoMode = X86.GetVideoMode;
-				SetGamma = X86.SetGamma;
-				GetGammaRamp = X86.GetGammaRamp;
-				SetGammaRamp = X86.SetGammaRamp;
-				DefaultWindowHints = X86.DefaultWindowHints;
-				WindowHint = X86.WindowHint;
-				CreateWindow = X86.CreateWindow;
-				DestroyWindow = X86.DestroyWindow;
-				WindowShouldClose = X86.WindowShouldClose;
-				SetWindowShouldClose = X86.SetWindowShouldClose;
-				SetWindowTitle = X86.SetWindowTitle;
-				SetWindowIcon = X86.SetWindowIcon;
-				GetWindowPos = X86.GetWindowPos;
-				SetWindowPos = X86.SetWindowPos;
-				GetWindowSize = X86.GetWindowSize;
-				SetWindowSizeLimits = X86.SetWindowSizeLimits;
-				SetWindowAspectRatio = X86.SetWindowAspectRatio;
-				SetWindowSize = X86.SetWindowSize;
-				GetFramebufferSize = X86.GetFramebufferSize;
-				GetWindowFrameSize = X86.GetWindowFrameSize;
-				IconifyWindow = X86.IconifyWindow;
-				RestoreWindow = X86.RestoreWindow;
-				MaximizeWindow = X86.MaximizeWindow;
-				ShowWindow = X86.ShowWindow;
-				HideWindow = X86.HideWindow;
-				FocusWindow = X86.FocusWindow;
-				GetWindowMonitor = X86.GetWindowMonitor;
-				SetWindowMonitor = X86.SetWindowMonitor;
-				GetWindowAttrib = X86.GetWindowAttrib;
-				SetWindowUserPointer = X86.SetWindowUserPointer;
-				GetWindowUserPointer = X86.GetWindowUserPointer;
-				SetWindowPosCallback = X86.SetWindowPosCallback;
-				SetWindowSizeCallback = X86.SetWindowSizeCallback;
-				SetWindowCloseCallback = X86.SetWindowCloseCallback;
-				SetWindowRefreshCallback = X86.SetWindowRefreshCallback;
-				SetWindowFocusCallback = X86.SetWindowFocusCallback;
-				SetWindowIconifyCallback = X86.SetWindowIconifyCallback;
-				SetFramebufferSizeCallback = X86.SetFramebufferSizeCallback;
-				PollEvents = X86.PollEvents;
-				WaitEvents = X86.WaitEvents;
-				WaitEventsTimeout = X86.WaitEventsTimeout;
-				PostEmptyEvent = X86.PostEmptyEvent;
-				GetInputMode = X86.GetInputMode;
-				SetInputMode = X86.SetInputMode;
-				GetKeyName = X86.GetKeyName;
-				GetKey = X86.GetKey;
-				GetMouseButton = X86.GetMouseButton;
-				GetCursorPos = X86.GetCursorPos;
-				SetCursorPos = X86.SetCursorPos;
-				CreateCursor = X86.CreateCursor;
-				CreateStandardCursor = X86.CreateStandardCursor;
-				DestroyCursor = X86.DestroyCursor;
-				SetCursor = X86.SetCursor;
-				SetKeyCallback = X86.SetKeyCallback;
-				SetCharCallback = X86.SetCharCallback;
-				SetCharModsCallback = X86.SetCharModsCallback;
-				SetMouseButtonCallback = X86.SetMouseButtonCallback;
-				SetCursorPosCallback = X86.SetCursorPosCallback;
-				SetCursorEnterCallback = X86.SetCursorEnterCallback;
-				SetScrollCallback = X86.SetScrollCallback;
-				SetDropCallback = X86.SetDropCallback;
-				JoystickPresent = X86.JoystickPresent;
-				GetJoystickAxes = X86.GetJoystickAxes;
-				GetJoystickButtons = X86.GetJoystickButtons;
-				GetJoystickName = X86.GetJoystickName;
-				SetJoystickCallback = X86.SetJoystickCallback;
-				SetClipboardString = X86.SetClipboardString;
-				GetClipboardString = X86.GetClipboardString;
-				GetTime = X86.GetTime;
-				SetTime = X86.SetTime;
-				GetTimerValue = X86.GetTimerValue;
-				GetTimerFrequency = X86.GetTimerFrequency;
-				MakeContextCurrent = X86.MakeContextCurrent;
-				GetCurrentContext = X86.GetCurrentContext;
-				SwapBuffers = X86.SwapBuffers;
-				SwapInterval = X86.SwapInterval;
-				ExtensionSupported = X86.ExtensionSupported;
-				GetProcAddress = X86.GetProcAddress;
-				VulkanSupported = X86.VulkanSupported;
-				GetRequiredInstanceExtensions = X86.GetRequiredInstanceExtensions;
-				GetInstanceProcAddress = X86.GetInstanceProcAddress;
-				GetPhysicalDevicePresentationSupport = X86.GetPhysicalDevicePresentationSupport;
-				CreateWindowSurface = X86.CreateWindowSurface;
-			}
+			new GLFWAssemblyLoadContext().Init();
 		}
-
 	}
 }

@@ -7,7 +7,7 @@ namespace SharpBgfxIntegration
 {
     public class Program
     {
-        [DllImport("glfw3_x64.dll", EntryPoint = "glfwGetWin32Window", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("glfw3", EntryPoint = "glfwGetWin32Window", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr GetWin32Window(IntPtr window);
 
         public static int Main(string[] args)

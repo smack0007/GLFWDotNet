@@ -6,16 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\..\..\License.txt" Link="License.txt">
+    <Content Include="..\..\License.txt" Link="License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\External\GLFW\glfw3.h" Link="glfw3.h">
+    <None Include="..\..\ext\GLFW\glfw3.h" Link="glfw3.h">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\..\..\External\GLFW\glfw3native.h" Link="glfw3native.h">
+    <None Include="..\..\ext\GLFW\glfw3native.h" Link="glfw3native.h">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

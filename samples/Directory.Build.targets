@@ -1,0 +1,19 @@
+<Project>
+    <ItemGroup>
+        <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />
+        
+        <Reference Include="GLDotNet">
+            <HintPath>$(RepositoryRootDirectory)ext\GLDotNet\GLDotNet.dll</HintPath>
+        </Reference>
+
+        <Compile Include="$(MSBuildThisFileDirectory)GLFWPlatformContext.cs" />
+    </ItemGroup>
+
+    <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
+        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x64\glfw3.dll"
+              DestinationFolder="$(TargetDir)x64\" />
+
+        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x86\glfw3.dll"
+              DestinationFolder="$(TargetDir)x86\" />
+    </Target>
+</Project>

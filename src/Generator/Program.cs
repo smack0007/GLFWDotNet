@@ -726,7 +726,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText(@"..\..\..\..\GLFWDotNet\GLFW.cs", sb.ToString());
+            File.WriteAllText(@"..\..\..\..\src\GLFWDotNet\GLFW.cs", sb.ToString());
         }
     }
 }

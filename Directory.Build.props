@@ -1,5 +1,8 @@
 <Project>
     <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
         <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
+        <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
+        <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
     </PropertyGroup>
 </Project>

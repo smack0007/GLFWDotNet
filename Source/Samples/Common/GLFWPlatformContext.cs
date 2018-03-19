@@ -1,5 +1,6 @@
 ﻿using System;
 using GLDotNet;
+using static GLFWDotNet.GLFW;
 
 namespace GLFWDotNet.Samples
 {
@@ -24,17 +25,17 @@ namespace GLFWDotNet.Samples
 
         public IntPtr GetProcAddress(string name)
         {
-            return GLFW.GetProcAddress(name);
+            return glfwGetProcAddress(name);
         }
 
         public void MakeCurrent()
         {
-            GLFW.MakeContextCurrent(this.Window);
+            glfwMakeContextCurrent(this.Window);
         }
 
         public void SwapBuffers()
         {
-            GLFW.SwapBuffers(this.Window);
+            glfwSwapBuffers(this.Window);
         }
     }
 }

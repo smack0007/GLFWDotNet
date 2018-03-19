@@ -175,87 +175,6 @@ namespace Generator
             Parse(lines, enums, functions, callbacks, structs);
 
             Write(enums, functions, callbacks, structs);
-
-            WriteEnumFile(
-                enums.Where(x => x.Value.StartsWith("0x00022") || x.Value.StartsWith("0x00030") || x.Value.StartsWith("0x00031") || x.Value.StartsWith("0x00032") || x.Value.StartsWith("0x00035")
-                                 || x.Name == "GLFW_NO_ROBUSTNESS" || x.Name == "GLFW_OPENGL_ANY_PROFILE" || x.Name == "GLFW_ANY_RELEASE_BEHAVIOR"),
-                x =>
-                {
-                    return InflectEnumName(x.Substring("GLFW_".Length));
-                },
-                "ContextHints");
-
-            WriteEnumFile(
-                enums.Where(x => x.Value.StartsWith("0x00021")),
-                x =>
-                {
-                    return InflectEnumName(x.Substring("GLFW_".Length));
-                },
-                "FramebufferHints");
-
-            var keyEnums = enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST"));
-
-            Func<string, string> inflectKeyEnum = x =>
-            {
-                string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
-
-                if (name.StartsWith("_"))
-                    name = name.Replace("_", "D");
-
-                if (name.StartsWith("Kp"))
-                    name = name.Replace("Kp", "KeyPad");
-
-                return name;
-            };
-
-            WriteEnumFile(
-                keyEnums,
-                inflectKeyEnum,
-                "Keys");
-
-            WriteKeyboardMethods(keyEnums, inflectKeyEnum);
-
-            WriteEnumFile(
-                enums.Where(x => x.Name.StartsWith("GLFW_MOD")),
-                x =>
-                {
-                    return InflectEnumName(x.Substring("GLFW_MOD".Length));
-                },
-                "KeyModifiers");
-                       
-            WriteEnumFile(
-                enums.Where(x => x.Name.StartsWith("GLFW_JOYSTICK") && !x.Name.EndsWith("LAST")),
-                x =>
-                {
-                    string name = InflectEnumName(x.Substring("GLFW_JOYSTICK".Length));
-
-                    if (name.StartsWith("_"))
-                        name = name.Replace("_", "Button");
-
-                    return name;
-                },
-                "JoystickButtons");
-
-            WriteEnumFile(
-                enums.Where(x => x.Name.StartsWith("GLFW_MOUSE_BUTTON") && !x.Name.EndsWith("LAST")),
-                x =>
-                {
-                    string name = InflectEnumName(x.Substring("GLFW_MOUSE_BUTTON".Length));
-
-                    if (name.StartsWith("_"))
-                        name = name.Replace("_", "Button");
-
-                    return name;
-                },
-                "MouseButtons");
-
-            WriteEnumFile(
-                enums.Where(x => x.Value.StartsWith("0x00020")),
-                x =>
-                {
-                    return InflectEnumName(x.Substring("GLFW_".Length));
-                },
-                "WindowHints");
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -592,33 +511,6 @@ namespace Generator
                 .Replace("size", "Size");
         }
 
-        private static string InflectGLFWName(string input)
-        {
-            if (input.StartsWith("glfw") || input.StartsWith("GLFW"))
-            {
-                input = input.Substring("GLFW".Length);
-                input = input.Substring(0, 1).ToUpper() + input.Substring(1);
-
-                if (input.EndsWith("fun"))
-                {
-                    input = input.Substring(0, input.Length - "fun".Length) + "Fun";
-                    input = ReplaceCommonWords(input);
-                }
-
-                if (input == "Vidmode")
-                {
-                    input = "VidMode";
-                }
-
-                if (input == "Gammaramp")
-                {
-                    input = "GammaRamp";
-                }
-            }
-
-            return input;
-        }
-
         private static string GetType(string type, List<StructData> structs)
         {
             if (type.StartsWith("const "))
@@ -649,8 +541,6 @@ namespace Generator
                     }
                 }
             }
-
-            type = InflectGLFWName(type);
 
             switch (type)
             {
@@ -688,6 +578,8 @@ namespace Generator
                 case "unsigned short*":
                     return "ushort[]";
 
+                case "GLFWglproc":
+                case "GLFWvkproc":
                 case "VkAllocationCallbacks*":
                 case "VkInstance":
                 case "VkPhysicalDevice":
@@ -722,11 +614,6 @@ namespace Generator
             return type;
         }
 
-        private static string GetFunctionName(string function)
-        {
-            return InflectGLFWName(function);
-        }
-
         private static string GetParamName(string name)
         {
             switch (name)
@@ -739,47 +626,6 @@ namespace Generator
             }
 
             return name;
-        }
-
-        private static string FormatDocs(string input, string padding)
-        {
-            return
-                padding + "/// " +
-                string.Join(
-                    Environment.NewLine + padding + "/// ",
-                    input.TrimEnd().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                );
-        }
-
-        private static void WriteDocs(IDocs docs, StringBuilder sb, string padding, bool descriptionOnly = false)
-        {
-            sb.AppendLine($"{padding}/// <summary>");
-            sb.AppendLine(FormatDocs(docs.Description, padding));
-            sb.AppendLine($"{padding}/// </summary>");
-
-            if (descriptionOnly)
-                return;
-
-            if (!string.IsNullOrEmpty(docs.Remarks))
-            {
-                sb.AppendLine($"{padding}/// <remarks>");
-                sb.AppendLine(FormatDocs(docs.Remarks, padding));
-                sb.AppendLine($"{padding}/// </remarks>");
-            }
-
-            foreach (var param in docs.GetParamDocs())
-            {
-                sb.AppendLine($"{padding}/// <param name=\"{param.Key}\">");
-                sb.AppendLine(FormatDocs(param.Value, padding));
-                sb.AppendLine($"{padding}/// </param>");
-            }
-
-            if (!string.IsNullOrEmpty(docs.ReturnDescription))
-            {
-                sb.AppendLine($"{padding}/// <returns>");
-                sb.AppendLine(FormatDocs(docs.ReturnDescription, padding));
-                sb.AppendLine($"{padding}/// </returns>");
-            }
         }
 
         private static void Write(
@@ -817,11 +663,8 @@ namespace Generator
 
             foreach (var @enum in enums)
             {
-                string name = @enum.Name.Substring(5);
+                string name = @enum.Name;
                 string value = @enum.Value;
-
-                if (value.StartsWith("GLFW_"))                
-                    value = value.Substring(5);
 
                 sb.AppendLine($"\t\tpublic const int {name} = {value};");
             }
@@ -835,9 +678,8 @@ namespace Generator
 
                 foreach (var member in @struct.Members)
                 {
-                    var name = InflectEnumName(member.Name);
                     var type = GetParamType(member.Type, ParamModifier.None, structs);
-                    sb.AppendLine($"\t\t\tpublic {type} {name};");
+                    sb.AppendLine($"\t\t\tpublic {type} {member.Name};");
                 }
 
                 sb.AppendLine("\t\t}");
@@ -847,24 +689,20 @@ namespace Generator
 
             foreach (var callback in callbacks)
             {
-                WriteDocs(callback, sb, "\t\t");
-
                 string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
                 sb.AppendLine("\t\t[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]");
-                sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {GetFunctionName(callback.Name)}({parameters});");
+                sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {callback.Name}({parameters});");
 
                 sb.AppendLine();
             }
                         
             foreach (var function in functions)
             {
-                WriteDocs(function, sb, "\t\t");
-
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
                 sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
-                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {GetFunctionName(function.Name)}({parameters});");
+                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
 
                 sb.AppendLine();
             }
@@ -888,99 +726,7 @@ namespace Generator
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            File.WriteAllText(@"..\..\Library\GLFWDotNet\GLFW.cs", sb.ToString());
-        }
-
-        private static string InflectEnumName(string input)
-        {
-            string[] parts = input.Split('_');
-            string[] temp = new string[parts.Length];
-
-            for (int i = 0; i < parts.Length; i++)
-            {
-                if (parts[i].Length > 0)
-                {
-                    int capitalizeLength = 1;
-
-                    if (parts[i].Length > 1 && char.IsDigit(parts[i][0]))
-                        capitalizeLength = 2;
-
-                    temp[i] = parts[i].Substring(0, capitalizeLength).ToUpper() + parts[i].Substring(capitalizeLength).ToLower();
-                }
-            }
-
-            string name = string.Join(string.Empty, temp);
-
-            if (char.IsDigit(name[0]))
-                name = "_" + name;
-
-            return ReplaceCommonWords(name);
-        }
-
-        private static void WriteEnumFile(
-            IEnumerable<EnumData> enums,
-            Func<string, string> inflectName,
-            string enumName)
-        {
-            StringBuilder sb = new StringBuilder(1024);
-
-            sb.AppendLine("using System;");
-            sb.AppendLine();
-            sb.AppendLine("namespace GLFWDotNet");
-            sb.AppendLine("{");
-            sb.AppendLine($"\tpublic enum {enumName}");
-            sb.AppendLine("\t{");
-
-            foreach (var @enum in enums)
-            {
-                string leftName = inflectName(@enum.Name);
-                string rightName = @enum.Name.Substring(5);
-                sb.AppendLine($"\t\t{leftName} = GLFW.{rightName},");
-            }
-
-            sb.AppendLine("\t}");
-            sb.AppendLine("}");
-
-            File.WriteAllText($@"..\..\Library\GLFWDotNet\{enumName}.Generated.cs", sb.ToString());
-        }
-
-        private static void WriteKeyboardMethods(IEnumerable<EnumData> keyEnums, Func<string, string> inflectName)
-        {
-            StringBuilder sb = new StringBuilder(1024);
-
-            sb.AppendLine("using System;");
-            sb.AppendLine();
-            sb.AppendLine("namespace GLFWDotNet");
-            sb.AppendLine("{");
-            sb.AppendLine($"\tpublic partial class Keyboard");
-            sb.AppendLine("\t{");
-
-            var keysToMap = keyEnums.Skip(1).ToArray();
-
-            sb.AppendLine($"\t\tprivate readonly bool[] keyMap = new bool[{keysToMap.Length}];");
-            sb.AppendLine();
-
-            sb.AppendLine("\t\tprivate int GetKeyMapIndex(Keys key)");
-            sb.AppendLine("\t\t{");
-            sb.AppendLine("\t\t\tswitch(key)");
-            sb.AppendLine("\t\t\t{");
-
-            for (int i = 0; i < keysToMap.Length; i++)
-            {
-                string name = inflectName(keysToMap[i].Name);
-                sb.AppendLine($"\t\t\t\tcase Keys.{name}: return {i};");
-            }
-
-            sb.AppendLine("\t\t\t}");
-            sb.AppendLine();
-
-            sb.AppendLine("\t\t\treturn -1;");
-            sb.AppendLine("\t\t}");
-
-            sb.AppendLine("\t}");
-            sb.AppendLine("}");
-
-            File.WriteAllText($@"..\..\Library\GLFWDotNet\Keyboard.Generated.cs", sb.ToString());
+            File.WriteAllText(@"..\..\..\..\..\Library\GLFWDotNet\GLFW.cs", sb.ToString());
         }
     }
 }

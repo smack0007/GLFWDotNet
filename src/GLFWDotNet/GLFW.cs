@@ -30,8 +30,6 @@ namespace GLFWDotNet
 {
 	public static partial class GLFW
 	{
-		private const string Library = "glfw3";
-
 		public const int GLFW_VERSION_MAJOR = 3;
 		public const int GLFW_VERSION_MINOR = 2;
 		public const int GLFW_VERSION_REVISION = 1;
@@ -336,304 +334,992 @@ namespace GLFWDotNet
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWjoystickfun(int joy, int @event);
 
-		[DllImport(Library, EntryPoint = "glfwInit", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwInit();
-
-		[DllImport(Library, EntryPoint = "glfwTerminate", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwTerminate();
-
-		[DllImport(Library, EntryPoint = "glfwGetVersion", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetVersion(out int major, out int minor, out int rev);
-
-		[DllImport(Library, EntryPoint = "glfwGetVersionString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetVersionString();
-
-		[DllImport(Library, EntryPoint = "glfwSetErrorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwGetMonitors", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr[] glfwGetMonitors(out int count);
-
-		[DllImport(Library, EntryPoint = "glfwGetPrimaryMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetPrimaryMonitor();
-
-		[DllImport(Library, EntryPoint = "glfwGetMonitorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
-
-		[DllImport(Library, EntryPoint = "glfwGetMonitorPhysicalSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
-
-		[DllImport(Library, EntryPoint = "glfwGetMonitorName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetMonitorName(IntPtr monitor);
-
-		[DllImport(Library, EntryPoint = "glfwSetMonitorCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwGetVideoModes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWvidmode glfwGetVideoModes(IntPtr monitor, out int count);
-
-		[DllImport(Library, EntryPoint = "glfwGetVideoMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWvidmode glfwGetVideoMode(IntPtr monitor);
-
-		[DllImport(Library, EntryPoint = "glfwSetGamma", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetGamma(IntPtr monitor, float gamma);
-
-		[DllImport(Library, EntryPoint = "glfwGetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWgammaramp glfwGetGammaRamp(IntPtr monitor);
-
-		[DllImport(Library, EntryPoint = "glfwSetGammaRamp", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp);
-
-		[DllImport(Library, EntryPoint = "glfwDefaultWindowHints", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwDefaultWindowHints();
-
-		[DllImport(Library, EntryPoint = "glfwWindowHint", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwWindowHint(int hint, int value);
-
-		[DllImport(Library, EntryPoint = "glfwCreateWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
-
-		[DllImport(Library, EntryPoint = "glfwDestroyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwDestroyWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwWindowShouldClose(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowShouldClose", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowShouldClose(IntPtr window, int value);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowTitle", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowTitle(IntPtr window, string title);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowIcon", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowIcon(IntPtr window, int count, GLFWimage images);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowPos(IntPtr window, int xpos, int ypos);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetWindowSize(IntPtr window, out int width, out int height);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowSizeLimits", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowAspectRatio", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowAspectRatio(IntPtr window, int numer, int denom);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowSize(IntPtr window, int width, int height);
-
-		[DllImport(Library, EntryPoint = "glfwGetFramebufferSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetFramebufferSize(IntPtr window, out int width, out int height);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowFrameSize", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
-
-		[DllImport(Library, EntryPoint = "glfwIconifyWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwIconifyWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwRestoreWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwRestoreWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwMaximizeWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwMaximizeWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwShowWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwShowWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwHideWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwHideWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwFocusWindow", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwFocusWindow(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetWindowMonitor(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowMonitor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowAttrib", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwGetWindowAttrib(IntPtr window, int attrib);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer);
-
-		[DllImport(Library, EntryPoint = "glfwGetWindowUserPointer", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetWindowUserPointer(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowposfun glfwSetWindowPosCallback(IntPtr window, GLFWwindowposfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowsizefun glfwSetWindowSizeCallback(IntPtr window, GLFWwindowsizefun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowCloseCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowclosefun glfwSetWindowCloseCallback(IntPtr window, GLFWwindowclosefun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowRefreshCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowrefreshfun glfwSetWindowRefreshCallback(IntPtr window, GLFWwindowrefreshfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowFocusCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowfocusfun glfwSetWindowFocusCallback(IntPtr window, GLFWwindowfocusfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetWindowIconifyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetFramebufferSizeCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwPollEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwPollEvents();
-
-		[DllImport(Library, EntryPoint = "glfwWaitEvents", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwWaitEvents();
-
-		[DllImport(Library, EntryPoint = "glfwWaitEventsTimeout", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwWaitEventsTimeout(double timeout);
-
-		[DllImport(Library, EntryPoint = "glfwPostEmptyEvent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwPostEmptyEvent();
-
-		[DllImport(Library, EntryPoint = "glfwGetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwGetInputMode(IntPtr window, int mode);
-
-		[DllImport(Library, EntryPoint = "glfwSetInputMode", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetInputMode(IntPtr window, int mode, int value);
-
-		[DllImport(Library, EntryPoint = "glfwGetKeyName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetKeyName(int key, int scancode);
-
-		[DllImport(Library, EntryPoint = "glfwGetKey", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwGetKey(IntPtr window, int key);
-
-		[DllImport(Library, EntryPoint = "glfwGetMouseButton", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwGetMouseButton(IntPtr window, int button);
-
-		[DllImport(Library, EntryPoint = "glfwGetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos);
-
-		[DllImport(Library, EntryPoint = "glfwSetCursorPos", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetCursorPos(IntPtr window, double xpos, double ypos);
-
-		[DllImport(Library, EntryPoint = "glfwCreateCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwCreateCursor(GLFWimage image, int xhot, int yhot);
-
-		[DllImport(Library, EntryPoint = "glfwCreateStandardCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwCreateStandardCursor(int shape);
-
-		[DllImport(Library, EntryPoint = "glfwDestroyCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwDestroyCursor(IntPtr cursor);
-
-		[DllImport(Library, EntryPoint = "glfwSetCursor", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetCursor(IntPtr window, IntPtr cursor);
-
-		[DllImport(Library, EntryPoint = "glfwSetKeyCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWkeyfun glfwSetKeyCallback(IntPtr window, GLFWkeyfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetCharCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWcharfun glfwSetCharCallback(IntPtr window, GLFWcharfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetCharModsCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWcharmodsfun glfwSetCharModsCallback(IntPtr window, GLFWcharmodsfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetMouseButtonCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWmousebuttonfun glfwSetMouseButtonCallback(IntPtr window, GLFWmousebuttonfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetCursorPosCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWcursorposfun glfwSetCursorPosCallback(IntPtr window, GLFWcursorposfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetCursorEnterCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWcursorenterfun glfwSetCursorEnterCallback(IntPtr window, GLFWcursorenterfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetScrollCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWscrollfun glfwSetScrollCallback(IntPtr window, GLFWscrollfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetDropCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwJoystickPresent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwJoystickPresent(int joy);
-
-		[DllImport(Library, EntryPoint = "glfwGetJoystickAxes", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern float[] glfwGetJoystickAxes(int joy, out int count);
-
-		[DllImport(Library, EntryPoint = "glfwGetJoystickButtons", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetJoystickButtons(int joy, out int count);
-
-		[DllImport(Library, EntryPoint = "glfwGetJoystickName", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetJoystickName(int joy);
-
-		[DllImport(Library, EntryPoint = "glfwSetJoystickCallback", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun);
-
-		[DllImport(Library, EntryPoint = "glfwSetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetClipboardString(IntPtr window, string @string);
-
-		[DllImport(Library, EntryPoint = "glfwGetClipboardString", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string glfwGetClipboardString(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwGetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern double glfwGetTime();
-
-		[DllImport(Library, EntryPoint = "glfwSetTime", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSetTime(double time);
-
-		[DllImport(Library, EntryPoint = "glfwGetTimerValue", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern ulong glfwGetTimerValue();
-
-		[DllImport(Library, EntryPoint = "glfwGetTimerFrequency", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern ulong glfwGetTimerFrequency();
-
-		[DllImport(Library, EntryPoint = "glfwMakeContextCurrent", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwMakeContextCurrent(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwGetCurrentContext", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetCurrentContext();
-
-		[DllImport(Library, EntryPoint = "glfwSwapBuffers", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSwapBuffers(IntPtr window);
-
-		[DllImport(Library, EntryPoint = "glfwSwapInterval", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void glfwSwapInterval(int interval);
-
-		[DllImport(Library, EntryPoint = "glfwExtensionSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwExtensionSupported(string extension);
-
-		[DllImport(Library, EntryPoint = "glfwGetProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetProcAddress(string procname);
-
-		[DllImport(Library, EntryPoint = "glfwVulkanSupported", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwVulkanSupported();
-
-		[DllImport(Library, EntryPoint = "glfwGetRequiredInstanceExtensions", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern string[] glfwGetRequiredInstanceExtensions(out uint count);
-
-		[DllImport(Library, EntryPoint = "glfwGetInstanceProcAddress", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname);
-
-		[DllImport(Library, EntryPoint = "glfwGetPhysicalDevicePresentationSupport", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwGetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
-
-		[DllImport(Library, EntryPoint = "glfwCreateWindowSurface", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
-
-		private class GLFWAssemblyLoadContext : AssemblyLoadContext
+		private static class Delegates
 		{
-			internal void Init()
-			{
-				this.LoadUnmanagedDllFromPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "x64" : "x86", Library));
-			}
+			public delegate int glfwInit();
 
-			protected override Assembly Load(AssemblyName assemblyName) => null;
+			public delegate void glfwTerminate();
+
+			public delegate void glfwGetVersion(out int major, out int minor, out int rev);
+
+			public delegate string glfwGetVersionString();
+
+			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
+
+			public delegate IntPtr[] glfwGetMonitors(out int count);
+
+			public delegate IntPtr glfwGetPrimaryMonitor();
+
+			public delegate void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
+
+			public delegate void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
+
+			public delegate string glfwGetMonitorName(IntPtr monitor);
+
+			public delegate GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
+
+			public delegate GLFWvidmode glfwGetVideoModes(IntPtr monitor, out int count);
+
+			public delegate GLFWvidmode glfwGetVideoMode(IntPtr monitor);
+
+			public delegate void glfwSetGamma(IntPtr monitor, float gamma);
+
+			public delegate GLFWgammaramp glfwGetGammaRamp(IntPtr monitor);
+
+			public delegate void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp);
+
+			public delegate void glfwDefaultWindowHints();
+
+			public delegate void glfwWindowHint(int hint, int value);
+
+			public delegate IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
+
+			public delegate void glfwDestroyWindow(IntPtr window);
+
+			public delegate int glfwWindowShouldClose(IntPtr window);
+
+			public delegate void glfwSetWindowShouldClose(IntPtr window, int value);
+
+			public delegate void glfwSetWindowTitle(IntPtr window, string title);
+
+			public delegate void glfwSetWindowIcon(IntPtr window, int count, GLFWimage images);
+
+			public delegate void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos);
+
+			public delegate void glfwSetWindowPos(IntPtr window, int xpos, int ypos);
+
+			public delegate void glfwGetWindowSize(IntPtr window, out int width, out int height);
+
+			public delegate void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
+
+			public delegate void glfwSetWindowAspectRatio(IntPtr window, int numer, int denom);
+
+			public delegate void glfwSetWindowSize(IntPtr window, int width, int height);
+
+			public delegate void glfwGetFramebufferSize(IntPtr window, out int width, out int height);
+
+			public delegate void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
+
+			public delegate void glfwIconifyWindow(IntPtr window);
+
+			public delegate void glfwRestoreWindow(IntPtr window);
+
+			public delegate void glfwMaximizeWindow(IntPtr window);
+
+			public delegate void glfwShowWindow(IntPtr window);
+
+			public delegate void glfwHideWindow(IntPtr window);
+
+			public delegate void glfwFocusWindow(IntPtr window);
+
+			public delegate IntPtr glfwGetWindowMonitor(IntPtr window);
+
+			public delegate void glfwSetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
+
+			public delegate int glfwGetWindowAttrib(IntPtr window, int attrib);
+
+			public delegate void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer);
+
+			public delegate IntPtr glfwGetWindowUserPointer(IntPtr window);
+
+			public delegate GLFWwindowposfun glfwSetWindowPosCallback(IntPtr window, GLFWwindowposfun cbfun);
+
+			public delegate GLFWwindowsizefun glfwSetWindowSizeCallback(IntPtr window, GLFWwindowsizefun cbfun);
+
+			public delegate GLFWwindowclosefun glfwSetWindowCloseCallback(IntPtr window, GLFWwindowclosefun cbfun);
+
+			public delegate GLFWwindowrefreshfun glfwSetWindowRefreshCallback(IntPtr window, GLFWwindowrefreshfun cbfun);
+
+			public delegate GLFWwindowfocusfun glfwSetWindowFocusCallback(IntPtr window, GLFWwindowfocusfun cbfun);
+
+			public delegate GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun);
+
+			public delegate GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun);
+
+			public delegate void glfwPollEvents();
+
+			public delegate void glfwWaitEvents();
+
+			public delegate void glfwWaitEventsTimeout(double timeout);
+
+			public delegate void glfwPostEmptyEvent();
+
+			public delegate int glfwGetInputMode(IntPtr window, int mode);
+
+			public delegate void glfwSetInputMode(IntPtr window, int mode, int value);
+
+			public delegate string glfwGetKeyName(int key, int scancode);
+
+			public delegate int glfwGetKey(IntPtr window, int key);
+
+			public delegate int glfwGetMouseButton(IntPtr window, int button);
+
+			public delegate void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos);
+
+			public delegate void glfwSetCursorPos(IntPtr window, double xpos, double ypos);
+
+			public delegate IntPtr glfwCreateCursor(GLFWimage image, int xhot, int yhot);
+
+			public delegate IntPtr glfwCreateStandardCursor(int shape);
+
+			public delegate void glfwDestroyCursor(IntPtr cursor);
+
+			public delegate void glfwSetCursor(IntPtr window, IntPtr cursor);
+
+			public delegate GLFWkeyfun glfwSetKeyCallback(IntPtr window, GLFWkeyfun cbfun);
+
+			public delegate GLFWcharfun glfwSetCharCallback(IntPtr window, GLFWcharfun cbfun);
+
+			public delegate GLFWcharmodsfun glfwSetCharModsCallback(IntPtr window, GLFWcharmodsfun cbfun);
+
+			public delegate GLFWmousebuttonfun glfwSetMouseButtonCallback(IntPtr window, GLFWmousebuttonfun cbfun);
+
+			public delegate GLFWcursorposfun glfwSetCursorPosCallback(IntPtr window, GLFWcursorposfun cbfun);
+
+			public delegate GLFWcursorenterfun glfwSetCursorEnterCallback(IntPtr window, GLFWcursorenterfun cbfun);
+
+			public delegate GLFWscrollfun glfwSetScrollCallback(IntPtr window, GLFWscrollfun cbfun);
+
+			public delegate GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun);
+
+			public delegate int glfwJoystickPresent(int joy);
+
+			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
+
+			public delegate string glfwGetJoystickButtons(int joy, out int count);
+
+			public delegate string glfwGetJoystickName(int joy);
+
+			public delegate GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun);
+
+			public delegate void glfwSetClipboardString(IntPtr window, string @string);
+
+			public delegate string glfwGetClipboardString(IntPtr window);
+
+			public delegate double glfwGetTime();
+
+			public delegate void glfwSetTime(double time);
+
+			public delegate ulong glfwGetTimerValue();
+
+			public delegate ulong glfwGetTimerFrequency();
+
+			public delegate void glfwMakeContextCurrent(IntPtr window);
+
+			public delegate IntPtr glfwGetCurrentContext();
+
+			public delegate void glfwSwapBuffers(IntPtr window);
+
+			public delegate void glfwSwapInterval(int interval);
+
+			public delegate int glfwExtensionSupported(string extension);
+
+			public delegate IntPtr glfwGetProcAddress(string procname);
+
+			public delegate int glfwVulkanSupported();
+
+			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
+
+			public delegate IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname);
+
+			public delegate int glfwGetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
+
+			public delegate int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
+
+		}
+		private static Delegates.glfwInit _glfwInit;
+
+		private static Delegates.glfwTerminate _glfwTerminate;
+
+		private static Delegates.glfwGetVersion _glfwGetVersion;
+
+		private static Delegates.glfwGetVersionString _glfwGetVersionString;
+
+		private static Delegates.glfwSetErrorCallback _glfwSetErrorCallback;
+
+		private static Delegates.glfwGetMonitors _glfwGetMonitors;
+
+		private static Delegates.glfwGetPrimaryMonitor _glfwGetPrimaryMonitor;
+
+		private static Delegates.glfwGetMonitorPos _glfwGetMonitorPos;
+
+		private static Delegates.glfwGetMonitorPhysicalSize _glfwGetMonitorPhysicalSize;
+
+		private static Delegates.glfwGetMonitorName _glfwGetMonitorName;
+
+		private static Delegates.glfwSetMonitorCallback _glfwSetMonitorCallback;
+
+		private static Delegates.glfwGetVideoModes _glfwGetVideoModes;
+
+		private static Delegates.glfwGetVideoMode _glfwGetVideoMode;
+
+		private static Delegates.glfwSetGamma _glfwSetGamma;
+
+		private static Delegates.glfwGetGammaRamp _glfwGetGammaRamp;
+
+		private static Delegates.glfwSetGammaRamp _glfwSetGammaRamp;
+
+		private static Delegates.glfwDefaultWindowHints _glfwDefaultWindowHints;
+
+		private static Delegates.glfwWindowHint _glfwWindowHint;
+
+		private static Delegates.glfwCreateWindow _glfwCreateWindow;
+
+		private static Delegates.glfwDestroyWindow _glfwDestroyWindow;
+
+		private static Delegates.glfwWindowShouldClose _glfwWindowShouldClose;
+
+		private static Delegates.glfwSetWindowShouldClose _glfwSetWindowShouldClose;
+
+		private static Delegates.glfwSetWindowTitle _glfwSetWindowTitle;
+
+		private static Delegates.glfwSetWindowIcon _glfwSetWindowIcon;
+
+		private static Delegates.glfwGetWindowPos _glfwGetWindowPos;
+
+		private static Delegates.glfwSetWindowPos _glfwSetWindowPos;
+
+		private static Delegates.glfwGetWindowSize _glfwGetWindowSize;
+
+		private static Delegates.glfwSetWindowSizeLimits _glfwSetWindowSizeLimits;
+
+		private static Delegates.glfwSetWindowAspectRatio _glfwSetWindowAspectRatio;
+
+		private static Delegates.glfwSetWindowSize _glfwSetWindowSize;
+
+		private static Delegates.glfwGetFramebufferSize _glfwGetFramebufferSize;
+
+		private static Delegates.glfwGetWindowFrameSize _glfwGetWindowFrameSize;
+
+		private static Delegates.glfwIconifyWindow _glfwIconifyWindow;
+
+		private static Delegates.glfwRestoreWindow _glfwRestoreWindow;
+
+		private static Delegates.glfwMaximizeWindow _glfwMaximizeWindow;
+
+		private static Delegates.glfwShowWindow _glfwShowWindow;
+
+		private static Delegates.glfwHideWindow _glfwHideWindow;
+
+		private static Delegates.glfwFocusWindow _glfwFocusWindow;
+
+		private static Delegates.glfwGetWindowMonitor _glfwGetWindowMonitor;
+
+		private static Delegates.glfwSetWindowMonitor _glfwSetWindowMonitor;
+
+		private static Delegates.glfwGetWindowAttrib _glfwGetWindowAttrib;
+
+		private static Delegates.glfwSetWindowUserPointer _glfwSetWindowUserPointer;
+
+		private static Delegates.glfwGetWindowUserPointer _glfwGetWindowUserPointer;
+
+		private static Delegates.glfwSetWindowPosCallback _glfwSetWindowPosCallback;
+
+		private static Delegates.glfwSetWindowSizeCallback _glfwSetWindowSizeCallback;
+
+		private static Delegates.glfwSetWindowCloseCallback _glfwSetWindowCloseCallback;
+
+		private static Delegates.glfwSetWindowRefreshCallback _glfwSetWindowRefreshCallback;
+
+		private static Delegates.glfwSetWindowFocusCallback _glfwSetWindowFocusCallback;
+
+		private static Delegates.glfwSetWindowIconifyCallback _glfwSetWindowIconifyCallback;
+
+		private static Delegates.glfwSetFramebufferSizeCallback _glfwSetFramebufferSizeCallback;
+
+		private static Delegates.glfwPollEvents _glfwPollEvents;
+
+		private static Delegates.glfwWaitEvents _glfwWaitEvents;
+
+		private static Delegates.glfwWaitEventsTimeout _glfwWaitEventsTimeout;
+
+		private static Delegates.glfwPostEmptyEvent _glfwPostEmptyEvent;
+
+		private static Delegates.glfwGetInputMode _glfwGetInputMode;
+
+		private static Delegates.glfwSetInputMode _glfwSetInputMode;
+
+		private static Delegates.glfwGetKeyName _glfwGetKeyName;
+
+		private static Delegates.glfwGetKey _glfwGetKey;
+
+		private static Delegates.glfwGetMouseButton _glfwGetMouseButton;
+
+		private static Delegates.glfwGetCursorPos _glfwGetCursorPos;
+
+		private static Delegates.glfwSetCursorPos _glfwSetCursorPos;
+
+		private static Delegates.glfwCreateCursor _glfwCreateCursor;
+
+		private static Delegates.glfwCreateStandardCursor _glfwCreateStandardCursor;
+
+		private static Delegates.glfwDestroyCursor _glfwDestroyCursor;
+
+		private static Delegates.glfwSetCursor _glfwSetCursor;
+
+		private static Delegates.glfwSetKeyCallback _glfwSetKeyCallback;
+
+		private static Delegates.glfwSetCharCallback _glfwSetCharCallback;
+
+		private static Delegates.glfwSetCharModsCallback _glfwSetCharModsCallback;
+
+		private static Delegates.glfwSetMouseButtonCallback _glfwSetMouseButtonCallback;
+
+		private static Delegates.glfwSetCursorPosCallback _glfwSetCursorPosCallback;
+
+		private static Delegates.glfwSetCursorEnterCallback _glfwSetCursorEnterCallback;
+
+		private static Delegates.glfwSetScrollCallback _glfwSetScrollCallback;
+
+		private static Delegates.glfwSetDropCallback _glfwSetDropCallback;
+
+		private static Delegates.glfwJoystickPresent _glfwJoystickPresent;
+
+		private static Delegates.glfwGetJoystickAxes _glfwGetJoystickAxes;
+
+		private static Delegates.glfwGetJoystickButtons _glfwGetJoystickButtons;
+
+		private static Delegates.glfwGetJoystickName _glfwGetJoystickName;
+
+		private static Delegates.glfwSetJoystickCallback _glfwSetJoystickCallback;
+
+		private static Delegates.glfwSetClipboardString _glfwSetClipboardString;
+
+		private static Delegates.glfwGetClipboardString _glfwGetClipboardString;
+
+		private static Delegates.glfwGetTime _glfwGetTime;
+
+		private static Delegates.glfwSetTime _glfwSetTime;
+
+		private static Delegates.glfwGetTimerValue _glfwGetTimerValue;
+
+		private static Delegates.glfwGetTimerFrequency _glfwGetTimerFrequency;
+
+		private static Delegates.glfwMakeContextCurrent _glfwMakeContextCurrent;
+
+		private static Delegates.glfwGetCurrentContext _glfwGetCurrentContext;
+
+		private static Delegates.glfwSwapBuffers _glfwSwapBuffers;
+
+		private static Delegates.glfwSwapInterval _glfwSwapInterval;
+
+		private static Delegates.glfwExtensionSupported _glfwExtensionSupported;
+
+		private static Delegates.glfwGetProcAddress _glfwGetProcAddress;
+
+		private static Delegates.glfwVulkanSupported _glfwVulkanSupported;
+
+		private static Delegates.glfwGetRequiredInstanceExtensions _glfwGetRequiredInstanceExtensions;
+
+		private static Delegates.glfwGetInstanceProcAddress _glfwGetInstanceProcAddress;
+
+		private static Delegates.glfwGetPhysicalDevicePresentationSupport _glfwGetPhysicalDevicePresentationSupport;
+
+		private static Delegates.glfwCreateWindowSurface _glfwCreateWindowSurface;
+
+		private static class Win32
+        {
+            [DllImport("kernel32")]
+            public static extern IntPtr LoadLibrary(string fileName);
+
+            [DllImport("kernel32")]
+            public static extern IntPtr GetProcAddress(IntPtr module, string procName);
+        }
+
+        public static int glfwInit()
+        {
+            LoadFunctions(LoadAssembly());
+            return _glfwInit();
+        }
+
+        private static Func<string, IntPtr> LoadAssembly()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "x64" : "x86", "glfw3.dll");
+                IntPtr assembly = Win32.LoadLibrary(assemblyPath);
+
+                if (assembly == IntPtr.Zero)
+                    throw new InvalidOperationException($"Failed to load GLFW dll from path '{assemblyPath}'.");
+
+                return x => Win32.GetProcAddress(assembly, x);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // Coming soon...
+            }
+
+            throw new NotImplementedException("Unsupported platform.");
+        }
+
+		private static void LoadFunctions(Func<string, IntPtr> getProcAddress)
+		{
+			_glfwInit = (Delegates.glfwInit)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwInit"), typeof(Delegates.glfwInit));
+			_glfwTerminate = (Delegates.glfwTerminate)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwTerminate"), typeof(Delegates.glfwTerminate));
+			_glfwGetVersion = (Delegates.glfwGetVersion)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersion"), typeof(Delegates.glfwGetVersion));
+			_glfwGetVersionString = (Delegates.glfwGetVersionString)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersionString"), typeof(Delegates.glfwGetVersionString));
+			_glfwSetErrorCallback = (Delegates.glfwSetErrorCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetErrorCallback"), typeof(Delegates.glfwSetErrorCallback));
+			//_glfwGetMonitors = (Delegates.glfwGetMonitors)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitors"), typeof(Delegates.glfwGetMonitors));
+			_glfwGetPrimaryMonitor = (Delegates.glfwGetPrimaryMonitor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPrimaryMonitor"), typeof(Delegates.glfwGetPrimaryMonitor));
+			_glfwGetMonitorPos = (Delegates.glfwGetMonitorPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPos"), typeof(Delegates.glfwGetMonitorPos));
+			_glfwGetMonitorPhysicalSize = (Delegates.glfwGetMonitorPhysicalSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPhysicalSize"), typeof(Delegates.glfwGetMonitorPhysicalSize));
+			_glfwGetMonitorName = (Delegates.glfwGetMonitorName)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorName"), typeof(Delegates.glfwGetMonitorName));
+			_glfwSetMonitorCallback = (Delegates.glfwSetMonitorCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetMonitorCallback"), typeof(Delegates.glfwSetMonitorCallback));
+			_glfwGetVideoModes = (Delegates.glfwGetVideoModes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoModes"), typeof(Delegates.glfwGetVideoModes));
+			_glfwGetVideoMode = (Delegates.glfwGetVideoMode)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoMode"), typeof(Delegates.glfwGetVideoMode));
+			_glfwSetGamma = (Delegates.glfwSetGamma)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGamma"), typeof(Delegates.glfwSetGamma));
+			//_glfwGetGammaRamp = (Delegates.glfwGetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetGammaRamp"), typeof(Delegates.glfwGetGammaRamp));
+			_glfwSetGammaRamp = (Delegates.glfwSetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGammaRamp"), typeof(Delegates.glfwSetGammaRamp));
+			_glfwDefaultWindowHints = (Delegates.glfwDefaultWindowHints)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwDefaultWindowHints"), typeof(Delegates.glfwDefaultWindowHints));
+			_glfwWindowHint = (Delegates.glfwWindowHint)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWindowHint"), typeof(Delegates.glfwWindowHint));
+			_glfwCreateWindow = (Delegates.glfwCreateWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateWindow"), typeof(Delegates.glfwCreateWindow));
+			_glfwDestroyWindow = (Delegates.glfwDestroyWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwDestroyWindow"), typeof(Delegates.glfwDestroyWindow));
+			_glfwWindowShouldClose = (Delegates.glfwWindowShouldClose)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWindowShouldClose"), typeof(Delegates.glfwWindowShouldClose));
+			_glfwSetWindowShouldClose = (Delegates.glfwSetWindowShouldClose)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowShouldClose"), typeof(Delegates.glfwSetWindowShouldClose));
+			_glfwSetWindowTitle = (Delegates.glfwSetWindowTitle)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowTitle"), typeof(Delegates.glfwSetWindowTitle));
+			_glfwSetWindowIcon = (Delegates.glfwSetWindowIcon)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowIcon"), typeof(Delegates.glfwSetWindowIcon));
+			_glfwGetWindowPos = (Delegates.glfwGetWindowPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowPos"), typeof(Delegates.glfwGetWindowPos));
+			_glfwSetWindowPos = (Delegates.glfwSetWindowPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowPos"), typeof(Delegates.glfwSetWindowPos));
+			_glfwGetWindowSize = (Delegates.glfwGetWindowSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowSize"), typeof(Delegates.glfwGetWindowSize));
+			_glfwSetWindowSizeLimits = (Delegates.glfwSetWindowSizeLimits)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowSizeLimits"), typeof(Delegates.glfwSetWindowSizeLimits));
+			_glfwSetWindowAspectRatio = (Delegates.glfwSetWindowAspectRatio)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowAspectRatio"), typeof(Delegates.glfwSetWindowAspectRatio));
+			_glfwSetWindowSize = (Delegates.glfwSetWindowSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowSize"), typeof(Delegates.glfwSetWindowSize));
+			_glfwGetFramebufferSize = (Delegates.glfwGetFramebufferSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetFramebufferSize"), typeof(Delegates.glfwGetFramebufferSize));
+			_glfwGetWindowFrameSize = (Delegates.glfwGetWindowFrameSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowFrameSize"), typeof(Delegates.glfwGetWindowFrameSize));
+			_glfwIconifyWindow = (Delegates.glfwIconifyWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwIconifyWindow"), typeof(Delegates.glfwIconifyWindow));
+			_glfwRestoreWindow = (Delegates.glfwRestoreWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwRestoreWindow"), typeof(Delegates.glfwRestoreWindow));
+			_glfwMaximizeWindow = (Delegates.glfwMaximizeWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwMaximizeWindow"), typeof(Delegates.glfwMaximizeWindow));
+			_glfwShowWindow = (Delegates.glfwShowWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwShowWindow"), typeof(Delegates.glfwShowWindow));
+			_glfwHideWindow = (Delegates.glfwHideWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwHideWindow"), typeof(Delegates.glfwHideWindow));
+			_glfwFocusWindow = (Delegates.glfwFocusWindow)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwFocusWindow"), typeof(Delegates.glfwFocusWindow));
+			_glfwGetWindowMonitor = (Delegates.glfwGetWindowMonitor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowMonitor"), typeof(Delegates.glfwGetWindowMonitor));
+			_glfwSetWindowMonitor = (Delegates.glfwSetWindowMonitor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowMonitor"), typeof(Delegates.glfwSetWindowMonitor));
+			_glfwGetWindowAttrib = (Delegates.glfwGetWindowAttrib)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowAttrib"), typeof(Delegates.glfwGetWindowAttrib));
+			_glfwSetWindowUserPointer = (Delegates.glfwSetWindowUserPointer)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowUserPointer"), typeof(Delegates.glfwSetWindowUserPointer));
+			_glfwGetWindowUserPointer = (Delegates.glfwGetWindowUserPointer)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetWindowUserPointer"), typeof(Delegates.glfwGetWindowUserPointer));
+			_glfwSetWindowPosCallback = (Delegates.glfwSetWindowPosCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowPosCallback"), typeof(Delegates.glfwSetWindowPosCallback));
+			_glfwSetWindowSizeCallback = (Delegates.glfwSetWindowSizeCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowSizeCallback"), typeof(Delegates.glfwSetWindowSizeCallback));
+			_glfwSetWindowCloseCallback = (Delegates.glfwSetWindowCloseCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowCloseCallback"), typeof(Delegates.glfwSetWindowCloseCallback));
+			_glfwSetWindowRefreshCallback = (Delegates.glfwSetWindowRefreshCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowRefreshCallback"), typeof(Delegates.glfwSetWindowRefreshCallback));
+			_glfwSetWindowFocusCallback = (Delegates.glfwSetWindowFocusCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowFocusCallback"), typeof(Delegates.glfwSetWindowFocusCallback));
+			_glfwSetWindowIconifyCallback = (Delegates.glfwSetWindowIconifyCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetWindowIconifyCallback"), typeof(Delegates.glfwSetWindowIconifyCallback));
+			_glfwSetFramebufferSizeCallback = (Delegates.glfwSetFramebufferSizeCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetFramebufferSizeCallback"), typeof(Delegates.glfwSetFramebufferSizeCallback));
+			_glfwPollEvents = (Delegates.glfwPollEvents)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwPollEvents"), typeof(Delegates.glfwPollEvents));
+			_glfwWaitEvents = (Delegates.glfwWaitEvents)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWaitEvents"), typeof(Delegates.glfwWaitEvents));
+			_glfwWaitEventsTimeout = (Delegates.glfwWaitEventsTimeout)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWaitEventsTimeout"), typeof(Delegates.glfwWaitEventsTimeout));
+			_glfwPostEmptyEvent = (Delegates.glfwPostEmptyEvent)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwPostEmptyEvent"), typeof(Delegates.glfwPostEmptyEvent));
+			_glfwGetInputMode = (Delegates.glfwGetInputMode)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetInputMode"), typeof(Delegates.glfwGetInputMode));
+			_glfwSetInputMode = (Delegates.glfwSetInputMode)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetInputMode"), typeof(Delegates.glfwSetInputMode));
+			_glfwGetKeyName = (Delegates.glfwGetKeyName)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetKeyName"), typeof(Delegates.glfwGetKeyName));
+			_glfwGetKey = (Delegates.glfwGetKey)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetKey"), typeof(Delegates.glfwGetKey));
+			_glfwGetMouseButton = (Delegates.glfwGetMouseButton)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMouseButton"), typeof(Delegates.glfwGetMouseButton));
+			_glfwGetCursorPos = (Delegates.glfwGetCursorPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetCursorPos"), typeof(Delegates.glfwGetCursorPos));
+			_glfwSetCursorPos = (Delegates.glfwSetCursorPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCursorPos"), typeof(Delegates.glfwSetCursorPos));
+			_glfwCreateCursor = (Delegates.glfwCreateCursor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateCursor"), typeof(Delegates.glfwCreateCursor));
+			_glfwCreateStandardCursor = (Delegates.glfwCreateStandardCursor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateStandardCursor"), typeof(Delegates.glfwCreateStandardCursor));
+			_glfwDestroyCursor = (Delegates.glfwDestroyCursor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwDestroyCursor"), typeof(Delegates.glfwDestroyCursor));
+			_glfwSetCursor = (Delegates.glfwSetCursor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCursor"), typeof(Delegates.glfwSetCursor));
+			_glfwSetKeyCallback = (Delegates.glfwSetKeyCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetKeyCallback"), typeof(Delegates.glfwSetKeyCallback));
+			_glfwSetCharCallback = (Delegates.glfwSetCharCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCharCallback"), typeof(Delegates.glfwSetCharCallback));
+			_glfwSetCharModsCallback = (Delegates.glfwSetCharModsCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCharModsCallback"), typeof(Delegates.glfwSetCharModsCallback));
+			_glfwSetMouseButtonCallback = (Delegates.glfwSetMouseButtonCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetMouseButtonCallback"), typeof(Delegates.glfwSetMouseButtonCallback));
+			_glfwSetCursorPosCallback = (Delegates.glfwSetCursorPosCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCursorPosCallback"), typeof(Delegates.glfwSetCursorPosCallback));
+			_glfwSetCursorEnterCallback = (Delegates.glfwSetCursorEnterCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetCursorEnterCallback"), typeof(Delegates.glfwSetCursorEnterCallback));
+			_glfwSetScrollCallback = (Delegates.glfwSetScrollCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetScrollCallback"), typeof(Delegates.glfwSetScrollCallback));
+			_glfwSetDropCallback = (Delegates.glfwSetDropCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetDropCallback"), typeof(Delegates.glfwSetDropCallback));
+			_glfwJoystickPresent = (Delegates.glfwJoystickPresent)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwJoystickPresent"), typeof(Delegates.glfwJoystickPresent));
+			//_glfwGetJoystickAxes = (Delegates.glfwGetJoystickAxes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickAxes"), typeof(Delegates.glfwGetJoystickAxes));
+			_glfwGetJoystickButtons = (Delegates.glfwGetJoystickButtons)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickButtons"), typeof(Delegates.glfwGetJoystickButtons));
+			_glfwGetJoystickName = (Delegates.glfwGetJoystickName)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickName"), typeof(Delegates.glfwGetJoystickName));
+			_glfwSetJoystickCallback = (Delegates.glfwSetJoystickCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetJoystickCallback"), typeof(Delegates.glfwSetJoystickCallback));
+			_glfwSetClipboardString = (Delegates.glfwSetClipboardString)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetClipboardString"), typeof(Delegates.glfwSetClipboardString));
+			_glfwGetClipboardString = (Delegates.glfwGetClipboardString)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetClipboardString"), typeof(Delegates.glfwGetClipboardString));
+			_glfwGetTime = (Delegates.glfwGetTime)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetTime"), typeof(Delegates.glfwGetTime));
+			_glfwSetTime = (Delegates.glfwSetTime)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetTime"), typeof(Delegates.glfwSetTime));
+			_glfwGetTimerValue = (Delegates.glfwGetTimerValue)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetTimerValue"), typeof(Delegates.glfwGetTimerValue));
+			_glfwGetTimerFrequency = (Delegates.glfwGetTimerFrequency)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetTimerFrequency"), typeof(Delegates.glfwGetTimerFrequency));
+			_glfwMakeContextCurrent = (Delegates.glfwMakeContextCurrent)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwMakeContextCurrent"), typeof(Delegates.glfwMakeContextCurrent));
+			_glfwGetCurrentContext = (Delegates.glfwGetCurrentContext)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetCurrentContext"), typeof(Delegates.glfwGetCurrentContext));
+			_glfwSwapBuffers = (Delegates.glfwSwapBuffers)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSwapBuffers"), typeof(Delegates.glfwSwapBuffers));
+			_glfwSwapInterval = (Delegates.glfwSwapInterval)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSwapInterval"), typeof(Delegates.glfwSwapInterval));
+			_glfwExtensionSupported = (Delegates.glfwExtensionSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwExtensionSupported"), typeof(Delegates.glfwExtensionSupported));
+			_glfwGetProcAddress = (Delegates.glfwGetProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetProcAddress"), typeof(Delegates.glfwGetProcAddress));
+			_glfwVulkanSupported = (Delegates.glfwVulkanSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwVulkanSupported"), typeof(Delegates.glfwVulkanSupported));
+			//_glfwGetRequiredInstanceExtensions = (Delegates.glfwGetRequiredInstanceExtensions)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetRequiredInstanceExtensions"), typeof(Delegates.glfwGetRequiredInstanceExtensions));
+			_glfwGetInstanceProcAddress = (Delegates.glfwGetInstanceProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetInstanceProcAddress"), typeof(Delegates.glfwGetInstanceProcAddress));
+			_glfwGetPhysicalDevicePresentationSupport = (Delegates.glfwGetPhysicalDevicePresentationSupport)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPhysicalDevicePresentationSupport"), typeof(Delegates.glfwGetPhysicalDevicePresentationSupport));
+			_glfwCreateWindowSurface = (Delegates.glfwCreateWindowSurface)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateWindowSurface"), typeof(Delegates.glfwCreateWindowSurface));
 		}
 
-		static GLFW()
+		public static void glfwTerminate()
 		{
-			new GLFWAssemblyLoadContext().Init();
+			_glfwTerminate();
 		}
+
+		public static void glfwGetVersion(out int major, out int minor, out int rev)
+		{
+			_glfwGetVersion(out major, out minor, out rev);
+		}
+
+		public static string glfwGetVersionString()
+		{
+			return _glfwGetVersionString();
+		}
+
+		public static GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
+		{
+			return _glfwSetErrorCallback(cbfun);
+		}
+
+		public static IntPtr[] glfwGetMonitors(out int count)
+		{
+			return _glfwGetMonitors(out count);
+		}
+
+		public static IntPtr glfwGetPrimaryMonitor()
+		{
+			return _glfwGetPrimaryMonitor();
+		}
+
+		public static void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos)
+		{
+			_glfwGetMonitorPos(monitor, out xpos, out ypos);
+		}
+
+		public static void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM)
+		{
+			_glfwGetMonitorPhysicalSize(monitor, out widthMM, out heightMM);
+		}
+
+		public static string glfwGetMonitorName(IntPtr monitor)
+		{
+			return _glfwGetMonitorName(monitor);
+		}
+
+		public static GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun)
+		{
+			return _glfwSetMonitorCallback(cbfun);
+		}
+
+		public static GLFWvidmode glfwGetVideoModes(IntPtr monitor, out int count)
+		{
+			return _glfwGetVideoModes(monitor, out count);
+		}
+
+		public static GLFWvidmode glfwGetVideoMode(IntPtr monitor)
+		{
+			return _glfwGetVideoMode(monitor);
+		}
+
+		public static void glfwSetGamma(IntPtr monitor, float gamma)
+		{
+			_glfwSetGamma(monitor, gamma);
+		}
+
+		public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
+		{
+			return _glfwGetGammaRamp(monitor);
+		}
+
+		public static void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp)
+		{
+			_glfwSetGammaRamp(monitor, ramp);
+		}
+
+		public static void glfwDefaultWindowHints()
+		{
+			_glfwDefaultWindowHints();
+		}
+
+		public static void glfwWindowHint(int hint, int value)
+		{
+			_glfwWindowHint(hint, value);
+		}
+
+		public static IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share)
+		{
+			return _glfwCreateWindow(width, height, title, monitor, share);
+		}
+
+		public static void glfwDestroyWindow(IntPtr window)
+		{
+			_glfwDestroyWindow(window);
+		}
+
+		public static int glfwWindowShouldClose(IntPtr window)
+		{
+			return _glfwWindowShouldClose(window);
+		}
+
+		public static void glfwSetWindowShouldClose(IntPtr window, int value)
+		{
+			_glfwSetWindowShouldClose(window, value);
+		}
+
+		public static void glfwSetWindowTitle(IntPtr window, string title)
+		{
+			_glfwSetWindowTitle(window, title);
+		}
+
+		public static void glfwSetWindowIcon(IntPtr window, int count, GLFWimage images)
+		{
+			_glfwSetWindowIcon(window, count, images);
+		}
+
+		public static void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos)
+		{
+			_glfwGetWindowPos(window, out xpos, out ypos);
+		}
+
+		public static void glfwSetWindowPos(IntPtr window, int xpos, int ypos)
+		{
+			_glfwSetWindowPos(window, xpos, ypos);
+		}
+
+		public static void glfwGetWindowSize(IntPtr window, out int width, out int height)
+		{
+			_glfwGetWindowSize(window, out width, out height);
+		}
+
+		public static void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight)
+		{
+			_glfwSetWindowSizeLimits(window, minwidth, minheight, maxwidth, maxheight);
+		}
+
+		public static void glfwSetWindowAspectRatio(IntPtr window, int numer, int denom)
+		{
+			_glfwSetWindowAspectRatio(window, numer, denom);
+		}
+
+		public static void glfwSetWindowSize(IntPtr window, int width, int height)
+		{
+			_glfwSetWindowSize(window, width, height);
+		}
+
+		public static void glfwGetFramebufferSize(IntPtr window, out int width, out int height)
+		{
+			_glfwGetFramebufferSize(window, out width, out height);
+		}
+
+		public static void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom)
+		{
+			_glfwGetWindowFrameSize(window, out left, out top, out right, out bottom);
+		}
+
+		public static void glfwIconifyWindow(IntPtr window)
+		{
+			_glfwIconifyWindow(window);
+		}
+
+		public static void glfwRestoreWindow(IntPtr window)
+		{
+			_glfwRestoreWindow(window);
+		}
+
+		public static void glfwMaximizeWindow(IntPtr window)
+		{
+			_glfwMaximizeWindow(window);
+		}
+
+		public static void glfwShowWindow(IntPtr window)
+		{
+			_glfwShowWindow(window);
+		}
+
+		public static void glfwHideWindow(IntPtr window)
+		{
+			_glfwHideWindow(window);
+		}
+
+		public static void glfwFocusWindow(IntPtr window)
+		{
+			_glfwFocusWindow(window);
+		}
+
+		public static IntPtr glfwGetWindowMonitor(IntPtr window)
+		{
+			return _glfwGetWindowMonitor(window);
+		}
+
+		public static void glfwSetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate)
+		{
+			_glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height, refreshRate);
+		}
+
+		public static int glfwGetWindowAttrib(IntPtr window, int attrib)
+		{
+			return _glfwGetWindowAttrib(window, attrib);
+		}
+
+		public static void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer)
+		{
+			_glfwSetWindowUserPointer(window, pointer);
+		}
+
+		public static IntPtr glfwGetWindowUserPointer(IntPtr window)
+		{
+			return _glfwGetWindowUserPointer(window);
+		}
+
+		public static GLFWwindowposfun glfwSetWindowPosCallback(IntPtr window, GLFWwindowposfun cbfun)
+		{
+			return _glfwSetWindowPosCallback(window, cbfun);
+		}
+
+		public static GLFWwindowsizefun glfwSetWindowSizeCallback(IntPtr window, GLFWwindowsizefun cbfun)
+		{
+			return _glfwSetWindowSizeCallback(window, cbfun);
+		}
+
+		public static GLFWwindowclosefun glfwSetWindowCloseCallback(IntPtr window, GLFWwindowclosefun cbfun)
+		{
+			return _glfwSetWindowCloseCallback(window, cbfun);
+		}
+
+		public static GLFWwindowrefreshfun glfwSetWindowRefreshCallback(IntPtr window, GLFWwindowrefreshfun cbfun)
+		{
+			return _glfwSetWindowRefreshCallback(window, cbfun);
+		}
+
+		public static GLFWwindowfocusfun glfwSetWindowFocusCallback(IntPtr window, GLFWwindowfocusfun cbfun)
+		{
+			return _glfwSetWindowFocusCallback(window, cbfun);
+		}
+
+		public static GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun)
+		{
+			return _glfwSetWindowIconifyCallback(window, cbfun);
+		}
+
+		public static GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun)
+		{
+			return _glfwSetFramebufferSizeCallback(window, cbfun);
+		}
+
+		public static void glfwPollEvents()
+		{
+			_glfwPollEvents();
+		}
+
+		public static void glfwWaitEvents()
+		{
+			_glfwWaitEvents();
+		}
+
+		public static void glfwWaitEventsTimeout(double timeout)
+		{
+			_glfwWaitEventsTimeout(timeout);
+		}
+
+		public static void glfwPostEmptyEvent()
+		{
+			_glfwPostEmptyEvent();
+		}
+
+		public static int glfwGetInputMode(IntPtr window, int mode)
+		{
+			return _glfwGetInputMode(window, mode);
+		}
+
+		public static void glfwSetInputMode(IntPtr window, int mode, int value)
+		{
+			_glfwSetInputMode(window, mode, value);
+		}
+
+		public static string glfwGetKeyName(int key, int scancode)
+		{
+			return _glfwGetKeyName(key, scancode);
+		}
+
+		public static int glfwGetKey(IntPtr window, int key)
+		{
+			return _glfwGetKey(window, key);
+		}
+
+		public static int glfwGetMouseButton(IntPtr window, int button)
+		{
+			return _glfwGetMouseButton(window, button);
+		}
+
+		public static void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos)
+		{
+			_glfwGetCursorPos(window, out xpos, out ypos);
+		}
+
+		public static void glfwSetCursorPos(IntPtr window, double xpos, double ypos)
+		{
+			_glfwSetCursorPos(window, xpos, ypos);
+		}
+
+		public static IntPtr glfwCreateCursor(GLFWimage image, int xhot, int yhot)
+		{
+			return _glfwCreateCursor(image, xhot, yhot);
+		}
+
+		public static IntPtr glfwCreateStandardCursor(int shape)
+		{
+			return _glfwCreateStandardCursor(shape);
+		}
+
+		public static void glfwDestroyCursor(IntPtr cursor)
+		{
+			_glfwDestroyCursor(cursor);
+		}
+
+		public static void glfwSetCursor(IntPtr window, IntPtr cursor)
+		{
+			_glfwSetCursor(window, cursor);
+		}
+
+		public static GLFWkeyfun glfwSetKeyCallback(IntPtr window, GLFWkeyfun cbfun)
+		{
+			return _glfwSetKeyCallback(window, cbfun);
+		}
+
+		public static GLFWcharfun glfwSetCharCallback(IntPtr window, GLFWcharfun cbfun)
+		{
+			return _glfwSetCharCallback(window, cbfun);
+		}
+
+		public static GLFWcharmodsfun glfwSetCharModsCallback(IntPtr window, GLFWcharmodsfun cbfun)
+		{
+			return _glfwSetCharModsCallback(window, cbfun);
+		}
+
+		public static GLFWmousebuttonfun glfwSetMouseButtonCallback(IntPtr window, GLFWmousebuttonfun cbfun)
+		{
+			return _glfwSetMouseButtonCallback(window, cbfun);
+		}
+
+		public static GLFWcursorposfun glfwSetCursorPosCallback(IntPtr window, GLFWcursorposfun cbfun)
+		{
+			return _glfwSetCursorPosCallback(window, cbfun);
+		}
+
+		public static GLFWcursorenterfun glfwSetCursorEnterCallback(IntPtr window, GLFWcursorenterfun cbfun)
+		{
+			return _glfwSetCursorEnterCallback(window, cbfun);
+		}
+
+		public static GLFWscrollfun glfwSetScrollCallback(IntPtr window, GLFWscrollfun cbfun)
+		{
+			return _glfwSetScrollCallback(window, cbfun);
+		}
+
+		public static GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun)
+		{
+			return _glfwSetDropCallback(window, cbfun);
+		}
+
+		public static int glfwJoystickPresent(int joy)
+		{
+			return _glfwJoystickPresent(joy);
+		}
+
+		public static float[] glfwGetJoystickAxes(int joy, out int count)
+		{
+			return _glfwGetJoystickAxes(joy, out count);
+		}
+
+		public static string glfwGetJoystickButtons(int joy, out int count)
+		{
+			return _glfwGetJoystickButtons(joy, out count);
+		}
+
+		public static string glfwGetJoystickName(int joy)
+		{
+			return _glfwGetJoystickName(joy);
+		}
+
+		public static GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun)
+		{
+			return _glfwSetJoystickCallback(cbfun);
+		}
+
+		public static void glfwSetClipboardString(IntPtr window, string @string)
+		{
+			_glfwSetClipboardString(window, @string);
+		}
+
+		public static string glfwGetClipboardString(IntPtr window)
+		{
+			return _glfwGetClipboardString(window);
+		}
+
+		public static double glfwGetTime()
+		{
+			return _glfwGetTime();
+		}
+
+		public static void glfwSetTime(double time)
+		{
+			_glfwSetTime(time);
+		}
+
+		public static ulong glfwGetTimerValue()
+		{
+			return _glfwGetTimerValue();
+		}
+
+		public static ulong glfwGetTimerFrequency()
+		{
+			return _glfwGetTimerFrequency();
+		}
+
+		public static void glfwMakeContextCurrent(IntPtr window)
+		{
+			_glfwMakeContextCurrent(window);
+		}
+
+		public static IntPtr glfwGetCurrentContext()
+		{
+			return _glfwGetCurrentContext();
+		}
+
+		public static void glfwSwapBuffers(IntPtr window)
+		{
+			_glfwSwapBuffers(window);
+		}
+
+		public static void glfwSwapInterval(int interval)
+		{
+			_glfwSwapInterval(interval);
+		}
+
+		public static int glfwExtensionSupported(string extension)
+		{
+			return _glfwExtensionSupported(extension);
+		}
+
+		public static IntPtr glfwGetProcAddress(string procname)
+		{
+			return _glfwGetProcAddress(procname);
+		}
+
+		public static int glfwVulkanSupported()
+		{
+			return _glfwVulkanSupported();
+		}
+
+		public static string[] glfwGetRequiredInstanceExtensions(out uint count)
+		{
+			return _glfwGetRequiredInstanceExtensions(out count);
+		}
+
+		public static IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname)
+		{
+			return _glfwGetInstanceProcAddress(instance, procname);
+		}
+
+		public static int glfwGetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily)
+		{
+			return _glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
+		}
+
+		public static int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface)
+		{
+			return _glfwCreateWindowSurface(instance, window, allocator, out surface);
+		}
+
 	}
 }

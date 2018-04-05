@@ -186,7 +186,7 @@ namespace Generator
                 result += "const ";
                 j++;
             }
-            
+
             if (parts[j] == "unsigned")
             {
                 result += "unsigned ";
@@ -602,16 +602,20 @@ namespace Generator
             return GetType(type, structs);
         }
 
+        private static string PrependModifier(string input, ParamModifier modifier)
+        {
+            if (modifier == ParamModifier.Out)
+            {
+                return "out " + input;
+            }
+
+            return input;
+        }
+
         private static string GetParamType(string type, ParamModifier modifier, List<StructData> structs)
         {
             type = GetType(type, structs);
-
-            if (modifier == ParamModifier.Out)
-            {
-                type = "out " + type;
-            }
-
-            return type;
+            return PrependModifier(type, modifier);
         }
 
         private static string GetParamName(string name)
@@ -657,9 +661,7 @@ namespace Generator
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
             sb.AppendLine("\tpublic static partial class GLFW");
-            sb.AppendLine("\t{");
-            sb.AppendLine("\t\tprivate const string Library = \"glfw3\";");
-            sb.AppendLine();
+            sb.AppendLine("\t{");            
 
             foreach (var @enum in enums)
             {
@@ -696,37 +698,104 @@ namespace Generator
 
                 sb.AppendLine();
             }
-                        
+
+            sb.AppendLine("\t\tprivate static class Delegates");
+            sb.AppendLine("\t\t{");
+
             foreach (var function in functions)
             {
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
-                sb.AppendLine($"\t\t[DllImport(Library, EntryPoint = \"{function.Name}\", ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]");
-                sb.AppendLine($"\t\tpublic static extern {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
+                sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
+
+            foreach (var function in functions)
+            {
+                sb.AppendLine($"\t\tprivate static Delegates.{function.Name} _{function.Name};");
+                sb.AppendLine();
+            }
+
+            sb.Append("\t\t");
+            sb.AppendLine(LoaderCode.Trim());
+            sb.AppendLine();
+
+            sb.AppendLine("\t\tprivate static void LoadFunctions(Func<string, IntPtr> getProcAddress)");
+            sb.AppendLine("\t\t{");
+
+            foreach (var function in functions)
+            {
+                sb.AppendLine($"\t\t\t_{function.Name} = (Delegates.{function.Name})Marshal.GetDelegateForFunctionPointer(getProcAddress(\"{function.Name}\"), typeof(Delegates.{function.Name}));");
+            }
+
+            sb.AppendLine("\t\t}");
+            sb.AppendLine();
+
+            foreach (var function in functions.Where(x => x.Name != "glfwInit"))
+            {
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+                string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name), x.Modifier)));
+                string returnType = GetReturnType(function.ReturnType, structs);
+
+                sb.AppendLine($"\t\tpublic static {returnType} {function.Name}({parameters})");
+                sb.AppendLine("\t\t{");
+
+                sb.Append("\t\t\t");
+
+                if (returnType != "void")
+                    sb.Append("return ");
+
+                sb.AppendLine($"_{function.Name}({parametersInvoke});");
+
+                sb.AppendLine("\t\t}");
 
                 sb.AppendLine();
             }
 
-            sb.AppendLine("\t\tprivate class GLFWAssemblyLoadContext : AssemblyLoadContext");
-            sb.AppendLine("\t\t{");
-            sb.AppendLine("\t\t\tinternal void Init()");
-            sb.AppendLine("\t\t\t{");
-            sb.AppendLine("\t\t\t\tthis.LoadUnmanagedDllFromPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? \"x64\" : \"x86\", Library));");
-            sb.AppendLine("\t\t\t}");
-            sb.AppendLine();
-            sb.AppendLine("\t\t\tprotected override Assembly Load(AssemblyName assemblyName) => null;");
-            sb.AppendLine("\t\t}");
-            sb.AppendLine();
-
-            sb.AppendLine("\t\tstatic GLFW()");
-            sb.AppendLine("\t\t{");
-            sb.AppendLine("\t\t\tnew GLFWAssemblyLoadContext().Init();");
-            sb.AppendLine("\t\t}");
-            
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
             File.WriteAllText(@"..\..\..\..\src\GLFWDotNet\GLFW.cs", sb.ToString());
         }
+
+        private const string LoaderCode = @"
+        private static class Win32
+        {
+            [DllImport(""kernel32"")]
+            public static extern IntPtr LoadLibrary(string fileName);
+
+            [DllImport(""kernel32"")]
+            public static extern IntPtr GetProcAddress(IntPtr module, string procName);
+        }
+
+        public static int glfwInit()
+        {
+            LoadFunctions(LoadAssembly());
+            return _glfwInit();
+        }
+
+        private static Func<string, IntPtr> LoadAssembly()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? ""x64"" : ""x86"", ""glfw3.dll"");
+                IntPtr assembly = Win32.LoadLibrary(assemblyPath);
+
+                if (assembly == IntPtr.Zero)
+                    throw new InvalidOperationException($""Failed to load GLFW dll from path '{assemblyPath}'."");
+
+                return x => Win32.GetProcAddress(assembly, x);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // Coming soon...
+            }
+
+            throw new NotImplementedException(""Unsupported platform."");
+        }
+";
     }
 }

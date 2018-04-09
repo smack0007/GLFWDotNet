@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "group": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/GLFWDotNet.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "generate",
+            "group": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Generator/Generator.csproj",
+                "-p:ExecuteAfterBuild=true"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

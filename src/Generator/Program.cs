@@ -77,6 +77,8 @@ namespace Generator
 
             public string Name { get; set; }
 
+            public bool CommentOut { get; set; }
+
             public List<ParamData> Params { get; } = new List<ParamData>();
 
             public override string ToString() => this.Name;
@@ -173,6 +175,11 @@ namespace Generator
             var structs = new List<StructData>();
 
             Parse(lines, enums, functions, callbacks, structs);
+
+            functions.Single(x => x.Name == "glfwGetMonitors").CommentOut = true;
+            functions.Single(x => x.Name == "glfwGetGammaRamp").CommentOut = true;
+            functions.Single(x => x.Name == "glfwGetJoystickAxes").CommentOut = true;
+            functions.Single(x => x.Name == "glfwGetRequiredInstanceExtensions").CommentOut = true;
 
             Write(enums, functions, callbacks, structs);
         }
@@ -706,6 +713,9 @@ namespace Generator
             {
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
+                if (function.CommentOut)
+                    sb.Append("// ");
+
                 sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
                 sb.AppendLine();
             }
@@ -715,6 +725,9 @@ namespace Generator
 
             foreach (var function in functions)
             {
+                if (function.CommentOut)
+                    sb.Append("// ");
+
                 sb.AppendLine($"\t\tprivate static Delegates.{function.Name} _{function.Name};");
                 sb.AppendLine();
             }
@@ -728,6 +741,9 @@ namespace Generator
 
             foreach (var function in functions)
             {
+                if (function.CommentOut)
+                    sb.Append("// ");
+
                 sb.AppendLine($"\t\t\t_{function.Name} = (Delegates.{function.Name})Marshal.GetDelegateForFunctionPointer(getProcAddress(\"{function.Name}\"), typeof(Delegates.{function.Name}));");
             }
 
@@ -736,6 +752,9 @@ namespace Generator
 
             foreach (var function in functions.Where(x => x.Name != "glfwInit"))
             {
+                if (function.CommentOut)
+                    sb.AppendLine("/*");
+
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
                 string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name), x.Modifier)));
                 string returnType = GetReturnType(function.ReturnType, structs);
@@ -751,6 +770,9 @@ namespace Generator
                 sb.AppendLine($"_{function.Name}({parametersInvoke});");
 
                 sb.AppendLine("\t\t}");
+
+                if (function.CommentOut)
+                    sb.AppendLine("*/");
 
                 sb.AppendLine();
             }
@@ -797,5 +819,11 @@ namespace Generator
             throw new NotImplementedException(""Unsupported platform."");
         }
 ";
+
+        private static readonly Dictionary<string, string> Methods = new Dictionary<string, string>() {
+            ["glfwGetVideoMode"] = @"
+",
+
+        };
     }
 }

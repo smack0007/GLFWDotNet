@@ -346,7 +346,7 @@ namespace GLFWDotNet
 
 			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
 
-			public delegate IntPtr[] glfwGetMonitors(out int count);
+// 			public delegate IntPtr[] glfwGetMonitors(out int count);
 
 			public delegate IntPtr glfwGetPrimaryMonitor();
 
@@ -364,7 +364,7 @@ namespace GLFWDotNet
 
 			public delegate void glfwSetGamma(IntPtr monitor, float gamma);
 
-			public delegate GLFWgammaramp glfwGetGammaRamp(IntPtr monitor);
+// 			public delegate GLFWgammaramp glfwGetGammaRamp(IntPtr monitor);
 
 			public delegate void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp);
 
@@ -484,7 +484,7 @@ namespace GLFWDotNet
 
 			public delegate int glfwJoystickPresent(int joy);
 
-			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
+// 			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
 
 			public delegate string glfwGetJoystickButtons(int joy, out int count);
 
@@ -518,7 +518,7 @@ namespace GLFWDotNet
 
 			public delegate int glfwVulkanSupported();
 
-			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
+// 			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
 
 			public delegate IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname);
 
@@ -527,6 +527,7 @@ namespace GLFWDotNet
 			public delegate int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
 
 		}
+
 		private static Delegates.glfwInit _glfwInit;
 
 		private static Delegates.glfwTerminate _glfwTerminate;
@@ -537,7 +538,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetErrorCallback _glfwSetErrorCallback;
 
-		private static Delegates.glfwGetMonitors _glfwGetMonitors;
+// 		private static Delegates.glfwGetMonitors _glfwGetMonitors;
 
 		private static Delegates.glfwGetPrimaryMonitor _glfwGetPrimaryMonitor;
 
@@ -555,7 +556,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetGamma _glfwSetGamma;
 
-		private static Delegates.glfwGetGammaRamp _glfwGetGammaRamp;
+// 		private static Delegates.glfwGetGammaRamp _glfwGetGammaRamp;
 
 		private static Delegates.glfwSetGammaRamp _glfwSetGammaRamp;
 
@@ -675,7 +676,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwJoystickPresent _glfwJoystickPresent;
 
-		private static Delegates.glfwGetJoystickAxes _glfwGetJoystickAxes;
+// 		private static Delegates.glfwGetJoystickAxes _glfwGetJoystickAxes;
 
 		private static Delegates.glfwGetJoystickButtons _glfwGetJoystickButtons;
 
@@ -709,7 +710,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwVulkanSupported _glfwVulkanSupported;
 
-		private static Delegates.glfwGetRequiredInstanceExtensions _glfwGetRequiredInstanceExtensions;
+// 		private static Delegates.glfwGetRequiredInstanceExtensions _glfwGetRequiredInstanceExtensions;
 
 		private static Delegates.glfwGetInstanceProcAddress _glfwGetInstanceProcAddress;
 
@@ -759,7 +760,7 @@ namespace GLFWDotNet
 			_glfwGetVersion = (Delegates.glfwGetVersion)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersion"), typeof(Delegates.glfwGetVersion));
 			_glfwGetVersionString = (Delegates.glfwGetVersionString)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersionString"), typeof(Delegates.glfwGetVersionString));
 			_glfwSetErrorCallback = (Delegates.glfwSetErrorCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetErrorCallback"), typeof(Delegates.glfwSetErrorCallback));
-			//_glfwGetMonitors = (Delegates.glfwGetMonitors)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitors"), typeof(Delegates.glfwGetMonitors));
+// 			_glfwGetMonitors = (Delegates.glfwGetMonitors)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitors"), typeof(Delegates.glfwGetMonitors));
 			_glfwGetPrimaryMonitor = (Delegates.glfwGetPrimaryMonitor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPrimaryMonitor"), typeof(Delegates.glfwGetPrimaryMonitor));
 			_glfwGetMonitorPos = (Delegates.glfwGetMonitorPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPos"), typeof(Delegates.glfwGetMonitorPos));
 			_glfwGetMonitorPhysicalSize = (Delegates.glfwGetMonitorPhysicalSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPhysicalSize"), typeof(Delegates.glfwGetMonitorPhysicalSize));
@@ -768,7 +769,7 @@ namespace GLFWDotNet
 			_glfwGetVideoModes = (Delegates.glfwGetVideoModes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoModes"), typeof(Delegates.glfwGetVideoModes));
 			_glfwGetVideoMode = (Delegates.glfwGetVideoMode)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoMode"), typeof(Delegates.glfwGetVideoMode));
 			_glfwSetGamma = (Delegates.glfwSetGamma)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGamma"), typeof(Delegates.glfwSetGamma));
-			//_glfwGetGammaRamp = (Delegates.glfwGetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetGammaRamp"), typeof(Delegates.glfwGetGammaRamp));
+// 			_glfwGetGammaRamp = (Delegates.glfwGetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetGammaRamp"), typeof(Delegates.glfwGetGammaRamp));
 			_glfwSetGammaRamp = (Delegates.glfwSetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGammaRamp"), typeof(Delegates.glfwSetGammaRamp));
 			_glfwDefaultWindowHints = (Delegates.glfwDefaultWindowHints)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwDefaultWindowHints"), typeof(Delegates.glfwDefaultWindowHints));
 			_glfwWindowHint = (Delegates.glfwWindowHint)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWindowHint"), typeof(Delegates.glfwWindowHint));
@@ -828,7 +829,7 @@ namespace GLFWDotNet
 			_glfwSetScrollCallback = (Delegates.glfwSetScrollCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetScrollCallback"), typeof(Delegates.glfwSetScrollCallback));
 			_glfwSetDropCallback = (Delegates.glfwSetDropCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetDropCallback"), typeof(Delegates.glfwSetDropCallback));
 			_glfwJoystickPresent = (Delegates.glfwJoystickPresent)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwJoystickPresent"), typeof(Delegates.glfwJoystickPresent));
-			//_glfwGetJoystickAxes = (Delegates.glfwGetJoystickAxes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickAxes"), typeof(Delegates.glfwGetJoystickAxes));
+// 			_glfwGetJoystickAxes = (Delegates.glfwGetJoystickAxes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickAxes"), typeof(Delegates.glfwGetJoystickAxes));
 			_glfwGetJoystickButtons = (Delegates.glfwGetJoystickButtons)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickButtons"), typeof(Delegates.glfwGetJoystickButtons));
 			_glfwGetJoystickName = (Delegates.glfwGetJoystickName)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickName"), typeof(Delegates.glfwGetJoystickName));
 			_glfwSetJoystickCallback = (Delegates.glfwSetJoystickCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetJoystickCallback"), typeof(Delegates.glfwSetJoystickCallback));
@@ -845,7 +846,7 @@ namespace GLFWDotNet
 			_glfwExtensionSupported = (Delegates.glfwExtensionSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwExtensionSupported"), typeof(Delegates.glfwExtensionSupported));
 			_glfwGetProcAddress = (Delegates.glfwGetProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetProcAddress"), typeof(Delegates.glfwGetProcAddress));
 			_glfwVulkanSupported = (Delegates.glfwVulkanSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwVulkanSupported"), typeof(Delegates.glfwVulkanSupported));
-			//_glfwGetRequiredInstanceExtensions = (Delegates.glfwGetRequiredInstanceExtensions)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetRequiredInstanceExtensions"), typeof(Delegates.glfwGetRequiredInstanceExtensions));
+// 			_glfwGetRequiredInstanceExtensions = (Delegates.glfwGetRequiredInstanceExtensions)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetRequiredInstanceExtensions"), typeof(Delegates.glfwGetRequiredInstanceExtensions));
 			_glfwGetInstanceProcAddress = (Delegates.glfwGetInstanceProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetInstanceProcAddress"), typeof(Delegates.glfwGetInstanceProcAddress));
 			_glfwGetPhysicalDevicePresentationSupport = (Delegates.glfwGetPhysicalDevicePresentationSupport)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPhysicalDevicePresentationSupport"), typeof(Delegates.glfwGetPhysicalDevicePresentationSupport));
 			_glfwCreateWindowSurface = (Delegates.glfwCreateWindowSurface)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateWindowSurface"), typeof(Delegates.glfwCreateWindowSurface));
@@ -871,10 +872,12 @@ namespace GLFWDotNet
 			return _glfwSetErrorCallback(cbfun);
 		}
 
+/*
 		public static IntPtr[] glfwGetMonitors(out int count)
 		{
 			return _glfwGetMonitors(out count);
 		}
+*/
 
 		public static IntPtr glfwGetPrimaryMonitor()
 		{
@@ -916,10 +919,12 @@ namespace GLFWDotNet
 			_glfwSetGamma(monitor, gamma);
 		}
 
+/*
 		public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
 		{
 			return _glfwGetGammaRamp(monitor);
 		}
+*/
 
 		public static void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp)
 		{
@@ -1216,10 +1221,12 @@ namespace GLFWDotNet
 			return _glfwJoystickPresent(joy);
 		}
 
+/*
 		public static float[] glfwGetJoystickAxes(int joy, out int count)
 		{
 			return _glfwGetJoystickAxes(joy, out count);
 		}
+*/
 
 		public static string glfwGetJoystickButtons(int joy, out int count)
 		{
@@ -1301,10 +1308,12 @@ namespace GLFWDotNet
 			return _glfwVulkanSupported();
 		}
 
+/*
 		public static string[] glfwGetRequiredInstanceExtensions(out uint count)
 		{
 			return _glfwGetRequiredInstanceExtensions(out count);
 		}
+*/
 
 		public static IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname)
 		{

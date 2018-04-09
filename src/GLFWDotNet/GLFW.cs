@@ -28,8 +28,10 @@ using System.Security;
 
 namespace GLFWDotNet
 {
-	public static partial class GLFW
+	public static class GLFW
 	{
+		private static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();
+
 		public const int GLFW_VERSION_MAJOR = 3;
 		public const int GLFW_VERSION_MINOR = 2;
 		public const int GLFW_VERSION_REVISION = 1;
@@ -336,194 +338,295 @@ namespace GLFWDotNet
 
 		private static class Delegates
 		{
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwInit();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwTerminate();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetVersion(out int major, out int minor, out int rev);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetVersionString();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
 
-// 			public delegate IntPtr glfwGetMonitors(out int count);
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetMonitors(out int count);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetPrimaryMonitor();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetMonitorName(IntPtr monitor);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetVideoModes(IntPtr monitor, out int count);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetVideoMode(IntPtr monitor);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetGamma(IntPtr monitor, float gamma);
 
-// 			public delegate IntPtr glfwGetGammaRamp(IntPtr monitor);
+/*
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetGammaRamp(IntPtr monitor);
+*/
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwDefaultWindowHints();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwWindowHint(int hint, int value);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwDestroyWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwWindowShouldClose(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowShouldClose(IntPtr window, int value);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowTitle(IntPtr window, string title);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowIcon(IntPtr window, int count, IntPtr images);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowPos(IntPtr window, int xpos, int ypos);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetWindowSize(IntPtr window, out int width, out int height);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowAspectRatio(IntPtr window, int numer, int denom);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowSize(IntPtr window, int width, int height);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetFramebufferSize(IntPtr window, out int width, out int height);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwIconifyWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwRestoreWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwMaximizeWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwShowWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwHideWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwFocusWindow(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetWindowMonitor(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetWindowAttrib(IntPtr window, int attrib);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetWindowUserPointer(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowposfun glfwSetWindowPosCallback(IntPtr window, GLFWwindowposfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowsizefun glfwSetWindowSizeCallback(IntPtr window, GLFWwindowsizefun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowclosefun glfwSetWindowCloseCallback(IntPtr window, GLFWwindowclosefun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowrefreshfun glfwSetWindowRefreshCallback(IntPtr window, GLFWwindowrefreshfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowfocusfun glfwSetWindowFocusCallback(IntPtr window, GLFWwindowfocusfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwPollEvents();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwWaitEvents();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwWaitEventsTimeout(double timeout);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwPostEmptyEvent();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetInputMode(IntPtr window, int mode);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetInputMode(IntPtr window, int mode, int value);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetKeyName(int key, int scancode);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetKey(IntPtr window, int key);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetMouseButton(IntPtr window, int button);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetCursorPos(IntPtr window, double xpos, double ypos);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwCreateCursor(IntPtr image, int xhot, int yhot);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwCreateStandardCursor(int shape);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwDestroyCursor(IntPtr cursor);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetCursor(IntPtr window, IntPtr cursor);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWkeyfun glfwSetKeyCallback(IntPtr window, GLFWkeyfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWcharfun glfwSetCharCallback(IntPtr window, GLFWcharfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWcharmodsfun glfwSetCharModsCallback(IntPtr window, GLFWcharmodsfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWmousebuttonfun glfwSetMouseButtonCallback(IntPtr window, GLFWmousebuttonfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWcursorposfun glfwSetCursorPosCallback(IntPtr window, GLFWcursorposfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWcursorenterfun glfwSetCursorEnterCallback(IntPtr window, GLFWcursorenterfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWscrollfun glfwSetScrollCallback(IntPtr window, GLFWscrollfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwJoystickPresent(int joy);
 
-// 			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
+/*
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
+*/
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetJoystickButtons(int joy, out int count);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetJoystickName(int joy);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetClipboardString(IntPtr window, string @string);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetClipboardString(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate double glfwGetTime();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetTime(double time);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate ulong glfwGetTimerValue();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate ulong glfwGetTimerFrequency();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwMakeContextCurrent(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetCurrentContext();
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSwapBuffers(IntPtr window);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSwapInterval(int interval);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwExtensionSupported(string extension);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetProcAddress(string procname);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwVulkanSupported();
 
-// 			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
+/*
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
+*/
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
 
 		}
@@ -538,7 +641,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetErrorCallback _glfwSetErrorCallback;
 
-// 		private static Delegates.glfwGetMonitors _glfwGetMonitors;
+		private static Delegates.glfwGetMonitors _glfwGetMonitors;
 
 		private static Delegates.glfwGetPrimaryMonitor _glfwGetPrimaryMonitor;
 
@@ -760,7 +863,7 @@ namespace GLFWDotNet
 			_glfwGetVersion = (Delegates.glfwGetVersion)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersion"), typeof(Delegates.glfwGetVersion));
 			_glfwGetVersionString = (Delegates.glfwGetVersionString)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVersionString"), typeof(Delegates.glfwGetVersionString));
 			_glfwSetErrorCallback = (Delegates.glfwSetErrorCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetErrorCallback"), typeof(Delegates.glfwSetErrorCallback));
-// 			_glfwGetMonitors = (Delegates.glfwGetMonitors)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitors"), typeof(Delegates.glfwGetMonitors));
+			_glfwGetMonitors = (Delegates.glfwGetMonitors)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitors"), typeof(Delegates.glfwGetMonitors));
 			_glfwGetPrimaryMonitor = (Delegates.glfwGetPrimaryMonitor)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPrimaryMonitor"), typeof(Delegates.glfwGetPrimaryMonitor));
 			_glfwGetMonitorPos = (Delegates.glfwGetMonitorPos)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPos"), typeof(Delegates.glfwGetMonitorPos));
 			_glfwGetMonitorPhysicalSize = (Delegates.glfwGetMonitorPhysicalSize)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetMonitorPhysicalSize"), typeof(Delegates.glfwGetMonitorPhysicalSize));
@@ -872,12 +975,20 @@ namespace GLFWDotNet
 			return _glfwSetErrorCallback(cbfun);
 		}
 
-/*
-		public static IntPtr glfwGetMonitors(out int count)
+		public static IntPtr[] glfwGetMonitors()
 		{
-			return _glfwGetMonitors(out count);
+            var arrayPtr = _glfwGetMonitors(out int count);
+
+            var result = new IntPtr[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtrSize);
+                result[i] = ptr;
+            }
+
+            return result;
 		}
-*/
 
 		public static IntPtr glfwGetPrimaryMonitor()
 		{

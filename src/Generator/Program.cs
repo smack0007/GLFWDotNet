@@ -176,7 +176,6 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
-            functions.Single(x => x.Name == "glfwGetMonitors").CommentOut = true;
             functions.Single(x => x.Name == "glfwGetGammaRamp").CommentOut = true;
             functions.Single(x => x.Name == "glfwGetJoystickAxes").CommentOut = true;
             functions.Single(x => x.Name == "glfwGetRequiredInstanceExtensions").CommentOut = true;
@@ -653,8 +652,10 @@ namespace Generator
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet");
             sb.AppendLine("{");
-            sb.AppendLine("\tpublic static partial class GLFW");
-            sb.AppendLine("\t{");            
+            sb.AppendLine("\tpublic static class GLFW");
+            sb.AppendLine("\t{");
+            sb.AppendLine("\t\tprivate static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();");
+            sb.AppendLine();
 
             foreach (var @enum in enums)
             {
@@ -700,9 +701,14 @@ namespace Generator
                 string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
 
                 if (function.CommentOut)
-                    sb.Append("// ");
+                    sb.AppendLine("/*");
 
+                sb.AppendLine("\t\t\t[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]");
                 sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
+
+                if (function.CommentOut)
+                    sb.AppendLine("*/");
+
                 sb.AppendLine();
             }
 
@@ -814,6 +820,22 @@ namespace Generator
 ";
 
         private static readonly Dictionary<string, string> Methods = new Dictionary<string, string>() {
+            ["glfwGetMonitors"] = @"
+        public static IntPtr[] glfwGetMonitors()
+		{
+            var arrayPtr = _glfwGetMonitors(out int count);
+
+            var result = new IntPtr[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtrSize);
+                result[i] = ptr;
+            }
+
+            return result;
+		}",
+
             ["glfwGetVideoMode"] = @"
         public static GLFWvidmode glfwGetVideoMode(IntPtr monitor)
 		{

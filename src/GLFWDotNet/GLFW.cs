@@ -346,7 +346,7 @@ namespace GLFWDotNet
 
 			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
 
-// 			public delegate IntPtr[] glfwGetMonitors(out int count);
+// 			public delegate IntPtr glfwGetMonitors(out int count);
 
 			public delegate IntPtr glfwGetPrimaryMonitor();
 
@@ -358,15 +358,15 @@ namespace GLFWDotNet
 
 			public delegate GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
 
-			public delegate GLFWvidmode glfwGetVideoModes(IntPtr monitor, out int count);
+			public delegate IntPtr glfwGetVideoModes(IntPtr monitor, out int count);
 
-			public delegate GLFWvidmode glfwGetVideoMode(IntPtr monitor);
+			public delegate IntPtr glfwGetVideoMode(IntPtr monitor);
 
 			public delegate void glfwSetGamma(IntPtr monitor, float gamma);
 
-// 			public delegate GLFWgammaramp glfwGetGammaRamp(IntPtr monitor);
+// 			public delegate IntPtr glfwGetGammaRamp(IntPtr monitor);
 
-			public delegate void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp);
+			public delegate void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp);
 
 			public delegate void glfwDefaultWindowHints();
 
@@ -382,7 +382,7 @@ namespace GLFWDotNet
 
 			public delegate void glfwSetWindowTitle(IntPtr window, string title);
 
-			public delegate void glfwSetWindowIcon(IntPtr window, int count, GLFWimage images);
+			public delegate void glfwSetWindowIcon(IntPtr window, int count, IntPtr images);
 
 			public delegate void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos);
 
@@ -458,7 +458,7 @@ namespace GLFWDotNet
 
 			public delegate void glfwSetCursorPos(IntPtr window, double xpos, double ypos);
 
-			public delegate IntPtr glfwCreateCursor(GLFWimage image, int xhot, int yhot);
+			public delegate IntPtr glfwCreateCursor(IntPtr image, int xhot, int yhot);
 
 			public delegate IntPtr glfwCreateStandardCursor(int shape);
 
@@ -873,7 +873,7 @@ namespace GLFWDotNet
 		}
 
 /*
-		public static IntPtr[] glfwGetMonitors(out int count)
+		public static IntPtr glfwGetMonitors(out int count)
 		{
 			return _glfwGetMonitors(out count);
 		}
@@ -904,14 +904,15 @@ namespace GLFWDotNet
 			return _glfwSetMonitorCallback(cbfun);
 		}
 
-		public static GLFWvidmode glfwGetVideoModes(IntPtr monitor, out int count)
+		public static IntPtr glfwGetVideoModes(IntPtr monitor, out int count)
 		{
 			return _glfwGetVideoModes(monitor, out count);
 		}
 
 		public static GLFWvidmode glfwGetVideoMode(IntPtr monitor)
 		{
-			return _glfwGetVideoMode(monitor);
+            var ptr = _glfwGetVideoMode(monitor);
+			return Marshal.PtrToStructure<GLFWvidmode>(ptr);
 		}
 
 		public static void glfwSetGamma(IntPtr monitor, float gamma)
@@ -920,13 +921,13 @@ namespace GLFWDotNet
 		}
 
 /*
-		public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
+		public static IntPtr glfwGetGammaRamp(IntPtr monitor)
 		{
 			return _glfwGetGammaRamp(monitor);
 		}
 */
 
-		public static void glfwSetGammaRamp(IntPtr monitor, GLFWgammaramp ramp)
+		public static void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp)
 		{
 			_glfwSetGammaRamp(monitor, ramp);
 		}
@@ -966,7 +967,7 @@ namespace GLFWDotNet
 			_glfwSetWindowTitle(window, title);
 		}
 
-		public static void glfwSetWindowIcon(IntPtr window, int count, GLFWimage images)
+		public static void glfwSetWindowIcon(IntPtr window, int count, IntPtr images)
 		{
 			_glfwSetWindowIcon(window, count, images);
 		}
@@ -1156,7 +1157,7 @@ namespace GLFWDotNet
 			_glfwSetCursorPos(window, xpos, ypos);
 		}
 
-		public static IntPtr glfwCreateCursor(GLFWimage image, int xhot, int yhot)
+		public static IntPtr glfwCreateCursor(IntPtr image, int xhot, int yhot)
 		{
 			return _glfwCreateCursor(image, xhot, yhot);
 		}

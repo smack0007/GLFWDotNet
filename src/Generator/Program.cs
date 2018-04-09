@@ -531,21 +531,7 @@ namespace Generator
 
                 if (@struct != null)
                 {
-                    if (@struct.IsOpaque)
-                    {
-                        if (type.EndsWith("**"))
-                        {
-                            return "IntPtr[]";
-                        }
-                        else
-                        {
-                            return "IntPtr";
-                        }
-                    }
-                    else
-                    {
-                        type = structName;
-                    }
+                    return "IntPtr";
                 }
             }
 
@@ -755,24 +741,31 @@ namespace Generator
                 if (function.CommentOut)
                     sb.AppendLine("/*");
 
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
-                string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name), x.Modifier)));
-                string returnType = GetReturnType(function.ReturnType, structs);
+                if (!Methods.ContainsKey(function.Name))
+                {
+                    string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+                    string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name), x.Modifier)));
+                    string returnType = GetReturnType(function.ReturnType, structs);
 
-                sb.AppendLine($"\t\tpublic static {returnType} {function.Name}({parameters})");
-                sb.AppendLine("\t\t{");
+                    sb.AppendLine($"\t\tpublic static {returnType} {function.Name}({parameters})");
+                    sb.AppendLine("\t\t{");
 
-                sb.Append("\t\t\t");
+                    sb.Append("\t\t\t");
 
-                if (returnType != "void")
-                    sb.Append("return ");
+                    if (returnType != "void")
+                        sb.Append("return ");
 
-                sb.AppendLine($"_{function.Name}({parametersInvoke});");
+                    sb.AppendLine($"_{function.Name}({parametersInvoke});");
 
-                sb.AppendLine("\t\t}");
+                    sb.AppendLine("\t\t}");
 
-                if (function.CommentOut)
-                    sb.AppendLine("*/");
+                    if (function.CommentOut)
+                        sb.AppendLine("*/");
+                }
+                else
+                {
+                    sb.AppendLine("\t\t" + Methods[function.Name].Trim());
+                }
 
                 sb.AppendLine();
             }
@@ -822,7 +815,11 @@ namespace Generator
 
         private static readonly Dictionary<string, string> Methods = new Dictionary<string, string>() {
             ["glfwGetVideoMode"] = @"
-",
+        public static GLFWvidmode glfwGetVideoMode(IntPtr monitor)
+		{
+            var ptr = _glfwGetVideoMode(monitor);
+			return Marshal.PtrToStructure<GLFWvidmode>(ptr);
+		}",
 
         };
     }

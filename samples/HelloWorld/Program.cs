@@ -24,19 +24,35 @@ namespace HelloWorld
             Console.WriteLine($"GLFW Version: {major}.{minor}.{revision}");
 
             var monitors = glfwGetMonitors();
-            Console.WriteLine($"Monitor Count: {monitors.Length}");
-
-            foreach (var monitor in monitors)
+            if (monitors != null)
             {
-                Console.WriteLine($"\t{glfwGetMonitorName(monitor)}");
+                Console.WriteLine($"Monitor Count: {monitors.Length}");
 
-                var videoMode = glfwGetVideoMode(monitor);
-                Console.WriteLine($"\t\tVideo Mode: {videoMode.width}x{videoMode.height}");
+                foreach (var monitor in monitors)
+                {
+                    Console.WriteLine($"\t{glfwGetMonitorName(monitor)}");
 
-                // I don't know that the average gamme ramp value has any use, I just
-                // use it so that I have a number to display. :-p
-                var gammaRamp = glfwGetGammaRamp(monitor);
-                Console.WriteLine($"\t\tGamma Ramp: {nameof(gammaRamp.size)}={gammaRamp.size} {nameof(gammaRamp.red)}={gammaRamp.red.Select(x => (int)x).Average()} {nameof(gammaRamp.green)}={gammaRamp.green.Select(x => (int)x).Average()} {nameof(gammaRamp.blue)}={gammaRamp.blue.Select(x => (int)x).Average()}");
+                    var videoMode = glfwGetVideoMode(monitor);
+                    Console.WriteLine($"\t\tVideo Mode: {videoMode.width}x{videoMode.height}");
+
+                    // I don't know that the average gamme ramp value has any use, I just
+                    // use it so that I have a number to display. :-p
+                    var gammaRamp = glfwGetGammaRamp(monitor);
+                    Console.WriteLine($"\t\tGamma Ramp: {nameof(gammaRamp.size)}={gammaRamp.size} {nameof(gammaRamp.red)}={gammaRamp.red.Select(x => (int)x).Average()} {nameof(gammaRamp.green)}={gammaRamp.green.Select(x => (int)x).Average()} {nameof(gammaRamp.blue)}={gammaRamp.blue.Select(x => (int)x).Average()}");
+                }
+            }
+
+            var vulkanSupported = glfwVulkanSupported();
+            Console.WriteLine($"Vulkan supported: {vulkanSupported}");
+
+            var vulkanRequiredInstanceExtensions = glfwGetRequiredInstanceExtensions();
+            if (vulkanRequiredInstanceExtensions != null)
+            {
+                Console.WriteLine("\tRequired Instance Extensions:");
+                foreach (var extension in vulkanRequiredInstanceExtensions)
+                {
+                    Console.WriteLine(extension);
+                }
             }
 
             glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);

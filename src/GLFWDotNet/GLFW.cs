@@ -326,7 +326,7 @@ namespace GLFWDotNet
 		public delegate void GLFWcharmodsfun(IntPtr window, uint codepoint, int mods);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-		public delegate void GLFWdropfun(IntPtr window, int count, string[] paths);
+		public delegate void GLFWdropfun(IntPtr window, int count, IntPtr paths);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWmonitorfun(IntPtr monitor, int @event);
@@ -611,10 +611,8 @@ namespace GLFWDotNet
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwVulkanSupported();
 
-/*
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string[] glfwGetRequiredInstanceExtensions(out uint count);
-*/
+			public delegate IntPtr glfwGetRequiredInstanceExtensions(out uint count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname);
@@ -809,7 +807,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwVulkanSupported _glfwVulkanSupported;
 
-// 		private static Delegates.glfwGetRequiredInstanceExtensions _glfwGetRequiredInstanceExtensions;
+		private static Delegates.glfwGetRequiredInstanceExtensions _glfwGetRequiredInstanceExtensions;
 
 		private static Delegates.glfwGetInstanceProcAddress _glfwGetInstanceProcAddress;
 
@@ -945,7 +943,7 @@ namespace GLFWDotNet
 			_glfwExtensionSupported = (Delegates.glfwExtensionSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwExtensionSupported"), typeof(Delegates.glfwExtensionSupported));
 			_glfwGetProcAddress = (Delegates.glfwGetProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetProcAddress"), typeof(Delegates.glfwGetProcAddress));
 			_glfwVulkanSupported = (Delegates.glfwVulkanSupported)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwVulkanSupported"), typeof(Delegates.glfwVulkanSupported));
-// 			_glfwGetRequiredInstanceExtensions = (Delegates.glfwGetRequiredInstanceExtensions)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetRequiredInstanceExtensions"), typeof(Delegates.glfwGetRequiredInstanceExtensions));
+			_glfwGetRequiredInstanceExtensions = (Delegates.glfwGetRequiredInstanceExtensions)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetRequiredInstanceExtensions"), typeof(Delegates.glfwGetRequiredInstanceExtensions));
 			_glfwGetInstanceProcAddress = (Delegates.glfwGetInstanceProcAddress)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetInstanceProcAddress"), typeof(Delegates.glfwGetInstanceProcAddress));
 			_glfwGetPhysicalDevicePresentationSupport = (Delegates.glfwGetPhysicalDevicePresentationSupport)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetPhysicalDevicePresentationSupport"), typeof(Delegates.glfwGetPhysicalDevicePresentationSupport));
 			_glfwCreateWindowSurface = (Delegates.glfwCreateWindowSurface)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateWindowSurface"), typeof(Delegates.glfwCreateWindowSurface));
@@ -974,6 +972,9 @@ namespace GLFWDotNet
 		public static IntPtr[] glfwGetMonitors()
 		{
             var arrayPtr = _glfwGetMonitors(out int count);
+
+			if (arrayPtr == IntPtr.Zero)
+				return null;
 
             var result = new IntPtr[count];
 
@@ -1438,12 +1439,22 @@ namespace GLFWDotNet
 			return _glfwVulkanSupported();
 		}
 
-/*
-		public static string[] glfwGetRequiredInstanceExtensions(out uint count)
+		public static string[] glfwGetRequiredInstanceExtensions()
 		{
-			return _glfwGetRequiredInstanceExtensions(out count);
+			var arrayPtr = _glfwGetRequiredInstanceExtensions(out uint count);
+
+			if (arrayPtr == IntPtr.Zero)
+				return null;
+
+			var result = new string[count];
+
+			for (int i = 0; i < count; i++)
+			{
+				result[i] = Marshal.PtrToStringAnsi(IntPtr.Add(arrayPtr, i * IntPtr.Size));
+			}
+
+			return result;
 		}
-*/
 
 		public static IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname)
 		{

@@ -177,7 +177,6 @@ namespace Generator
             Parse(lines, enums, functions, callbacks, structs);
 
             functions.Single(x => x.Name == "glfwGetJoystickAxes").CommentOut = true;
-            functions.Single(x => x.Name == "glfwGetRequiredInstanceExtensions").CommentOut = true;
 
             Write(enums, functions, callbacks, structs);
         }
@@ -501,21 +500,6 @@ namespace Generator
             }
         }
 
-        private static string ReplaceCommonWords(string input)
-        {
-            return input
-                .Replace("bits", "Bits")
-                .Replace("button", "Button")
-                .Replace("close", "Close")
-                .Replace("enter", "Enter")
-                .Replace("focus", "Focus")
-                .Replace("iconify", "Iconify")
-                .Replace("mods", "Mods")
-                .Replace("pos", "Pos")
-                .Replace("refresh", "Refresh")
-                .Replace("size", "Size");
-        }
-
         private static string GetType(string type, List<StructData> structs)
         {
             if (type.StartsWith("const "))
@@ -539,7 +523,7 @@ namespace Generator
                     return "string";
 
                 case "char**":
-                    return "string[]";
+                    return "IntPtr";
 
                 case "double*":
                     return "double";
@@ -851,6 +835,9 @@ namespace Generator
         public static IntPtr[] glfwGetMonitors()
 		{
             var arrayPtr = _glfwGetMonitors(out int count);
+
+            if (arrayPtr == IntPtr.Zero)
+				return null;
 
             var result = new IntPtr[count];
 

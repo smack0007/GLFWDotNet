@@ -546,7 +546,7 @@ namespace Generator
                     return "uint";
 
                 case "unsigned char*":
-                    return "string";
+                    return "IntPtr";
 
                 case "unsigned short*":
                     return "ushort[]";
@@ -837,6 +837,17 @@ namespace Generator
                 return null;
 
             var result = new float[count];
+            Marshal.Copy(arrayPtr, result, 0, count);
+
+            return result;
+		}",
+
+            ["glfwGetJoystickButtons"] = @"
+        public static byte[] glfwGetJoystickButtons(int joy)
+		{
+			var arrayPtr = _glfwGetJoystickButtons(joy, out int count);
+
+            var result = new byte[count];
             Marshal.Copy(arrayPtr, result, 0, count);
 
             return result;

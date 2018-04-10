@@ -91,7 +91,11 @@ namespace HelloWorld
                     Console.Write(joystickAxis + " ");
                 Console.WriteLine();
 
-                // TODO: Buttons
+                var joystickButtons = glfwGetJoystickButtons(joysticks[i]);
+                Console.Write("\t\t\tButtons: ");
+                foreach (var joystickButton in joystickButtons)
+                    Console.Write(joystickButton + " ");
+                Console.WriteLine();
             }
 
             glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);

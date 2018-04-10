@@ -276,7 +276,7 @@ namespace GLFWDotNet
 		{
 			public int width;
 			public int height;
-			public string pixels;
+			public IntPtr pixels;
 		}
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
@@ -561,7 +561,7 @@ namespace GLFWDotNet
 			public delegate IntPtr glfwGetJoystickAxes(int joy, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetJoystickButtons(int joy, out int count);
+			public delegate IntPtr glfwGetJoystickButtons(int joy, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetJoystickName(int joy);
@@ -1362,9 +1362,14 @@ namespace GLFWDotNet
             return result;
 		}
 
-		public static string glfwGetJoystickButtons(int joy, out int count)
+		public static byte[] glfwGetJoystickButtons(int joy)
 		{
-			return _glfwGetJoystickButtons(joy, out count);
+			var arrayPtr = _glfwGetJoystickButtons(joy, out int count);
+
+            var result = new byte[count];
+            Marshal.Copy(arrayPtr, result, 0, count);
+
+            return result;
 		}
 
 		public static string glfwGetJoystickName(int joy)

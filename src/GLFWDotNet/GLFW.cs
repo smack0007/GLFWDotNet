@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Loader;
 using System.Security;
 
 namespace GLFWDotNet
@@ -973,7 +972,7 @@ namespace GLFWDotNet
 		{
             var arrayPtr = _glfwGetMonitors(out int count);
 
-			if (arrayPtr == IntPtr.Zero)
+            if (arrayPtr == IntPtr.Zero)
 				return null;
 
             var result = new IntPtr[count];

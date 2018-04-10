@@ -629,7 +629,6 @@ namespace Generator
             sb.AppendLine("using System.IO;");
             sb.AppendLine("using System.Reflection;");
             sb.AppendLine("using System.Runtime.InteropServices;");
-            sb.AppendLine("using System.Runtime.Loader;");
             sb.AppendLine("using System.Security;");
 
             sb.AppendLine();
@@ -848,6 +847,23 @@ namespace Generator
             }
 
             return result;
+		}",
+            ["glfwGetRequiredInstanceExtensions"] = @"
+        public static string[] glfwGetRequiredInstanceExtensions()
+		{
+			var arrayPtr = _glfwGetRequiredInstanceExtensions(out uint count);
+
+			if (arrayPtr == IntPtr.Zero)
+				return null;
+
+			var result = new string[count];
+
+			for (int i = 0; i < count; i++)
+			{
+				result[i] = Marshal.PtrToStringAnsi(IntPtr.Add(arrayPtr, i * IntPtr.Size));
+			}
+
+			return result;
 		}",
 
             ["glfwGetVideoMode"] = @"

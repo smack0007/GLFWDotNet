@@ -1,12 +1,19 @@
 ﻿using System;
-using GLDotNet;
-using GLFWDotNet.Samples;
+using System.Runtime.InteropServices;
 using static GLFWDotNet.GLFW;
 
 namespace HelloWorld
 {
     public static class Program
     {
+        private const uint GL_RENDERER = 0x1F01;
+        private const uint GL_VERSION = 0x1F02;
+
+        private static class Delegates
+        {
+            public delegate IntPtr glGetString(uint name);
+        }
+
         public static int Main(string[] args)
         {
             if (glfwInit() == 0)
@@ -41,12 +48,12 @@ namespace HelloWorld
 
             glfwMakeContextCurrent(window);
 
-            GL gl = new GL(new GLFWPlatformContext(window, 4, 0));
+            var glGetString = (Delegates.glGetString)Marshal.GetDelegateForFunctionPointer(glfwGetProcAddress("glGetString"), typeof(Delegates.glGetString));
 
-            var version = gl.GetString(StringName.Version);
+            var version = Marshal.PtrToStringAnsi(glGetString(GL_VERSION));
             Console.WriteLine($"GL Version: {version}");
 
-            var renderer = gl.GetString(StringName.Renderer);
+            var renderer = Marshal.PtrToStringAnsi(glGetString(GL_RENDERER));
             Console.WriteLine($"GL Renderer: {renderer}");
 
             glfwShowWindow(window);

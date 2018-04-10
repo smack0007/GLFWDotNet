@@ -1,12 +1,6 @@
 <Project>
     <ItemGroup>
         <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />
-        
-        <Reference Include="GLDotNet">
-            <HintPath>$(RepositoryRootDirectory)ext\GLDotNet\GLDotNet.dll</HintPath>
-        </Reference>
-
-        <Compile Include="$(MSBuildThisFileDirectory)GLFWPlatformContext.cs" />
     </ItemGroup>
 
     <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">

@@ -1447,9 +1447,10 @@ namespace GLFWDotNet
 
 			var result = new string[count];
 
-			for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
 			{
-				result[i] = Marshal.PtrToStringAnsi(IntPtr.Add(arrayPtr, i * IntPtr.Size));
+                IntPtr stringPtr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                result[i] = Marshal.PtrToStringAnsi(stringPtr);
 			}
 
 			return result;

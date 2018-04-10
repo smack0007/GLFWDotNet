@@ -51,7 +51,7 @@ namespace HelloWorld
                 Console.WriteLine("\tRequired Instance Extensions:");
                 foreach (var extension in vulkanRequiredInstanceExtensions)
                 {
-                    Console.WriteLine(extension);
+                    Console.WriteLine("\t\t" + extension);
                 }
             }
 

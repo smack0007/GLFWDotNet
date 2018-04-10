@@ -55,6 +55,45 @@ namespace HelloWorld
                 }
             }
 
+            var joysticks = new int[]
+            {
+                GLFW_JOYSTICK_1,
+                GLFW_JOYSTICK_2,
+                GLFW_JOYSTICK_3,
+                GLFW_JOYSTICK_4,
+                GLFW_JOYSTICK_5,
+                GLFW_JOYSTICK_6,
+                GLFW_JOYSTICK_7,
+                GLFW_JOYSTICK_8,
+                GLFW_JOYSTICK_9,
+                GLFW_JOYSTICK_10,
+                GLFW_JOYSTICK_11,
+                GLFW_JOYSTICK_12,
+                GLFW_JOYSTICK_13,
+                GLFW_JOYSTICK_14,
+                GLFW_JOYSTICK_15,
+                GLFW_JOYSTICK_16,
+            };
+
+            int joystickCount = 0;
+            while (glfwJoystickPresent(joysticks[joystickCount]) != 0)
+                joystickCount++;
+
+            Console.WriteLine($"Joystick Count: {joystickCount}");
+
+            for (int i = 0; i < joystickCount; i++)
+            {
+                Console.WriteLine("\t" + glfwGetJoystickName(joysticks[i]));
+
+                var joystickAxes = glfwGetJoystickAxes(joysticks[i]);
+                Console.Write("\t\t\tAxes: ");
+                foreach (var joystickAxis in joystickAxes)
+                    Console.Write(joystickAxis + " ");
+                Console.WriteLine();
+
+                // TODO: Buttons
+            }
+
             glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

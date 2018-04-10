@@ -557,10 +557,8 @@ namespace GLFWDotNet
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwJoystickPresent(int joy);
 
-/*
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate float[] glfwGetJoystickAxes(int joy, out int count);
-*/
+			public delegate IntPtr glfwGetJoystickAxes(int joy, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate string glfwGetJoystickButtons(int joy, out int count);
@@ -772,7 +770,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwJoystickPresent _glfwJoystickPresent;
 
-// 		private static Delegates.glfwGetJoystickAxes _glfwGetJoystickAxes;
+		private static Delegates.glfwGetJoystickAxes _glfwGetJoystickAxes;
 
 		private static Delegates.glfwGetJoystickButtons _glfwGetJoystickButtons;
 
@@ -925,7 +923,7 @@ namespace GLFWDotNet
 			_glfwSetScrollCallback = (Delegates.glfwSetScrollCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetScrollCallback"), typeof(Delegates.glfwSetScrollCallback));
 			_glfwSetDropCallback = (Delegates.glfwSetDropCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetDropCallback"), typeof(Delegates.glfwSetDropCallback));
 			_glfwJoystickPresent = (Delegates.glfwJoystickPresent)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwJoystickPresent"), typeof(Delegates.glfwJoystickPresent));
-// 			_glfwGetJoystickAxes = (Delegates.glfwGetJoystickAxes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickAxes"), typeof(Delegates.glfwGetJoystickAxes));
+			_glfwGetJoystickAxes = (Delegates.glfwGetJoystickAxes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickAxes"), typeof(Delegates.glfwGetJoystickAxes));
 			_glfwGetJoystickButtons = (Delegates.glfwGetJoystickButtons)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickButtons"), typeof(Delegates.glfwGetJoystickButtons));
 			_glfwGetJoystickName = (Delegates.glfwGetJoystickName)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetJoystickName"), typeof(Delegates.glfwGetJoystickName));
 			_glfwSetJoystickCallback = (Delegates.glfwSetJoystickCallback)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetJoystickCallback"), typeof(Delegates.glfwSetJoystickCallback));
@@ -1351,12 +1349,18 @@ namespace GLFWDotNet
 			return _glfwJoystickPresent(joy);
 		}
 
-/*
-		public static float[] glfwGetJoystickAxes(int joy, out int count)
+		public static float[] glfwGetJoystickAxes(int joy)
 		{
-			return _glfwGetJoystickAxes(joy, out count);
+            var arrayPtr = _glfwGetJoystickAxes(joy, out int count);
+
+            if (arrayPtr == IntPtr.Zero)
+                return null;
+
+            var result = new float[count];
+            Marshal.Copy(arrayPtr, result, 0, count);
+
+            return result;
 		}
-*/
 
 		public static string glfwGetJoystickButtons(int joy, out int count)
 		{

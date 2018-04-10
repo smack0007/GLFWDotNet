@@ -176,8 +176,6 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
-            functions.Single(x => x.Name == "glfwGetJoystickAxes").CommentOut = true;
-
             Write(enums, functions, callbacks, structs);
         }
 
@@ -529,7 +527,7 @@ namespace Generator
                     return "double";
 
                 case "float*":
-                    return "float[]";
+                    return "IntPtr";
 
                 case "Glproc":
                     return "IntPtr";
@@ -830,6 +828,20 @@ namespace Generator
 			return result;
 		}",
             
+            ["glfwGetJoystickAxes"] = @"
+        public static float[] glfwGetJoystickAxes(int joy)
+		{
+            var arrayPtr = _glfwGetJoystickAxes(joy, out int count);
+
+            if (arrayPtr == IntPtr.Zero)
+                return null;
+
+            var result = new float[count];
+            Marshal.Copy(arrayPtr, result, 0, count);
+
+            return result;
+		}",
+
             ["glfwGetMonitors"] = @"
         public static IntPtr[] glfwGetMonitors()
 		{
@@ -848,6 +860,7 @@ namespace Generator
 
             return result;
 		}",
+
             ["glfwGetRequiredInstanceExtensions"] = @"
         public static string[] glfwGetRequiredInstanceExtensions()
 		{
@@ -858,9 +871,10 @@ namespace Generator
 
 			var result = new string[count];
 
-			for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
 			{
-				result[i] = Marshal.PtrToStringAnsi(IntPtr.Add(arrayPtr, i * IntPtr.Size));
+                IntPtr stringPtr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
+                result[i] = Marshal.PtrToStringAnsi(stringPtr);
 			}
 
 			return result;

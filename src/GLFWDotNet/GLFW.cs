@@ -30,8 +30,6 @@ namespace GLFWDotNet
 {
 	public static class GLFW
 	{
-		private static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();
-
 		public const int GLFW_VERSION_MAJOR = 3;
 		public const int GLFW_VERSION_MINOR = 2;
 		public const int GLFW_VERSION_REVISION = 1;
@@ -380,10 +378,8 @@ namespace GLFWDotNet
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetGamma(IntPtr monitor, float gamma);
 
-/*
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetGammaRamp(IntPtr monitor);
-*/
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp);
@@ -659,7 +655,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetGamma _glfwSetGamma;
 
-// 		private static Delegates.glfwGetGammaRamp _glfwGetGammaRamp;
+		private static Delegates.glfwGetGammaRamp _glfwGetGammaRamp;
 
 		private static Delegates.glfwSetGammaRamp _glfwSetGammaRamp;
 
@@ -872,7 +868,7 @@ namespace GLFWDotNet
 			_glfwGetVideoModes = (Delegates.glfwGetVideoModes)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoModes"), typeof(Delegates.glfwGetVideoModes));
 			_glfwGetVideoMode = (Delegates.glfwGetVideoMode)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetVideoMode"), typeof(Delegates.glfwGetVideoMode));
 			_glfwSetGamma = (Delegates.glfwSetGamma)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGamma"), typeof(Delegates.glfwSetGamma));
-// 			_glfwGetGammaRamp = (Delegates.glfwGetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetGammaRamp"), typeof(Delegates.glfwGetGammaRamp));
+			_glfwGetGammaRamp = (Delegates.glfwGetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwGetGammaRamp"), typeof(Delegates.glfwGetGammaRamp));
 			_glfwSetGammaRamp = (Delegates.glfwSetGammaRamp)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwSetGammaRamp"), typeof(Delegates.glfwSetGammaRamp));
 			_glfwDefaultWindowHints = (Delegates.glfwDefaultWindowHints)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwDefaultWindowHints"), typeof(Delegates.glfwDefaultWindowHints));
 			_glfwWindowHint = (Delegates.glfwWindowHint)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwWindowHint"), typeof(Delegates.glfwWindowHint));
@@ -983,7 +979,7 @@ namespace GLFWDotNet
 
             for (int i = 0; i < count; i++)
             {
-                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtrSize);
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
                 result[i] = ptr;
             }
 
@@ -1031,12 +1027,34 @@ namespace GLFWDotNet
 			_glfwSetGamma(monitor, gamma);
 		}
 
-/*
-		public static IntPtr glfwGetGammaRamp(IntPtr monitor)
+		public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
 		{
-			return _glfwGetGammaRamp(monitor);
+			var structPtr = _glfwGetGammaRamp(monitor);
+
+			var redArrayPtr = Marshal.ReadIntPtr(structPtr);
+			var blueArrayPtr = Marshal.ReadIntPtr(IntPtr.Add(structPtr, IntPtr.Size));
+			var greenArrayPtr = Marshal.ReadIntPtr(IntPtr.Add(structPtr, IntPtr.Size * 2));
+			var size = (uint)Marshal.ReadInt32(IntPtr.Add(structPtr, IntPtr.Size * 3));
+			
+			var result = new GLFWgammaramp()
+			{
+				size = size,
+				red = new ushort[size],
+				green = new ushort[size],
+				blue = new ushort[size],
+			};
+
+			int uintSize = Marshal.SizeOf(typeof(uint));
+
+			for (int i = 0; i < size; i++)
+			{
+				result.red[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(redArrayPtr, uintSize * i));
+				result.blue[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(blueArrayPtr, uintSize * i));
+				result.green[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(greenArrayPtr, uintSize * i));
+			}
+
+			return result;
 		}
-*/
 
 		public static void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp)
 		{

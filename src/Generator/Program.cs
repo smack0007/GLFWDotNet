@@ -176,7 +176,6 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
-            functions.Single(x => x.Name == "glfwGetGammaRamp").CommentOut = true;
             functions.Single(x => x.Name == "glfwGetJoystickAxes").CommentOut = true;
             functions.Single(x => x.Name == "glfwGetRequiredInstanceExtensions").CommentOut = true;
 
@@ -654,8 +653,6 @@ namespace Generator
             sb.AppendLine("{");
             sb.AppendLine("\tpublic static class GLFW");
             sb.AppendLine("\t{");
-            sb.AppendLine("\t\tprivate static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();");
-            sb.AppendLine();
 
             foreach (var @enum in enums)
             {
@@ -820,6 +817,36 @@ namespace Generator
 ";
 
         private static readonly Dictionary<string, string> Methods = new Dictionary<string, string>() {
+            ["glfwGetGammaRamp"] = @"
+        public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
+		{
+			var structPtr = _glfwGetGammaRamp(monitor);
+
+			var redArrayPtr = Marshal.ReadIntPtr(structPtr);
+			var blueArrayPtr = Marshal.ReadIntPtr(IntPtr.Add(structPtr, IntPtr.Size));
+			var greenArrayPtr = Marshal.ReadIntPtr(IntPtr.Add(structPtr, IntPtr.Size * 2));
+			var size = (uint)Marshal.ReadInt32(IntPtr.Add(structPtr, IntPtr.Size * 3));
+			
+			var result = new GLFWgammaramp()
+			{
+				size = size,
+				red = new ushort[size],
+				green = new ushort[size],
+				blue = new ushort[size],
+			};
+
+			int uintSize = Marshal.SizeOf(typeof(uint));
+
+			for (int i = 0; i < size; i++)
+			{
+				result.red[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(redArrayPtr, uintSize * i));
+				result.blue[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(blueArrayPtr, uintSize * i));
+				result.green[i] = (ushort)Marshal.ReadInt16(IntPtr.Add(greenArrayPtr, uintSize * i));
+			}
+
+			return result;
+		}",
+            
             ["glfwGetMonitors"] = @"
         public static IntPtr[] glfwGetMonitors()
 		{
@@ -829,7 +856,7 @@ namespace Generator
 
             for (int i = 0; i < count; i++)
             {
-                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtrSize);
+                var ptr = Marshal.ReadIntPtr(arrayPtr, i * IntPtr.Size);
                 result[i] = ptr;
             }
 

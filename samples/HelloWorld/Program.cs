@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using static GLFWDotNet.GLFW;
 
@@ -31,6 +32,11 @@ namespace HelloWorld
 
                 var videoMode = glfwGetVideoMode(monitor);
                 Console.WriteLine($"\t\tVideo Mode: {videoMode.width}x{videoMode.height}");
+
+                // I don't know that the average gamme ramp value has any use, I just
+                // use it so that I have a number to display. :-p
+                var gammaRamp = glfwGetGammaRamp(monitor);
+                Console.WriteLine($"\t\tGamma Ramp: {nameof(gammaRamp.size)}={gammaRamp.size} {nameof(gammaRamp.red)}={gammaRamp.red.Select(x => (int)x).Average()} {nameof(gammaRamp.green)}={gammaRamp.green.Select(x => (int)x).Average()} {nameof(gammaRamp.blue)}={gammaRamp.blue.Select(x => (int)x).Average()}");
             }
 
             glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);

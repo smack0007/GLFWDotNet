@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.3
@@ -16,10 +16,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLFWDotNet", "src\GLFWDotNe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generator", "src\Generator\Generator.csproj", "{3880B67E-7BC8-4E7E-9160-A7EC1C6496DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLFWInfo", "samples\GLFWInfo\GLFWInfo.csproj", "{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C15774E0-8B2E-4FB5-B01B-0C5F455A32FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -34,6 +40,18 @@ Global
 		{3880B67E-7BC8-4E7E-9160-A7EC1C6496DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3880B67E-7BC8-4E7E-9160-A7EC1C6496DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3880B67E-7BC8-4E7E-9160-A7EC1C6496DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|x64.ActiveCfg = Debug|x64
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|x64.Build.0 = Debug|x64
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|x86.ActiveCfg = Debug|x86
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Debug|x86.Build.0 = Debug|x86
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|x64.ActiveCfg = Release|x64
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|x64.Build.0 = Release|x64
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|x86.ActiveCfg = Release|x86
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +60,7 @@ Global
 		{C15774E0-8B2E-4FB5-B01B-0C5F455A32FF} = {B218290B-7F6A-4727-B34B-740EDA309399}
 		{9E603FC7-C711-4EC4-A93B-CB2F551B7E06} = {22DFB173-8802-4C66-9345-6E1D60EBB028}
 		{3880B67E-7BC8-4E7E-9160-A7EC1C6496DD} = {22DFB173-8802-4C66-9345-6E1D60EBB028}
+		{EB1A5771-058A-4088-A8CA-603C6D2BFF2A} = {B218290B-7F6A-4727-B34B-740EDA309399}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3C34CCB-5F40-4FD8-AC75-722778A911E0}

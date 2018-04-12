@@ -23,6 +23,9 @@ namespace GLFWInfo
             glfwGetVersion(out int major, out int minor, out int revision);
             Console.WriteLine($"GLFW Version: {major}.{minor}.{revision}");
 
+            var versionString = glfwGetVersionString();
+            Console.WriteLine($"GLFW Version String: {versionString}");
+
             var monitors = glfwGetMonitors();
             if (monitors != null)
             {

@@ -345,7 +345,7 @@ namespace GLFWDotNet
 			public delegate void glfwGetVersion(out int major, out int minor, out int rev);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetVersionString();
+			public delegate IntPtr glfwGetVersionString();
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
@@ -363,7 +363,7 @@ namespace GLFWDotNet
 			public delegate void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetMonitorName(IntPtr monitor);
+			public delegate IntPtr glfwGetMonitorName(IntPtr monitor);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
@@ -504,7 +504,7 @@ namespace GLFWDotNet
 			public delegate void glfwSetInputMode(IntPtr window, int mode, int value);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetKeyName(int key, int scancode);
+			public delegate IntPtr glfwGetKeyName(int key, int scancode);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetKey(IntPtr window, int key);
@@ -564,7 +564,7 @@ namespace GLFWDotNet
 			public delegate IntPtr glfwGetJoystickButtons(int joy, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetJoystickName(int joy);
+			public delegate IntPtr glfwGetJoystickName(int joy);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun);
@@ -573,7 +573,7 @@ namespace GLFWDotNet
 			public delegate void glfwSetClipboardString(IntPtr window, string @string);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate string glfwGetClipboardString(IntPtr window);
+			public delegate IntPtr glfwGetClipboardString(IntPtr window);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate double glfwGetTime();
@@ -958,7 +958,8 @@ namespace GLFWDotNet
 
 		public static string glfwGetVersionString()
 		{
-			return _glfwGetVersionString();
+			var versionStringPtr = _glfwGetVersionString();
+			return Marshal.PtrToStringAnsi(versionStringPtr);
 		}
 
 		public static GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
@@ -999,7 +1000,7 @@ namespace GLFWDotNet
 			_glfwGetMonitorPhysicalSize(monitor, out widthMM, out heightMM);
 		}
 
-		public static string glfwGetMonitorName(IntPtr monitor)
+		public static IntPtr glfwGetMonitorName(IntPtr monitor)
 		{
 			return _glfwGetMonitorName(monitor);
 		}
@@ -1259,7 +1260,7 @@ namespace GLFWDotNet
 			_glfwSetInputMode(window, mode, value);
 		}
 
-		public static string glfwGetKeyName(int key, int scancode)
+		public static IntPtr glfwGetKeyName(int key, int scancode)
 		{
 			return _glfwGetKeyName(key, scancode);
 		}
@@ -1372,7 +1373,7 @@ namespace GLFWDotNet
             return result;
 		}
 
-		public static string glfwGetJoystickName(int joy)
+		public static IntPtr glfwGetJoystickName(int joy)
 		{
 			return _glfwGetJoystickName(joy);
 		}
@@ -1387,7 +1388,7 @@ namespace GLFWDotNet
 			_glfwSetClipboardString(window, @string);
 		}
 
-		public static string glfwGetClipboardString(IntPtr window)
+		public static IntPtr glfwGetClipboardString(IntPtr window)
 		{
 			return _glfwGetClipboardString(window);
 		}

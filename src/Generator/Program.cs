@@ -572,7 +572,12 @@ namespace Generator
 
         private static string GetReturnType(string type, List<StructData> structs)
         {
-            return GetType(type, structs);
+            type = GetType(type, structs);
+
+            if (type == "string")
+                type = "IntPtr";
+
+            return type;
         }
 
         private static string PrependModifier(string input, ParamModifier modifier)
@@ -889,6 +894,13 @@ namespace Generator
 			}
 
 			return result;
+		}",
+        
+            ["glfwGetVersionString"] = @"
+        public static string glfwGetVersionString()
+		{
+			var versionStringPtr = _glfwGetVersionString();
+			return Marshal.PtrToStringAnsi(versionStringPtr);
 		}",
 
             ["glfwGetVideoMode"] = @"

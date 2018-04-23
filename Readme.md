@@ -31,4 +31,5 @@ The glfw dlls must be copied into x86/x64 subdirectories relative to the GLFWDot
 
 There are a few [samples](https://github.com/smack0007/GLFWDotNet/tree/master/samples) showing how to use GLFWDotNet.
 
-* [HelloWorld](https://github.com/smack0007/GLFWDotNet/tree/master/Source/Samples/HelloWorld) Basic HelloWorld program to get you started.
+* [HelloWorld](https://github.com/smack0007/GLFWDotNet/blob/master/samples/HelloWorld/Program.cs) Basic HelloWorld program to get you started.
+* [GLFWInfo](https://github.com/smack0007/GLFWDotNet/blob/master/samples/GLFWInfo/Program.cs) Writes information about the system out to the console.

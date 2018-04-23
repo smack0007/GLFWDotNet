@@ -1,3 +1,6 @@
+[![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+![Build Status](https://smack0007.visualstudio.com/_apis/public/build/definitions/34bb64ac-53c0-4e81-9c7b-65d412b0d1c8/2/badge)
+
 # GLFWDotNet
 
 .NET bindings for [GLFW](http://www.glfw.org).

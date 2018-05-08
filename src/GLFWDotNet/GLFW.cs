@@ -821,6 +821,19 @@ namespace GLFWDotNet
             public static extern IntPtr GetProcAddress(IntPtr module, string procName);
         }
 
+        /// <summary>
+        /// Initializes the GLFW library.
+        /// </summary>
+        /// <remarks>
+		/// This function initializes the GLFW library.  Before most GLFW functions can
+		/// be used, GLFW must be initialized, and before an application terminates GLFW
+		/// should be terminated in order to free any resources allocated during or
+		/// after initialization.
+		/// </remarks>
+		/// <returns>
+		/// `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
         public static int glfwInit()
         {
             LoadFunctions(LoadAssembly());
@@ -946,27 +959,96 @@ namespace GLFWDotNet
 			_glfwCreateWindowSurface = (Delegates.glfwCreateWindowSurface)Marshal.GetDelegateForFunctionPointer(getProcAddress("glfwCreateWindowSurface"), typeof(Delegates.glfwCreateWindowSurface));
 		}
 
+		/// <summary>
+		/// Terminates the GLFW library.
+		/// </summary>
+		/// <remarks>
+		/// This function destroys all remaining windows and cursors, restores any
+		/// modified gamma ramps and frees any other allocated resources.  Once this
+		/// function is called, you must again call @ref glfwInit successfully before
+		/// you will be able to use most GLFW functions.
+		/// </remarks>
 		public static void glfwTerminate()
 		{
 			_glfwTerminate();
 		}
 
+		/// <summary>
+		/// Retrieves the version of the GLFW library.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the major, minor and revision numbers of the GLFW
+		/// library.  It is intended for when you are using GLFW as a shared library and
+		/// want to ensure that you are using the minimum required version.
+		/// </remarks>
+		/// <param name="major">
+		/// Where to store the major version number, or `NULL`.
+		/// </param>
+		/// <param name="minor">
+		/// Where to store the minor version number, or `NULL`.
+		/// </param>
+		/// <param name="rev">
+		/// Where to store the revision number, or `NULL`.
+		/// </param>
 		public static void glfwGetVersion(out int major, out int minor, out int rev)
 		{
 			_glfwGetVersion(out major, out minor, out rev);
 		}
 
+		/// <summary>
+		/// Returns a string describing the compile-time configuration.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the compile-time generated
+		/// [version string](@ref intro_version_string) of the GLFW library binary.  It
+		/// describes the version, platform, compiler and any platform-specific
+		/// compile-time options.  It should not be confused with the OpenGL or OpenGL
+		/// ES version string, queried with `glGetString`.
+		/// </remarks>
+		/// <returns>
+		/// The ASCII encoded GLFW version string.
+		/// </returns>
 		public static string glfwGetVersionString()
 		{
 			var versionStringPtr = _glfwGetVersionString();
 			return Marshal.PtrToStringAnsi(versionStringPtr);
 		}
 
+		/// <summary>
+		/// Sets the error callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the error callback, which is called with an error code
+		/// and a human-readable description each time a GLFW error occurs.
+		/// </remarks>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set.
+		/// </returns>
 		public static GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
 		{
 			return _glfwSetErrorCallback(cbfun);
 		}
 
+		/// <summary>
+		/// Returns the currently connected monitors.
+		/// </summary>
+		/// <remarks>
+		/// This function returns an array of handles for all currently connected
+		/// monitors.  The primary monitor is always first in the returned array.  If no
+		/// monitors were found, this function returns `NULL`.
+		/// </remarks>
+		/// <param name="count">
+		/// Where to store the number of monitors in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of monitor handles, or `NULL` if no monitors were found or
+		/// if an [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr[] glfwGetMonitors()
 		{
             var arrayPtr = _glfwGetMonitors(out int count);
@@ -985,47 +1067,185 @@ namespace GLFWDotNet
             return result;
 		}
 
+		/// <summary>
+		/// Returns the primary monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the primary monitor.  This is usually the monitor
+		/// where elements like the task bar or global menu bar are located.
+		/// </remarks>
+		/// <returns>
+		/// The primary monitor, or `NULL` if no monitors were found or if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetPrimaryMonitor()
 		{
 			return _glfwGetPrimaryMonitor();
 		}
 
+		/// <summary>
+		/// Returns the position of the monitor's viewport on the virtual screen.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the position, in screen coordinates, of the upper-left
+		/// corner of the specified monitor.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the monitor x-coordinate, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the monitor y-coordinate, or `NULL`.
+		/// </param>
 		public static void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos)
 		{
 			_glfwGetMonitorPos(monitor, out xpos, out ypos);
 		}
 
+		/// <summary>
+		/// Returns the physical size of the monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the size, in millimetres, of the display area of the
+		/// specified monitor.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="widthMM">
+		/// Where to store the width, in millimetres, of the
+		/// monitor's display area, or `NULL`.
+		/// </param>
+		/// <param name="heightMM">
+		/// Where to store the height, in millimetres, of the
+		/// monitor's display area, or `NULL`.
+		/// </param>
 		public static void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM)
 		{
 			_glfwGetMonitorPhysicalSize(monitor, out widthMM, out heightMM);
 		}
 
+		/// <summary>
+		/// Returns the name of the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns a human-readable name, encoded as UTF-8, of the
+		/// specified monitor.  The name typically reflects the make and model of the
+		/// monitor and is not guaranteed to be unique among the connected monitors.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded name of the monitor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetMonitorName(IntPtr monitor)
 		{
 			return _glfwGetMonitorName(monitor);
 		}
 
+		/// <summary>
+		/// Sets the monitor configuration callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the monitor configuration callback, or removes the
+		/// currently set callback.  This is called when a monitor is connected to or
+		/// disconnected from the system.
+		/// </remarks>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun)
 		{
 			return _glfwSetMonitorCallback(cbfun);
 		}
 
+		/// <summary>
+		/// Returns the available video modes for the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns an array of all video modes supported by the specified
+		/// monitor.  The returned array is sorted in ascending order, first by color
+		/// bit depth (the sum of all channel depths) and then by resolution area (the
+		/// product of width and height).
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of video modes in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of video modes, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetVideoModes(IntPtr monitor, out int count)
 		{
 			return _glfwGetVideoModes(monitor, out count);
 		}
 
+		/// <summary>
+		/// Returns the current mode of the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current video mode of the specified monitor.  If
+		/// you have created a full screen window for that monitor, the return value
+		/// will depend on whether that window is iconified.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The current mode of the monitor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static GLFWvidmode glfwGetVideoMode(IntPtr monitor)
 		{
             var ptr = _glfwGetVideoMode(monitor);
 			return Marshal.PtrToStructure<GLFWvidmode>(ptr);
 		}
 
+		/// <summary>
+		/// Generates a gamma ramp and sets it for the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function generates a 256-element gamma ramp from the specified exponent
+		/// and then calls @ref glfwSetGammaRamp with it.  The value must be a finite
+		/// number greater than zero.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor whose gamma ramp to set.
+		/// </param>
+		/// <param name="gamma">
+		/// The desired exponent.
+		/// </param>
 		public static void glfwSetGamma(IntPtr monitor, float gamma)
 		{
 			_glfwSetGamma(monitor, gamma);
 		}
 
+		/// <summary>
+		/// Returns the current gamma ramp for the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current gamma ramp of the specified monitor.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <returns>
+		/// The current gamma ramp, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static GLFWgammaramp glfwGetGammaRamp(IntPtr monitor)
 		{
 			var structPtr = _glfwGetGammaRamp(monitor);
@@ -1055,301 +1275,1297 @@ namespace GLFWDotNet
 			return result;
 		}
 
+		/// <summary>
+		/// Sets the current gamma ramp for the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the current gamma ramp for the specified monitor.  The
+		/// original gamma ramp for that monitor is saved by GLFW the first time this
+		/// function is called and is restored by @ref glfwTerminate.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor whose gamma ramp to set.
+		/// </param>
+		/// <param name="ramp">
+		/// The gamma ramp to use.
+		/// </param>
 		public static void glfwSetGammaRamp(IntPtr monitor, IntPtr ramp)
 		{
 			_glfwSetGammaRamp(monitor, ramp);
 		}
 
+		/// <summary>
+		/// Resets all window hints to their default values.
+		/// </summary>
+		/// <remarks>
+		/// This function resets all window hints to their
+		/// [default values](@ref window_hints_values).
+		/// </remarks>
 		public static void glfwDefaultWindowHints()
 		{
 			_glfwDefaultWindowHints();
 		}
 
+		/// <summary>
+		/// Sets the specified window hint to the desired value.
+		/// </summary>
+		/// <remarks>
+		/// This function sets hints for the next call to @ref glfwCreateWindow.  The
+		/// hints, once set, retain their values until changed by a call to @ref
+		/// glfwWindowHint or @ref glfwDefaultWindowHints, or until the library is
+		/// terminated.
+		/// </remarks>
+		/// <param name="hint">
+		/// The [window hint](@ref window_hints) to set.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the window hint.
+		/// </param>
 		public static void glfwWindowHint(int hint, int value)
 		{
 			_glfwWindowHint(hint, value);
 		}
 
+		/// <summary>
+		/// Creates a window and its associated context.
+		/// </summary>
+		/// <remarks>
+		/// This function creates a window and its associated OpenGL or OpenGL ES
+		/// context.  Most of the options controlling how the window and its context
+		/// should be created are specified with [window hints](@ref window_hints).
+		/// </remarks>
+		/// <param name="width">
+		/// The desired width, in screen coordinates, of the window.
+		/// This must be greater than zero.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the window.
+		/// This must be greater than zero.
+		/// </param>
+		/// <param name="title">
+		/// The initial, UTF-8 encoded window title.
+		/// </param>
+		/// <param name="monitor">
+		/// The monitor to use for full screen mode, or `NULL` for
+		/// windowed mode.
+		/// </param>
+		/// <param name="share">
+		/// The window whose context to share resources with, or `NULL`
+		/// to not share resources.
+		/// </param>
+		/// <returns>
+		/// The handle of the created window, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share)
 		{
 			return _glfwCreateWindow(width, height, title, monitor, share);
 		}
 
+		/// <summary>
+		/// Destroys the specified window and its context.
+		/// </summary>
+		/// <remarks>
+		/// This function destroys the specified window and its context.  On calling
+		/// this function, no further callbacks will be called for that window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to destroy.
+		/// </param>
 		public static void glfwDestroyWindow(IntPtr window)
 		{
 			_glfwDestroyWindow(window);
 		}
 
+		/// <summary>
+		/// Checks the close flag of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the value of the close flag of the specified window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The value of the close flag.
+		/// </returns>
 		public static int glfwWindowShouldClose(IntPtr window)
 		{
 			return _glfwWindowShouldClose(window);
 		}
 
+		/// <summary>
+		/// Sets the close flag of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the value of the close flag of the specified window.
+		/// This can be used to override the user's attempt to close the window, or
+		/// to signal that it should be closed.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose flag to change.
+		/// </param>
+		/// <param name="value">
+		/// The new value.
+		/// </param>
 		public static void glfwSetWindowShouldClose(IntPtr window, int value)
 		{
 			_glfwSetWindowShouldClose(window, value);
 		}
 
+		/// <summary>
+		/// Sets the title of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the window title, encoded as UTF-8, of the specified
+		/// window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose title to change.
+		/// </param>
+		/// <param name="title">
+		/// The UTF-8 encoded window title.
+		/// </param>
 		public static void glfwSetWindowTitle(IntPtr window, string title)
 		{
 			_glfwSetWindowTitle(window, title);
 		}
 
+		/// <summary>
+		/// Sets the icon for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the icon of the specified window.  If passed an array of
+		/// candidate images, those of or closest to the sizes desired by the system are
+		/// selected.  If no images are specified, the window reverts to its default
+		/// icon.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose icon to set.
+		/// </param>
+		/// <param name="count">
+		/// The number of images in the specified array, or zero to
+		/// revert to the default window icon.
+		/// </param>
+		/// <param name="images">
+		/// The images to create the icon from.  This is ignored if
+		/// count is zero.
+		/// </param>
 		public static void glfwSetWindowIcon(IntPtr window, int count, IntPtr images)
 		{
 			_glfwSetWindowIcon(window, count, images);
 		}
 
+		/// <summary>
+		/// Retrieves the position of the client area of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the position, in screen coordinates, of the
+		/// upper-left corner of the client area of the specified window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the x-coordinate of the upper-left corner of
+		/// the client area, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the y-coordinate of the upper-left corner of
+		/// the client area, or `NULL`.
+		/// </param>
 		public static void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos)
 		{
 			_glfwGetWindowPos(window, out xpos, out ypos);
 		}
 
+		/// <summary>
+		/// Sets the position of the client area of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the position, in screen coordinates, of the upper-left
+		/// corner of the client area of the specified windowed mode window.  If the
+		/// window is a full screen window, this function does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="xpos">
+		/// The x-coordinate of the upper-left corner of the client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The y-coordinate of the upper-left corner of the client area.
+		/// </param>
 		public static void glfwSetWindowPos(IntPtr window, int xpos, int ypos)
 		{
 			_glfwSetWindowPos(window, xpos, ypos);
 		}
 
+		/// <summary>
+		/// Retrieves the size of the client area of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the size, in screen coordinates, of the client area
+		/// of the specified window.  If you wish to retrieve the size of the
+		/// framebuffer of the window in pixels, see @ref glfwGetFramebufferSize.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose size to retrieve.
+		/// </param>
+		/// <param name="width">
+		/// Where to store the width, in screen coordinates, of the
+		/// client area, or `NULL`.
+		/// </param>
+		/// <param name="height">
+		/// Where to store the height, in screen coordinates, of the
+		/// client area, or `NULL`.
+		/// </param>
 		public static void glfwGetWindowSize(IntPtr window, out int width, out int height)
 		{
 			_glfwGetWindowSize(window, out width, out height);
 		}
 
+		/// <summary>
+		/// Sets the size limits of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the size limits of the client area of the specified
+		/// window.  If the window is full screen, the size limits only take effect
+		/// once it is made windowed.  If the window is not resizable, this function
+		/// does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="minwidth">
+		/// The minimum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="minheight">
+		/// The minimum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxwidth">
+		/// The maximum width, in screen coordinates, of the client
+		/// area, or `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="maxheight">
+		/// The maximum height, in screen coordinates, of the
+		/// client area, or `GLFW_DONT_CARE`.
+		/// </param>
 		public static void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight)
 		{
 			_glfwSetWindowSizeLimits(window, minwidth, minheight, maxwidth, maxheight);
 		}
 
+		/// <summary>
+		/// Sets the aspect ratio of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the required aspect ratio of the client area of the
+		/// specified window.  If the window is full screen, the aspect ratio only takes
+		/// effect once it is made windowed.  If the window is not resizable, this
+		/// function does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to set limits for.
+		/// </param>
+		/// <param name="numer">
+		/// The numerator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
+		/// <param name="denom">
+		/// The denominator of the desired aspect ratio, or
+		/// `GLFW_DONT_CARE`.
+		/// </param>
 		public static void glfwSetWindowAspectRatio(IntPtr window, int numer, int denom)
 		{
 			_glfwSetWindowAspectRatio(window, numer, denom);
 		}
 
+		/// <summary>
+		/// Sets the size of the client area of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the size, in screen coordinates, of the client area of
+		/// the specified window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to resize.
+		/// </param>
+		/// <param name="width">
+		/// The desired width, in screen coordinates, of the window
+		/// client area.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the window
+		/// client area.
+		/// </param>
 		public static void glfwSetWindowSize(IntPtr window, int width, int height)
 		{
 			_glfwSetWindowSize(window, width, height);
 		}
 
+		/// <summary>
+		/// Retrieves the size of the framebuffer of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the size, in pixels, of the framebuffer of the
+		/// specified window.  If you wish to retrieve the size of the window in screen
+		/// coordinates, see @ref glfwGetWindowSize.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose framebuffer to query.
+		/// </param>
+		/// <param name="width">
+		/// Where to store the width, in pixels, of the framebuffer,
+		/// or `NULL`.
+		/// </param>
+		/// <param name="height">
+		/// Where to store the height, in pixels, of the framebuffer,
+		/// or `NULL`.
+		/// </param>
 		public static void glfwGetFramebufferSize(IntPtr window, out int width, out int height)
 		{
 			_glfwGetFramebufferSize(window, out width, out height);
 		}
 
+		/// <summary>
+		/// Retrieves the size of the frame of the window.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the size, in screen coordinates, of each edge of the
+		/// frame of the specified window.  This size includes the title bar, if the
+		/// window has one.  The size of the frame may vary depending on the
+		/// [window-related hints](@ref window_hints_wnd) used to create it.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose frame size to query.
+		/// </param>
+		/// <param name="left">
+		/// Where to store the size, in screen coordinates, of the left
+		/// edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="top">
+		/// Where to store the size, in screen coordinates, of the top
+		/// edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="right">
+		/// Where to store the size, in screen coordinates, of the
+		/// right edge of the window frame, or `NULL`.
+		/// </param>
+		/// <param name="bottom">
+		/// Where to store the size, in screen coordinates, of the
+		/// bottom edge of the window frame, or `NULL`.
+		/// </param>
 		public static void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom)
 		{
 			_glfwGetWindowFrameSize(window, out left, out top, out right, out bottom);
 		}
 
+		/// <summary>
+		/// Iconifies the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function iconifies (minimizes) the specified window if it was
+		/// previously restored.  If the window is already iconified, this function does
+		/// nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to iconify.
+		/// </param>
 		public static void glfwIconifyWindow(IntPtr window)
 		{
 			_glfwIconifyWindow(window);
 		}
 
+		/// <summary>
+		/// Restores the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function restores the specified window if it was previously iconified
+		/// (minimized) or maximized.  If the window is already restored, this function
+		/// does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to restore.
+		/// </param>
 		public static void glfwRestoreWindow(IntPtr window)
 		{
 			_glfwRestoreWindow(window);
 		}
 
+		/// <summary>
+		/// Maximizes the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function maximizes the specified window if it was previously not
+		/// maximized.  If the window is already maximized, this function does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to maximize.
+		/// </param>
 		public static void glfwMaximizeWindow(IntPtr window)
 		{
 			_glfwMaximizeWindow(window);
 		}
 
+		/// <summary>
+		/// Makes the specified window visible.
+		/// </summary>
+		/// <remarks>
+		/// This function makes the specified window visible if it was previously
+		/// hidden.  If the window is already visible or is in full screen mode, this
+		/// function does nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to make visible.
+		/// </param>
 		public static void glfwShowWindow(IntPtr window)
 		{
 			_glfwShowWindow(window);
 		}
 
+		/// <summary>
+		/// Hides the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function hides the specified window if it was previously visible.  If
+		/// the window is already hidden or is in full screen mode, this function does
+		/// nothing.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to hide.
+		/// </param>
 		public static void glfwHideWindow(IntPtr window)
 		{
 			_glfwHideWindow(window);
 		}
 
+		/// <summary>
+		/// Brings the specified window to front and sets input focus.
+		/// </summary>
+		/// <remarks>
+		/// This function brings the specified window to front and sets input focus.
+		/// The window should already be visible and not iconified.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to give input focus.
+		/// </param>
 		public static void glfwFocusWindow(IntPtr window)
 		{
 			_glfwFocusWindow(window);
 		}
 
+		/// <summary>
+		/// Returns the monitor that the window uses for full screen mode.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the handle of the monitor that the specified window is
+		/// in full screen on.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The monitor, or `NULL` if the window is in windowed mode or an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetWindowMonitor(IntPtr window)
 		{
 			return _glfwGetWindowMonitor(window);
 		}
 
+		/// <summary>
+		/// Sets the mode, monitor, video mode and placement of a window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the monitor that the window uses for full screen mode or,
+		/// if the monitor is `NULL`, makes it windowed mode.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose monitor, size or video mode to set.
+		/// </param>
+		/// <param name="monitor">
+		/// The desired monitor, or `NULL` to set windowed mode.
+		/// </param>
+		/// <param name="xpos">
+		/// The desired x-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The desired y-coordinate of the upper-left corner of the
+		/// client area.
+		/// </param>
+		/// <param name="width">
+		/// The desired with, in screen coordinates, of the client area
+		/// or video mode.
+		/// </param>
+		/// <param name="height">
+		/// The desired height, in screen coordinates, of the client
+		/// area or video mode.
+		/// </param>
+		/// <param name="refreshRate">
+		/// The desired refresh rate, in Hz, of the video mode,
+		/// or `GLFW_DONT_CARE`.
+		/// </param>
 		public static void glfwSetWindowMonitor(IntPtr window, IntPtr monitor, int xpos, int ypos, int width, int height, int refreshRate)
 		{
 			_glfwSetWindowMonitor(window, monitor, xpos, ypos, width, height, refreshRate);
 		}
 
+		/// <summary>
+		/// Returns an attribute of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the value of an attribute of the specified window or
+		/// its OpenGL or OpenGL ES context.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="attrib">
+		/// The [window attribute](@ref window_attribs) whose value to
+		/// return.
+		/// </param>
+		/// <returns>
+		/// The value of the attribute, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static int glfwGetWindowAttrib(IntPtr window, int attrib)
 		{
 			return _glfwGetWindowAttrib(window, attrib);
 		}
 
+		/// <summary>
+		/// Sets the user pointer of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the user-defined pointer of the specified window.  The
+		/// current value is retained until the window is destroyed.  The initial value
+		/// is `NULL`.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose pointer to set.
+		/// </param>
+		/// <param name="pointer">
+		/// The new value.
+		/// </param>
 		public static void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer)
 		{
 			_glfwSetWindowUserPointer(window, pointer);
 		}
 
+		/// <summary>
+		/// Returns the user pointer of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current value of the user-defined pointer of the
+		/// specified window.  The initial value is `NULL`.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose pointer to return.
+		/// </param>
 		public static IntPtr glfwGetWindowUserPointer(IntPtr window)
 		{
 			return _glfwGetWindowUserPointer(window);
 		}
 
+		/// <summary>
+		/// Sets the position callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the position callback of the specified window, which is
+		/// called when the window is moved.  The callback is provided with the screen
+		/// position of the upper-left corner of the client area of the window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowposfun glfwSetWindowPosCallback(IntPtr window, GLFWwindowposfun cbfun)
 		{
 			return _glfwSetWindowPosCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the size callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the size callback of the specified window, which is
+		/// called when the window is resized.  The callback is provided with the size,
+		/// in screen coordinates, of the client area of the window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowsizefun glfwSetWindowSizeCallback(IntPtr window, GLFWwindowsizefun cbfun)
 		{
 			return _glfwSetWindowSizeCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the close callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the close callback of the specified window, which is
+		/// called when the user attempts to close the window, for example by clicking
+		/// the close widget in the title bar.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowclosefun glfwSetWindowCloseCallback(IntPtr window, GLFWwindowclosefun cbfun)
 		{
 			return _glfwSetWindowCloseCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the refresh callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the refresh callback of the specified window, which is
+		/// called when the client area of the window needs to be redrawn, for example
+		/// if the window has been exposed after having been covered by another window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowrefreshfun glfwSetWindowRefreshCallback(IntPtr window, GLFWwindowrefreshfun cbfun)
 		{
 			return _glfwSetWindowRefreshCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the focus callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the focus callback of the specified window, which is
+		/// called when the window gains or loses input focus.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowfocusfun glfwSetWindowFocusCallback(IntPtr window, GLFWwindowfocusfun cbfun)
 		{
 			return _glfwSetWindowFocusCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the iconify callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the iconification callback of the specified window, which
+		/// is called when the window is iconified or restored.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun)
 		{
 			return _glfwSetWindowIconifyCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the framebuffer resize callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the framebuffer resize callback of the specified window,
+		/// which is called when the framebuffer of the specified window is resized.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun)
 		{
 			return _glfwSetFramebufferSizeCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Processes all pending events.
+		/// </summary>
+		/// <remarks>
+		/// This function processes only those events that are already in the event
+		/// queue and then returns immediately.  Processing events will cause the window
+		/// and input callbacks associated with those events to be called.
+		/// </remarks>
 		public static void glfwPollEvents()
 		{
 			_glfwPollEvents();
 		}
 
+		/// <summary>
+		/// Waits until events are queued and processes them.
+		/// </summary>
+		/// <remarks>
+		/// This function puts the calling thread to sleep until at least one event is
+		/// available in the event queue.  Once one or more events are available,
+		/// it behaves exactly like @ref glfwPollEvents, i.e. the events in the queue
+		/// are processed and the function then returns immediately.  Processing events
+		/// will cause the window and input callbacks associated with those events to be
+		/// called.
+		/// </remarks>
 		public static void glfwWaitEvents()
 		{
 			_glfwWaitEvents();
 		}
 
+		/// <summary>
+		/// Waits with timeout until events are queued and processes them.
+		/// </summary>
+		/// <remarks>
+		/// This function puts the calling thread to sleep until at least one event is
+		/// available in the event queue, or until the specified timeout is reached.  If
+		/// one or more events are available, it behaves exactly like @ref
+		/// glfwPollEvents, i.e. the events in the queue are processed and the function
+		/// then returns immediately.  Processing events will cause the window and input
+		/// callbacks associated with those events to be called.
+		/// </remarks>
+		/// <param name="timeout">
+		/// The maximum amount of time, in seconds, to wait.
+		/// </param>
 		public static void glfwWaitEventsTimeout(double timeout)
 		{
 			_glfwWaitEventsTimeout(timeout);
 		}
 
+		/// <summary>
+		/// Posts an empty event to the event queue.
+		/// </summary>
+		/// <remarks>
+		/// This function posts an empty event from the current thread to the event
+		/// queue, causing @ref glfwWaitEvents or @ref glfwWaitEventsTimeout to return.
+		/// </remarks>
 		public static void glfwPostEmptyEvent()
 		{
 			_glfwPostEmptyEvent();
 		}
 
+		/// <summary>
+		/// Returns the value of an input option for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the value of an input option for the specified window.
+		/// The mode must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="mode">
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </param>
 		public static int glfwGetInputMode(IntPtr window, int mode)
 		{
 			return _glfwGetInputMode(window, mode);
 		}
 
+		/// <summary>
+		/// Sets an input option for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets an input mode option for the specified window.  The mode
+		/// must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose input mode to set.
+		/// </param>
+		/// <param name="mode">
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
+		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the specified input mode.
+		/// </param>
 		public static void glfwSetInputMode(IntPtr window, int mode, int value)
 		{
 			_glfwSetInputMode(window, mode, value);
 		}
 
+		/// <summary>
+		/// Returns the localized name of the specified printable key.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the localized name of the specified printable key.
+		/// This is intended for displaying key bindings to the user.
+		/// </remarks>
+		/// <param name="key">
+		/// The key to query, or `GLFW_KEY_UNKNOWN`.
+		/// </param>
+		/// <param name="scancode">
+		/// The scancode of the key to query.
+		/// </param>
+		/// <returns>
+		/// The localized name of the key, or `NULL`.
+		/// </returns>
 		public static IntPtr glfwGetKeyName(int key, int scancode)
 		{
 			return _glfwGetKeyName(key, scancode);
 		}
 
+		/// <summary>
+		/// Returns the last reported state of a keyboard key for the specified
+		/// window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the last state reported for the specified key to the
+		/// specified window.  The returned state is one of `GLFW_PRESS` or
+		/// `GLFW_RELEASE`.  The higher-level action `GLFW_REPEAT` is only reported to
+		/// the key callback.
+		/// </remarks>
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="key">
+		/// The desired [keyboard key](@ref keys).  `GLFW_KEY_UNKNOWN` is
+		/// not a valid key for this function.
+		/// </param>
+		/// <returns>
+		/// One of `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </returns>
 		public static int glfwGetKey(IntPtr window, int key)
 		{
 			return _glfwGetKey(window, key);
 		}
 
+		/// <summary>
+		/// Returns the last reported state of a mouse button for the specified
+		/// window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the last state reported for the specified mouse button
+		/// to the specified window.  The returned state is one of `GLFW_PRESS` or
+		/// `GLFW_RELEASE`.
+		/// </remarks>
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="button">
+		/// The desired [mouse button](@ref buttons).
+		/// </param>
+		/// <returns>
+		/// One of `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </returns>
 		public static int glfwGetMouseButton(IntPtr window, int button)
 		{
 			return _glfwGetMouseButton(window, button);
 		}
 
+		/// <summary>
+		/// Retrieves the position of the cursor relative to the client area of
+		/// the window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the position of the cursor, in screen coordinates,
+		/// relative to the upper-left corner of the client area of the specified
+		/// window.
+		/// </remarks>
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the cursor x-coordinate, relative to the
+		/// left edge of the client area, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the cursor y-coordinate, relative to the to
+		/// top edge of the client area, or `NULL`.
+		/// </param>
 		public static void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos)
 		{
 			_glfwGetCursorPos(window, out xpos, out ypos);
 		}
 
+		/// <summary>
+		/// Sets the position of the cursor, relative to the client area of the
+		/// window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the position, in screen coordinates, of the cursor
+		/// relative to the upper-left corner of the client area of the specified
+		/// window.  The window must have input focus.  If the window does not have
+		/// input focus when this function is called, it fails silently.
+		/// </remarks>
+		/// <param name="window">
+		/// The desired window.
+		/// </param>
+		/// <param name="xpos">
+		/// The desired x-coordinate, relative to the left edge of the
+		/// client area.
+		/// </param>
+		/// <param name="ypos">
+		/// The desired y-coordinate, relative to the top edge of the
+		/// client area.
+		/// </param>
 		public static void glfwSetCursorPos(IntPtr window, double xpos, double ypos)
 		{
 			_glfwSetCursorPos(window, xpos, ypos);
 		}
 
+		/// <summary>
+		/// Creates a custom cursor.
+		/// </summary>
+		/// <remarks>
+		/// Creates a new custom cursor image that can be set for a window with @ref
+		/// glfwSetCursor.  The cursor can be destroyed with @ref glfwDestroyCursor.
+		/// Any remaining cursors are destroyed by @ref glfwTerminate.
+		/// </remarks>
+		/// <param name="image">
+		/// The desired cursor image.
+		/// </param>
+		/// <param name="xhot">
+		/// The desired x-coordinate, in pixels, of the cursor hotspot.
+		/// </param>
+		/// <param name="yhot">
+		/// The desired y-coordinate, in pixels, of the cursor hotspot.
+		/// </param>
+		/// <returns>
+		/// The handle of the created cursor, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwCreateCursor(IntPtr image, int xhot, int yhot)
 		{
 			return _glfwCreateCursor(image, xhot, yhot);
 		}
 
+		/// <summary>
+		/// Creates a cursor with a standard shape.
+		/// </summary>
+		/// <remarks>
+		/// Returns a cursor with a [standard shape](@ref shapes), that can be set for
+		/// a window with @ref glfwSetCursor.
+		/// </remarks>
+		/// <param name="shape">
+		/// One of the [standard shapes](@ref shapes).
+		/// </param>
+		/// <returns>
+		/// A new cursor ready to use or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwCreateStandardCursor(int shape)
 		{
 			return _glfwCreateStandardCursor(shape);
 		}
 
+		/// <summary>
+		/// Destroys a cursor.
+		/// </summary>
+		/// <remarks>
+		/// This function destroys a cursor previously created with @ref
+		/// glfwCreateCursor.  Any remaining cursors will be destroyed by @ref
+		/// glfwTerminate.
+		/// </remarks>
+		/// <param name="cursor">
+		/// The cursor object to destroy.
+		/// </param>
 		public static void glfwDestroyCursor(IntPtr cursor)
 		{
 			_glfwDestroyCursor(cursor);
 		}
 
+		/// <summary>
+		/// Sets the cursor for the window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the cursor image to be used when the cursor is over the
+		/// client area of the specified window.  The set cursor will only be visible
+		/// when the [cursor mode](@ref cursor_mode) of the window is
+		/// `GLFW_CURSOR_NORMAL`.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to set the cursor for.
+		/// </param>
+		/// <param name="cursor">
+		/// The cursor to set, or `NULL` to switch back to the default
+		/// arrow cursor.
+		/// </param>
 		public static void glfwSetCursor(IntPtr window, IntPtr cursor)
 		{
 			_glfwSetCursor(window, cursor);
 		}
 
+		/// <summary>
+		/// Sets the key callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the key callback of the specified window, which is called
+		/// when a key is pressed, repeated or released.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new key callback, or `NULL` to remove the currently
+		/// set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWkeyfun glfwSetKeyCallback(IntPtr window, GLFWkeyfun cbfun)
 		{
 			return _glfwSetKeyCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the Unicode character callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the character callback of the specified window, which is
+		/// called when a Unicode character is input.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWcharfun glfwSetCharCallback(IntPtr window, GLFWcharfun cbfun)
 		{
 			return _glfwSetCharCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the Unicode character with modifiers callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the character with modifiers callback of the specified
+		/// window, which is called when a Unicode character is input regardless of what
+		/// modifier keys are used.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static GLFWcharmodsfun glfwSetCharModsCallback(IntPtr window, GLFWcharmodsfun cbfun)
 		{
 			return _glfwSetCharModsCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the mouse button callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the mouse button callback of the specified window, which
+		/// is called when a mouse button is pressed or released.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWmousebuttonfun glfwSetMouseButtonCallback(IntPtr window, GLFWmousebuttonfun cbfun)
 		{
 			return _glfwSetMouseButtonCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the cursor position callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the cursor position callback of the specified window,
+		/// which is called when the cursor is moved.  The callback is provided with the
+		/// position, in screen coordinates, relative to the upper-left corner of the
+		/// client area of the window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWcursorposfun glfwSetCursorPosCallback(IntPtr window, GLFWcursorposfun cbfun)
 		{
 			return _glfwSetCursorPosCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the cursor enter/exit callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the cursor boundary crossing callback of the specified
+		/// window, which is called when the cursor enters or leaves the client area of
+		/// the window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWcursorenterfun glfwSetCursorEnterCallback(IntPtr window, GLFWcursorenterfun cbfun)
 		{
 			return _glfwSetCursorEnterCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the scroll callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the scroll callback of the specified window, which is
+		/// called when a scrolling device is used, such as a mouse wheel or scrolling
+		/// area of a touchpad.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new scroll callback, or `NULL` to remove the currently
+		/// set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWscrollfun glfwSetScrollCallback(IntPtr window, GLFWscrollfun cbfun)
 		{
 			return _glfwSetScrollCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Sets the file drop callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the file drop callback of the specified window, which is
+		/// called when one or more dragged files are dropped on the window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new file drop callback, or `NULL` to remove the
+		/// currently set callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun)
 		{
 			return _glfwSetDropCallback(window, cbfun);
 		}
 
+		/// <summary>
+		/// Returns whether the specified joystick is present.
+		/// </summary>
+		/// <remarks>
+		/// This function returns whether the specified joystick is present.
+		/// </remarks>
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the joystick is present, or `GLFW_FALSE` otherwise.
+		/// </returns>
 		public static int glfwJoystickPresent(int joy)
 		{
 			return _glfwJoystickPresent(joy);
 		}
 
+		/// <summary>
+		/// Returns the values of all axes of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the values of all axes of the specified joystick.
+		/// Each element in the array is a value between -1.0 and 1.0.
+		/// </remarks>
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of axis values in the returned
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
+		/// </param>
+		/// <returns>
+		/// An array of axis values, or `NULL` if the joystick is not present or
+		/// an [error](@ref error_handling) occurred.
+		/// </returns>
 		public static float[] glfwGetJoystickAxes(int joy)
 		{
             var arrayPtr = _glfwGetJoystickAxes(joy, out int count);
@@ -1363,6 +2579,25 @@ namespace GLFWDotNet
             return result;
 		}
 
+		/// <summary>
+		/// Returns the state of all buttons of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the state of all buttons of the specified joystick.
+		/// Each element in the array is either `GLFW_PRESS` or `GLFW_RELEASE`.
+		/// </remarks>
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of button states in the returned
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
+		/// </param>
+		/// <returns>
+		/// An array of button states, or `NULL` if the joystick is not present
+		/// or an [error](@ref error_handling) occurred.
+		/// </returns>
 		public static byte[] glfwGetJoystickButtons(int joy)
 		{
 			var arrayPtr = _glfwGetJoystickButtons(joy, out int count);
@@ -1373,81 +2608,297 @@ namespace GLFWDotNet
             return result;
 		}
 
+		/// <summary>
+		/// Returns the name of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the name, encoded as UTF-8, of the specified joystick.
+		/// The returned string is allocated and freed by GLFW.  You should not free it
+		/// yourself.
+		/// </remarks>
+		/// <param name="joy">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded name of the joystick, or `NULL` if the joystick
+		/// is not present or an [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetJoystickName(int joy)
 		{
 			return _glfwGetJoystickName(joy);
 		}
 
+		/// <summary>
+		/// Sets the joystick configuration callback.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the joystick configuration callback, or removes the
+		/// currently set callback.  This is called when a joystick is connected to or
+		/// disconnected from the system.
+		/// </remarks>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
 		public static GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun)
 		{
 			return _glfwSetJoystickCallback(cbfun);
 		}
 
+		/// <summary>
+		/// Sets the clipboard to the specified string.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the system clipboard to the specified, UTF-8 encoded
+		/// string.
+		/// </remarks>
+		/// <param name="window">
+		/// The window that will own the clipboard contents.
+		/// </param>
+		/// <param name="string">
+		/// A UTF-8 encoded string.
+		/// </param>
 		public static void glfwSetClipboardString(IntPtr window, string @string)
 		{
 			_glfwSetClipboardString(window, @string);
 		}
 
+		/// <summary>
+		/// Returns the contents of the clipboard as a string.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the contents of the system clipboard, if it contains
+		/// or is convertible to a UTF-8 encoded string.  If the clipboard is empty or
+		/// if its contents cannot be converted, `NULL` is returned and a @ref
+		/// GLFW_FORMAT_UNAVAILABLE error is generated.
+		/// </remarks>
+		/// <param name="window">
+		/// The window that will request the clipboard contents.
+		/// </param>
+		/// <returns>
+		/// The contents of the clipboard as a UTF-8 encoded string, or `NULL`
+		/// if an [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetClipboardString(IntPtr window)
 		{
 			return _glfwGetClipboardString(window);
 		}
 
+		/// <summary>
+		/// Returns the value of the GLFW timer.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the value of the GLFW timer.  Unless the timer has
+		/// been set using @ref glfwSetTime, the timer measures time elapsed since GLFW
+		/// was initialized.
+		/// </remarks>
+		/// <returns>
+		/// The current value, in seconds, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static double glfwGetTime()
 		{
 			return _glfwGetTime();
 		}
 
+		/// <summary>
+		/// Sets the GLFW timer.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the value of the GLFW timer.  It then continues to count
+		/// up from that value.  The value must be a positive finite number less than
+		/// or equal to 18446744073.0, which is approximately 584.5 years.
+		/// </remarks>
+		/// <param name="time">
+		/// The new value, in seconds.
+		/// </param>
 		public static void glfwSetTime(double time)
 		{
 			_glfwSetTime(time);
 		}
 
+		/// <summary>
+		/// Returns the current value of the raw timer.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current value of the raw timer, measured in
+		/// 1&nbsp;/&nbsp;frequency seconds.  To get the frequency, call @ref
+		/// glfwGetTimerFrequency.
+		/// </remarks>
+		/// <returns>
+		/// The value of the timer, or zero if an 
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static ulong glfwGetTimerValue()
 		{
 			return _glfwGetTimerValue();
 		}
 
+		/// <summary>
+		/// Returns the frequency, in Hz, of the raw timer.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the frequency, in Hz, of the raw timer.
+		/// </remarks>
+		/// <returns>
+		/// The frequency of the timer, in Hz, or zero if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static ulong glfwGetTimerFrequency()
 		{
 			return _glfwGetTimerFrequency();
 		}
 
+		/// <summary>
+		/// Makes the context of the specified window current for the calling
+		/// thread.
+		/// </summary>
+		/// <remarks>
+		/// This function makes the OpenGL or OpenGL ES context of the specified window
+		/// current on the calling thread.  A context can only be made current on
+		/// a single thread at a time and each thread can have only a single current
+		/// context at a time.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose context to make current, or `NULL` to
+		/// detach the current context.
+		/// </param>
 		public static void glfwMakeContextCurrent(IntPtr window)
 		{
 			_glfwMakeContextCurrent(window);
 		}
 
+		/// <summary>
+		/// Returns the window whose context is current on the calling thread.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the window whose OpenGL or OpenGL ES context is
+		/// current on the calling thread.
+		/// </remarks>
+		/// <returns>
+		/// The window whose context is current, or `NULL` if no window's
+		/// context is current.
+		/// </returns>
 		public static IntPtr glfwGetCurrentContext()
 		{
 			return _glfwGetCurrentContext();
 		}
 
+		/// <summary>
+		/// Swaps the front and back buffers of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function swaps the front and back buffers of the specified window when
+		/// rendering with OpenGL or OpenGL ES.  If the swap interval is greater than
+		/// zero, the GPU driver waits the specified number of screen updates before
+		/// swapping the buffers.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose buffers to swap.
+		/// </param>
 		public static void glfwSwapBuffers(IntPtr window)
 		{
 			_glfwSwapBuffers(window);
 		}
 
+		/// <summary>
+		/// Sets the swap interval for the current context.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the swap interval for the current OpenGL or OpenGL ES
+		/// context, i.e. the number of screen updates to wait from the time @ref
+		/// glfwSwapBuffers was called before swapping the buffers and returning.  This
+		/// is sometimes called _vertical synchronization_, _vertical retrace
+		/// synchronization_ or just _vsync_.
+		/// </remarks>
+		/// <param name="interval">
+		/// The minimum number of screen updates to wait for
+		/// until the buffers are swapped by @ref glfwSwapBuffers.
+		/// </param>
 		public static void glfwSwapInterval(int interval)
 		{
 			_glfwSwapInterval(interval);
 		}
 
+		/// <summary>
+		/// Returns whether the specified extension is available.
+		/// </summary>
+		/// <remarks>
+		/// This function returns whether the specified
+		/// [API extension](@ref context_glext) is supported by the current OpenGL or
+		/// OpenGL ES context.  It searches both for client API extension and context
+		/// creation API extensions.
+		/// </remarks>
+		/// <param name="extension">
+		/// The ASCII encoded name of the extension.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the extension is available, or `GLFW_FALSE`
+		/// otherwise.
+		/// </returns>
 		public static int glfwExtensionSupported(string extension)
 		{
 			return _glfwExtensionSupported(extension);
 		}
 
+		/// <summary>
+		/// Returns the address of the specified function for the current
+		/// context.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the address of the specified OpenGL or OpenGL ES
+		/// [core or extension function](@ref context_glext), if it is supported
+		/// by the current context.
+		/// </remarks>
+		/// <param name="procname">
+		/// The ASCII encoded name of the function.
+		/// </param>
+		/// <returns>
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetProcAddress(string procname)
 		{
 			return _glfwGetProcAddress(procname);
 		}
 
+		/// <summary>
+		/// Returns whether the Vulkan loader has been found.
+		/// </summary>
+		/// <remarks>
+		/// This function returns whether the Vulkan loader has been found.  This check
+		/// is performed by @ref glfwInit.
+		/// </remarks>
+		/// <returns>
+		/// `GLFW_TRUE` if Vulkan is available, or `GLFW_FALSE` otherwise.
+		/// </returns>
 		public static int glfwVulkanSupported()
 		{
 			return _glfwVulkanSupported();
 		}
 
+		/// <summary>
+		/// Returns the Vulkan instance extensions required by GLFW.
+		/// </summary>
+		/// <remarks>
+		/// This function returns an array of names of Vulkan instance extensions required
+		/// by GLFW for creating Vulkan surfaces for GLFW windows.  If successful, the
+		/// list will always contains `VK_KHR_surface`, so if you don't require any
+		/// additional extensions you can pass this list directly to the
+		/// `VkInstanceCreateInfo` struct.
+		/// </remarks>
+		/// <param name="count">
+		/// Where to store the number of extensions in the returned
+		/// array.  This is set to zero if an error occurred.
+		/// </param>
+		/// <returns>
+		/// An array of ASCII encoded extension names, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static string[] glfwGetRequiredInstanceExtensions()
 		{
 			var arrayPtr = _glfwGetRequiredInstanceExtensions(out uint count);
@@ -1466,16 +2917,80 @@ namespace GLFWDotNet
 			return result;
 		}
 
+		/// <summary>
+		/// Returns the address of the specified Vulkan instance function.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the address of the specified Vulkan core or extension
+		/// function for the specified instance.  If instance is set to `NULL` it can
+		/// return any function exported from the Vulkan loader, including at least the
+		/// following functions:
+		/// </remarks>
+		/// <param name="instance">
+		/// The Vulkan instance to query, or `NULL` to retrieve
+		/// functions related to instance creation.
+		/// </param>
+		/// <param name="procname">
+		/// The ASCII encoded name of the function.
+		/// </param>
+		/// <returns>
+		/// The address of the function, or `NULL` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static IntPtr glfwGetInstanceProcAddress(IntPtr instance, string procname)
 		{
 			return _glfwGetInstanceProcAddress(instance, procname);
 		}
 
+		/// <summary>
+		/// Returns whether the specified queue family can present images.
+		/// </summary>
+		/// <remarks>
+		/// This function returns whether the specified queue family of the specified
+		/// physical device supports presentation to the platform GLFW was built for.
+		/// </remarks>
+		/// <param name="instance">
+		/// The instance that the physical device belongs to.
+		/// </param>
+		/// <param name="device">
+		/// The physical device that the queue family belongs to.
+		/// </param>
+		/// <param name="queuefamily">
+		/// The index of the queue family to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if the queue family supports presentation, or
+		/// `GLFW_FALSE` otherwise.
+		/// </returns>
 		public static int glfwGetPhysicalDevicePresentationSupport(IntPtr instance, IntPtr device, uint queuefamily)
 		{
 			return _glfwGetPhysicalDevicePresentationSupport(instance, device, queuefamily);
 		}
 
+		/// <summary>
+		/// Creates a Vulkan surface for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function creates a Vulkan surface for the specified window.
+		/// </remarks>
+		/// <param name="instance">
+		/// The Vulkan instance to create the surface in.
+		/// </param>
+		/// <param name="window">
+		/// The window to create the surface for.
+		/// </param>
+		/// <param name="allocator">
+		/// The allocator to use, or `NULL` to use the default
+		/// allocator.
+		/// </param>
+		/// <param name="surface">
+		/// Where to store the handle of the surface.  This is set
+		/// to `VK_NULL_HANDLE` if an error occurred.
+		/// </param>
+		/// <returns>
+		/// `VK_SUCCESS` if successful, or a Vulkan error code if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
 		public static int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface)
 		{
 			return _glfwCreateWindowSurface(instance, window, allocator, out surface);

@@ -610,6 +610,16 @@ namespace Generator
             return name;
         }
 
+        private static string FormatDocs(string input, string padding)
+        {
+            return
+                padding + "/// " +
+                string.Join(
+                    Environment.NewLine + padding + "/// ",
+                    input.TrimEnd().Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                );
+        }
+
         private static void Write(
             List<EnumData> enums,
             List<FunctionData> functions,
@@ -708,7 +718,15 @@ namespace Generator
             }
 
             sb.Append("\t\t");
-            sb.AppendLine(LoaderCode.Trim());
+
+            var glfwInit = functions.Single(x => x.Name == "glfwInit");
+
+            var loaderCode = LoaderCode
+                .Replace("/// glfwInit.Summary ///", FormatDocs(glfwInit.BriefDescription, "\t\t").TrimStart())
+                .Replace("/// glfwInit.Remarks ///", FormatDocs(glfwInit.Description, "\t\t").TrimStart())
+                .Replace("/// glfwInit.Returns ///", FormatDocs(glfwInit.ReturnDescription, "\t\t").TrimStart());
+
+            sb.AppendLine(loaderCode.Trim());
             sb.AppendLine();
 
             sb.AppendLine("\t\tprivate static void LoadFunctions(Func<string, IntPtr> getProcAddress)");
@@ -727,6 +745,27 @@ namespace Generator
 
             foreach (var function in functions.Where(x => x.Name != "glfwInit"))
             {
+                sb.AppendLine("\t\t/// <summary>");
+                sb.AppendLine(FormatDocs(function.BriefDescription, "\t\t"));
+                sb.AppendLine("\t\t/// </summary>");
+                sb.AppendLine("\t\t/// <remarks>");
+                sb.AppendLine(FormatDocs(function.Description, "\t\t"));
+                sb.AppendLine("\t\t/// </remarks>");
+
+                foreach (var param in function.Params)
+                {
+                    sb.AppendLine($"\t\t/// <param name=\"{param.Name}\">");
+                    sb.AppendLine(FormatDocs(param.Description, "\t\t"));
+                    sb.AppendLine("\t\t/// </param>");
+                }
+
+                if (!string.IsNullOrEmpty(function.ReturnDescription))
+                {
+                    sb.AppendLine("\t\t/// <returns>");
+                    sb.AppendLine(FormatDocs(function.ReturnDescription, "\t\t"));
+                    sb.AppendLine("\t\t/// </returns>");
+                }
+
                 if (function.CommentOut)
                     sb.AppendLine("/*");
 
@@ -775,6 +814,15 @@ namespace Generator
             public static extern IntPtr GetProcAddress(IntPtr module, string procName);
         }
 
+        /// <summary>
+        /// glfwInit.Summary ///
+        /// </summary>
+        /// <remarks>
+		/// glfwInit.Remarks ///
+		/// </remarks>
+		/// <returns>
+		/// glfwInit.Returns ///
+		/// </returns>
         public static int glfwInit()
         {
             LoadFunctions(LoadAssembly());

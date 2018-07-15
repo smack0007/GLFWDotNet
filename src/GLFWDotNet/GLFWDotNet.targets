@@ -4,10 +4,14 @@
     </ItemGroup>
 
     <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
-        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x64\glfw3.dll"
+        <PropertyGroup>
+            <GLFWDLLsDirectory>$(MSBuildThisFileDirectory)..\..\ext\GLFW\</GLFWDLLsDirectory>
+        </PropertyGroup>
+        
+        <Copy SourceFiles="$(GLFWDLLsDirectory)x64\glfw3.dll"
               DestinationFolder="$(TargetDir)x64\" />
 
-        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x86\glfw3.dll"
+        <Copy SourceFiles="$(GLFWDLLsDirectory)x86\glfw3.dll"
               DestinationFolder="$(TargetDir)x86\" />
     </Target>
 </Project>

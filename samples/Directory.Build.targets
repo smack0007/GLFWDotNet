@@ -1,13 +1,3 @@
 <Project>
-    <ItemGroup>
-        <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />
-    </ItemGroup>
-
-    <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
-        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x64\glfw3.dll"
-              DestinationFolder="$(TargetDir)x64\" />
-
-        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x86\glfw3.dll"
-              DestinationFolder="$(TargetDir)x86\" />
-    </Target>
+    <Import Project="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.targets" />
 </Project>

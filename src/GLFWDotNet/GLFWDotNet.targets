@@ -1,0 +1,13 @@
+﻿<Project>
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" Exclude="$(MSBuildThisFileDirectory)obj\**\*.cs" Visible="false" />        
+    </ItemGroup>
+
+    <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
+        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x64\glfw3.dll"
+              DestinationFolder="$(TargetDir)x64\" />
+
+        <Copy SourceFiles="$(RepositoryRootDirectory)ext\GLFW\x86\glfw3.dll"
+              DestinationFolder="$(TargetDir)x86\" />
+    </Target>
+</Project>

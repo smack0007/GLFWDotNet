@@ -1,0 +1,17 @@
+﻿<Project>
+    <ItemGroup>
+        <ProjectReference Include="$(MSBuildThisFileDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />        
+    </ItemGroup>
+
+    <Target Name="CopyGLFWDlls" AfterTargets="AfterBuild">
+        <PropertyGroup>
+            <GLFWDLLsDirectory>$(MSBuildThisFileDirectory)ext\GLFW\</GLFWDLLsDirectory>
+        </PropertyGroup>
+        
+        <Copy SourceFiles="$(GLFWDLLsDirectory)x64\glfw3.dll"
+              DestinationFolder="$(TargetDir)x64\" />
+
+        <Copy SourceFiles="$(GLFWDLLsDirectory)x86\glfw3.dll"
+              DestinationFolder="$(TargetDir)x86\" />
+    </Target>
+</Project>

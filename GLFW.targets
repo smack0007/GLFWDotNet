@@ -1,0 +1,13 @@
+﻿<Project>
+    <PropertyGroup>
+        <GLFWDirectory>$(MSBuildThisFileDirectory)ext\GLFW\</GLFWDirectory>
+    </PropertyGroup>
+
+    <Target Name="CopyGLFW" AfterTargets="AfterBuild">        
+        <Copy SourceFiles="$(GLFWDirectory)x64\glfw3.dll"
+              DestinationFolder="$(TargetDir)x64\" />
+
+        <Copy SourceFiles="$(GLFWDirectory)x86\glfw3.dll"
+              DestinationFolder="$(TargetDir)x86\" />
+    </Target>
+</Project>

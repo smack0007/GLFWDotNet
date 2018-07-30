@@ -8,27 +8,21 @@
     <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <Target Name="CopyGLFWDlls" AfterTargets="BeforeBuild">
-    <PropertyGroup>
-        <GLFWDLLsDirectory>$(RepositoryRootDirectory)ext\GLFW\</GLFWDLLsDirectory>
-    </PropertyGroup>
-    
-    <Copy SourceFiles="$(GLFWDLLsDirectory)x64\glfw3.dll"
-          DestinationFolder="$(TargetDir)x64\" />
+  <Import Project="$(RepositoryRootDirectory)GLFW.targets" />
 
-    <Copy SourceFiles="$(GLFWDLLsDirectory)x86\glfw3.dll"
-          DestinationFolder="$(TargetDir)x86\" />
-
-    <ItemGroup>
-      <None Include="$(TargetDir)x64\glfw3.dll">
-        <Pack>true</Pack>
-        <PackagePath>lib\$(TargetFramework)\x64\</PackagePath>
-      </None>
-      <None Include="$(TargetDir)x86\glfw3.dll">
-        <Pack>true</Pack>
-        <PackagePath>lib\$(TargetFramework)\x86\</PackagePath>
-      </None>
-    </ItemGroup>
-  </Target>
+  <ItemGroup>
+    <None Include="$(GLFWDirectory)GLFW.license">
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)\</PackagePath>
+    </None>
+    <None Include="$(GLFWDirectory)x64\glfw3.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)\x64\</PackagePath>
+    </None>
+    <None Include="$(GLFWDirectory)x86\glfw3.dll">
+      <Pack>true</Pack>
+      <PackagePath>lib\$(TargetFramework)\x86\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

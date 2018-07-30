@@ -1,0 +1,9 @@
+<Project>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+    <Import Project="$(RepositoryRootDirectory)GLFW.targets" />
+
+    <ItemGroup>
+        <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />        
+    </ItemGroup>
+</Project>

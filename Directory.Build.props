@@ -8,7 +8,19 @@
 
         <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
         <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
+        
+        <PatchNumber Condition=" $(PatchNumber) == '' ">0</PatchNumber>
         <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
-        <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(BuildNumber)</VersionPrefix>
+        <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber).$(BuildNumber)</VersionPrefix>
+
+        <Authors>smack0007</Authors>
+        <Copyright>Copyright © Zachary Snow 2018</Copyright>
+
+        <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/smack0007/GLFWDotNet/master/License.txt</PackageLicenseUrl>
+        <PackageTags>glfw</PackageTags>
+
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/smack0007/GLFWDotNet.git</RepositoryUrl>
     </PropertyGroup>
 </Project>

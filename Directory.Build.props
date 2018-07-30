@@ -4,5 +4,11 @@
         <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
         <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
         <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
+        <LangVersion>latest</LangVersion>
+
+        <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
+        <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
+        <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
+        <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(BuildNumber)</VersionPrefix>
     </PropertyGroup>
 </Project>

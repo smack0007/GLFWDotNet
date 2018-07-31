@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>.NET bindings for GLFW.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 

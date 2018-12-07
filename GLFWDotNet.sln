@@ -21,8 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CEF9D625
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLFWDotNet.Tests", "tests\GLFWDotNet.Tests\GLFWDotNet.Tests.csproj", "{A4EBCC09-2417-465A-BA54-2FF459174708}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{C28993C0-709C-4220-AFF3-AD35C38ECAD4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLFWDotNet", "GLFWDotNet", "{C28993C0-709C-4220-AFF3-AD35C38ECAD4}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject

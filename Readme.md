@@ -1,5 +1,6 @@
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
-![Build Status](https://smack0007.visualstudio.com/_apis/public/build/definitions/34bb64ac-53c0-4e81-9c7b-65d412b0d1c8/2/badge)
+[![Build Status](https://dev.azure.com/smack0007/Github/_apis/build/status/smack0007.GLFWDotNet?branchName=master)](https://dev.azure.com/smack0007/Github/_build/latest?definitionId=13?branchName=master)
+[![BotBuilder Badge](https://buildstats.info/nuget/GLFWDotNet)](https://www.nuget.org/packages/GLFWDotNet/)  
 
 # GLFWDotNet
 
@@ -9,7 +10,7 @@
 
 Use one of the following options:
 
-* Compile the GLFWDotNet assembly using Visual Studio or MSBuild.
+* Use the [NuGet](https://www.nuget.org/packages/GLFWDotNet/) package.
 * Include [GLFW.cs](https://github.com/smack0007/GLFWDotNet/blob/master/src/GLFWDotNet/GLFW.cs) directly
   in your project.
   

@@ -34,8 +34,8 @@ namespace HelloWorld
 
             glfwMakeContextCurrent(window);
 
-            var glClear = (Delegates.glClear)Marshal.GetDelegateForFunctionPointer(glfwGetProcAddress("glClear"), typeof(Delegates.glClear));
-            var glClearColor = (Delegates.glClearColor)Marshal.GetDelegateForFunctionPointer(glfwGetProcAddress("glClearColor"), typeof(Delegates.glClearColor));
+            var glClear = Marshal.GetDelegateForFunctionPointer<Delegates.glClear>(glfwGetProcAddress("glClear"));
+            var glClearColor = Marshal.GetDelegateForFunctionPointer<Delegates.glClearColor>(glfwGetProcAddress("glClearColor"));
 
             // Cornflower Blue. Never forget.
             glClearColor(100 / 255.0f, 149 / 255.0f, 237 / 255.0f, 1);

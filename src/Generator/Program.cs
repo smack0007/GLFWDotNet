@@ -737,7 +737,7 @@ namespace Generator
                 if (function.CommentOut)
                     sb.Append("// ");
 
-                sb.AppendLine($"\t\t\t_{function.Name} = (Delegates.{function.Name})Marshal.GetDelegateForFunctionPointer(getProcAddress(\"{function.Name}\"), typeof(Delegates.{function.Name}));");
+                sb.AppendLine($"\t\t\t_{function.Name} = Marshal.GetDelegateForFunctionPointer<Delegates.{function.Name}>(getProcAddress(\"{function.Name}\"));");
             }
 
             sb.AppendLine("\t\t}");

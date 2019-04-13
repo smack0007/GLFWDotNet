@@ -61,7 +61,7 @@ namespace GLFWInfo
 
             glfwMakeContextCurrent(window);
 
-            var glGetString = (Delegates.glGetString)Marshal.GetDelegateForFunctionPointer(glfwGetProcAddress("glGetString"), typeof(Delegates.glGetString));
+            var glGetString = Marshal.GetDelegateForFunctionPointer<Delegates.glGetString>(glfwGetProcAddress("glGetString"));
 
             var version = Marshal.PtrToStringAnsi(glGetString(GL_VERSION));
             Console.WriteLine($"GL Version: {version}");

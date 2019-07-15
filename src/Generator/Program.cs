@@ -177,6 +177,73 @@ namespace Generator
             Parse(lines, enums, functions, callbacks, structs);
 
             Write(enums, functions, callbacks, structs);
+
+            var keyEnums = enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST"));
+
+            Func<string, string> inflectKeyEnum = x =>
+            {
+                string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
+
+                if (name.StartsWith("_"))
+                    name = name.Replace("_", "D");
+
+                if (name.StartsWith("Kp"))
+                    name = name.Replace("Kp", "KeyPad");
+
+                return name;
+            };
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_KEY") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_KEY".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "D");
+
+                    if (name.StartsWith("Kp"))
+                        name = name.Replace("Kp", "KeyPad");
+
+                    return name;
+                },
+                "Keys");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOD")),
+                x =>
+                {
+                    return InflectEnumName(x.Substring("GLFW_MOD".Length));
+                },
+                "KeyModifiers");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_JOYSTICK") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_JOYSTICK".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "JoystickButtons");
+
+            WriteEnumFile(
+                enums.Where(x => x.Name.StartsWith("GLFW_MOUSE_BUTTON") && !x.Name.EndsWith("LAST")),
+                x =>
+                {
+                    string name = InflectEnumName(x.Substring("GLFW_MOUSE_BUTTON".Length));
+
+                    if (name.StartsWith("_"))
+                        name = name.Replace("_", "Button");
+
+                    return name;
+                },
+                "MouseButtons");
+
+            WriteKeyboardMethods(keyEnums, inflectKeyEnum);
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -965,5 +1032,112 @@ namespace Generator
 		}",
 
         };
+
+        private static string ReplaceCommonWords(string input)
+        {
+            return input
+                .Replace("bits", "Bits")
+                .Replace("button", "Button")
+                .Replace("close", "Close")
+                .Replace("enter", "Enter")
+                .Replace("focus", "Focus")
+                .Replace("iconify", "Iconify")
+                .Replace("mods", "Mods")
+                .Replace("pos", "Pos")
+                .Replace("refresh", "Refresh")
+                .Replace("size", "Size");
+        }
+
+        private static string InflectEnumName(string input)
+        {
+            string[] parts = input.Split('_');
+            string[] temp = new string[parts.Length];
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 0)
+                {
+                    int capitalizeLength = 1;
+
+                    if (parts[i].Length > 1 && char.IsDigit(parts[i][0]))
+                        capitalizeLength = 2;
+
+                    temp[i] = parts[i].Substring(0, capitalizeLength).ToUpper() + parts[i].Substring(capitalizeLength).ToLower();
+                }
+            }
+
+            string name = string.Join(string.Empty, temp);
+
+            if (char.IsDigit(name[0]))
+                name = "_" + name;
+
+            return ReplaceCommonWords(name);
+        }
+
+        private static void WriteEnumFile(
+            IEnumerable<EnumData> enums,
+            Func<string, string> inflectName,
+            string enumName)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.AppendLine("using static GLFWDotNet.GLFW;");
+            sb.AppendLine();
+            sb.AppendLine("namespace GLFWDotNet.Utilities");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic enum {enumName}");
+            sb.AppendLine("\t{");
+
+            foreach (var @enum in enums)
+            {
+                string leftName = inflectName(@enum.Name);
+                string rightName = @enum.Name.Substring(5);
+                sb.AppendLine($"\t\t{leftName} = GLFW_{rightName},");
+            }
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+
+            File.WriteAllText($@"..\..\..\..\src\GLFWDotNet\Utilities\{enumName}.g.cs", sb.ToString());
+        }
+
+        private static void WriteKeyboardMethods(IEnumerable<EnumData> keyEnums, Func<string, string> inflectName)
+        {
+            StringBuilder sb = new StringBuilder(1024);
+
+            sb.AppendLine("using System;");
+            sb.AppendLine();
+            sb.AppendLine("namespace GLFWDotNet.Utilities");
+            sb.AppendLine("{");
+            sb.AppendLine($"\tpublic partial class Keyboard");
+            sb.AppendLine("\t{");
+
+            var keysToMap = keyEnums.Skip(1).ToArray();
+
+            sb.AppendLine($"\t\tprivate readonly bool[] keyMap = new bool[{keysToMap.Length}];");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\tprivate int GetKeyMapIndex(Keys key)");
+            sb.AppendLine("\t\t{");
+            sb.AppendLine("\t\t\tswitch(key)");
+            sb.AppendLine("\t\t\t{");
+
+            for (int i = 0; i < keysToMap.Length; i++)
+            {
+                string name = inflectName(keysToMap[i].Name);
+                sb.AppendLine($"\t\t\t\tcase Keys.{name}: return {i};");
+            }
+
+            sb.AppendLine("\t\t\t}");
+            sb.AppendLine();
+
+            sb.AppendLine("\t\t\treturn -1;");
+            sb.AppendLine("\t\t}");
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+
+            File.WriteAllText($@"..\..\..\..\src\GLFWDotNet\Utilities\Keyboard.g.cs", sb.ToString());
+        }
     }
 }

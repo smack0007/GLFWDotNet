@@ -30,13 +30,18 @@ namespace GLFWDotNet
 	public static class GLFW
 	{
 		public const int GLFW_VERSION_MAJOR = 3;
-		public const int GLFW_VERSION_MINOR = 2;
-		public const int GLFW_VERSION_REVISION = 1;
+		public const int GLFW_VERSION_MINOR = 3;
+		public const int GLFW_VERSION_REVISION = 0;
 		public const int GLFW_TRUE = 1;
 		public const int GLFW_FALSE = 0;
 		public const int GLFW_RELEASE = 0;
 		public const int GLFW_PRESS = 1;
 		public const int GLFW_REPEAT = 2;
+		public const int GLFW_HAT_CENTERED = 0;
+		public const int GLFW_HAT_UP = 1;
+		public const int GLFW_HAT_RIGHT = 2;
+		public const int GLFW_HAT_DOWN = 4;
+		public const int GLFW_HAT_LEFT = 8;
 		public const int GLFW_KEY_UNKNOWN = -1;
 		public const int GLFW_KEY_SPACE = 32;
 		public const int GLFW_KEY_0 = 48;
@@ -150,6 +155,8 @@ namespace GLFWDotNet
 		public const int GLFW_MOD_CONTROL = 0x0002;
 		public const int GLFW_MOD_ALT = 0x0004;
 		public const int GLFW_MOD_SUPER = 0x0008;
+		public const int GLFW_MOD_CAPS_LOCK = 0x0010;
+		public const int GLFW_MOD_NUM_LOCK = 0x0020;
 		public const int GLFW_MOUSE_BUTTON_1 = 0;
 		public const int GLFW_MOUSE_BUTTON_2 = 1;
 		public const int GLFW_MOUSE_BUTTON_3 = 2;
@@ -179,6 +186,34 @@ namespace GLFWDotNet
 		public const int GLFW_JOYSTICK_15 = 14;
 		public const int GLFW_JOYSTICK_16 = 15;
 		public const int GLFW_JOYSTICK_LAST = GLFW_JOYSTICK_16;
+		public const int GLFW_GAMEPAD_BUTTON_A = 0;
+		public const int GLFW_GAMEPAD_BUTTON_B = 1;
+		public const int GLFW_GAMEPAD_BUTTON_X = 2;
+		public const int GLFW_GAMEPAD_BUTTON_Y = 3;
+		public const int GLFW_GAMEPAD_BUTTON_LEFT_BUMPER = 4;
+		public const int GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER = 5;
+		public const int GLFW_GAMEPAD_BUTTON_BACK = 6;
+		public const int GLFW_GAMEPAD_BUTTON_START = 7;
+		public const int GLFW_GAMEPAD_BUTTON_GUIDE = 8;
+		public const int GLFW_GAMEPAD_BUTTON_LEFT_THUMB = 9;
+		public const int GLFW_GAMEPAD_BUTTON_RIGHT_THUMB = 10;
+		public const int GLFW_GAMEPAD_BUTTON_DPAD_UP = 11;
+		public const int GLFW_GAMEPAD_BUTTON_DPAD_RIGHT = 12;
+		public const int GLFW_GAMEPAD_BUTTON_DPAD_DOWN = 13;
+		public const int GLFW_GAMEPAD_BUTTON_DPAD_LEFT = 14;
+		public const int GLFW_GAMEPAD_BUTTON_LAST = GLFW_GAMEPAD_BUTTON_DPAD_LEFT;
+		public const int GLFW_GAMEPAD_BUTTON_CROSS = GLFW_GAMEPAD_BUTTON_A;
+		public const int GLFW_GAMEPAD_BUTTON_CIRCLE = GLFW_GAMEPAD_BUTTON_B;
+		public const int GLFW_GAMEPAD_BUTTON_SQUARE = GLFW_GAMEPAD_BUTTON_X;
+		public const int GLFW_GAMEPAD_BUTTON_TRIANGLE = GLFW_GAMEPAD_BUTTON_Y;
+		public const int GLFW_GAMEPAD_AXIS_LEFT_X = 0;
+		public const int GLFW_GAMEPAD_AXIS_LEFT_Y = 1;
+		public const int GLFW_GAMEPAD_AXIS_RIGHT_X = 2;
+		public const int GLFW_GAMEPAD_AXIS_RIGHT_Y = 3;
+		public const int GLFW_GAMEPAD_AXIS_LEFT_TRIGGER = 4;
+		public const int GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER = 5;
+		public const int GLFW_GAMEPAD_AXIS_LAST = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER;
+		public const int GLFW_NO_ERROR = 0;
 		public const int GLFW_NOT_INITIALIZED = 0x00010001;
 		public const int GLFW_NO_CURRENT_CONTEXT = 0x00010002;
 		public const int GLFW_INVALID_ENUM = 0x00010003;
@@ -197,6 +232,10 @@ namespace GLFWDotNet
 		public const int GLFW_AUTO_ICONIFY = 0x00020006;
 		public const int GLFW_FLOATING = 0x00020007;
 		public const int GLFW_MAXIMIZED = 0x00020008;
+		public const int GLFW_CENTER_CURSOR = 0x00020009;
+		public const int GLFW_TRANSPARENT_FRAMEBUFFER = 0x0002000A;
+		public const int GLFW_HOVERED = 0x0002000B;
+		public const int GLFW_FOCUS_ON_SHOW = 0x0002000C;
 		public const int GLFW_RED_BITS = 0x00021001;
 		public const int GLFW_GREEN_BITS = 0x00021002;
 		public const int GLFW_BLUE_BITS = 0x00021003;
@@ -224,6 +263,12 @@ namespace GLFWDotNet
 		public const int GLFW_CONTEXT_RELEASE_BEHAVIOR = 0x00022009;
 		public const int GLFW_CONTEXT_NO_ERROR = 0x0002200A;
 		public const int GLFW_CONTEXT_CREATION_API = 0x0002200B;
+		public const int GLFW_SCALE_TO_MONITOR = 0x0002200C;
+		public const int GLFW_COCOA_RETINA_FRAMEBUFFER = 0x00023001;
+		public const int GLFW_COCOA_FRAME_NAME = 0x00023002;
+		public const int GLFW_COCOA_GRAPHICS_SWITCHING = 0x00023003;
+		public const int GLFW_X11_CLASS_NAME = 0x00024001;
+		public const int GLFW_X11_INSTANCE_NAME = 0x00024002;
 		public const int GLFW_NO_API = 0;
 		public const int GLFW_OPENGL_API = 0x00030001;
 		public const int GLFW_OPENGL_ES_API = 0x00030002;
@@ -236,6 +281,8 @@ namespace GLFWDotNet
 		public const int GLFW_CURSOR = 0x00033001;
 		public const int GLFW_STICKY_KEYS = 0x00033002;
 		public const int GLFW_STICKY_MOUSE_BUTTONS = 0x00033003;
+		public const int GLFW_LOCK_KEY_MODS = 0x00033004;
+		public const int GLFW_RAW_MOUSE_MOTION = 0x00033005;
 		public const int GLFW_CURSOR_NORMAL = 0x00034001;
 		public const int GLFW_CURSOR_HIDDEN = 0x00034002;
 		public const int GLFW_CURSOR_DISABLED = 0x00034003;
@@ -244,6 +291,7 @@ namespace GLFWDotNet
 		public const int GLFW_RELEASE_BEHAVIOR_NONE = 0x00035002;
 		public const int GLFW_NATIVE_CONTEXT_API = 0x00036001;
 		public const int GLFW_EGL_CONTEXT_API = 0x00036002;
+		public const int GLFW_OSMESA_CONTEXT_API = 0x00036003;
 		public const int GLFW_ARROW_CURSOR = 0x00036001;
 		public const int GLFW_IBEAM_CURSOR = 0x00036002;
 		public const int GLFW_CROSSHAIR_CURSOR = 0x00036003;
@@ -252,6 +300,9 @@ namespace GLFWDotNet
 		public const int GLFW_VRESIZE_CURSOR = 0x00036006;
 		public const int GLFW_CONNECTED = 0x00040001;
 		public const int GLFW_DISCONNECTED = 0x00040002;
+		public const int GLFW_JOYSTICK_HAT_BUTTONS = 0x00050001;
+		public const int GLFW_COCOA_CHDIR_RESOURCES = 0x00051001;
+		public const int GLFW_COCOA_MENUBAR = 0x00051002;
 		public const int GLFW_DONT_CARE = -1;
 
 		public struct GLFWvidmode
@@ -279,6 +330,12 @@ namespace GLFWDotNet
 			public IntPtr pixels;
 		}
 
+		public struct GLFWgamepadstate
+		{
+			public IntPtr buttons;
+			public float axes;
+		}
+
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWerrorfun(int error, string description);
 
@@ -301,7 +358,13 @@ namespace GLFWDotNet
 		public delegate void GLFWwindowiconifyfun(IntPtr window, int iconified);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+		public delegate void GLFWwindowmaximizefun(IntPtr window, int iconified);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWframebuffersizefun(IntPtr window, int width, int height);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+		public delegate void GLFWwindowcontentscalefun(IntPtr window, float xscale, float yscale);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 		public delegate void GLFWmousebuttonfun(IntPtr window, int button, int action, int mods);
@@ -331,7 +394,7 @@ namespace GLFWDotNet
 		public delegate void GLFWmonitorfun(IntPtr monitor, int @event);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-		public delegate void GLFWjoystickfun(int joy, int @event);
+		public delegate void GLFWjoystickfun(int jid, int @event);
 
 		private static class Delegates
 		{
@@ -342,10 +405,16 @@ namespace GLFWDotNet
 			public delegate void glfwTerminate();
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwInitHint(int hint, int value);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetVersion(out int major, out int minor, out int rev);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetVersionString();
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwGetError(IntPtr description);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
@@ -360,10 +429,22 @@ namespace GLFWDotNet
 			public delegate void glfwGetMonitorPos(IntPtr monitor, out int xpos, out int ypos);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwGetMonitorWorkarea(IntPtr monitor, out int xpos, out int ypos, out int width, out int height);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwGetMonitorPhysicalSize(IntPtr monitor, out int widthMM, out int heightMM);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwGetMonitorContentScale(IntPtr monitor, out IntPtr xscale, out IntPtr yscale);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetMonitorName(IntPtr monitor);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwSetMonitorUserPointer(IntPtr monitor, IntPtr pointer);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetMonitorUserPointer(IntPtr monitor);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
@@ -388,6 +469,9 @@ namespace GLFWDotNet
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwWindowHint(int hint, int value);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwWindowHintString(int hint, string value);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwCreateWindow(int width, int height, string title, IntPtr monitor, IntPtr share);
@@ -432,6 +516,15 @@ namespace GLFWDotNet
 			public delegate void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwGetWindowContentScale(IntPtr window, out IntPtr xscale, out IntPtr yscale);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate float glfwGetWindowOpacity(IntPtr window);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwSetWindowOpacity(IntPtr window, float opacity);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwIconifyWindow(IntPtr window);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
@@ -450,6 +543,9 @@ namespace GLFWDotNet
 			public delegate void glfwFocusWindow(IntPtr window);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwRequestWindowAttention(IntPtr window);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetWindowMonitor(IntPtr window);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
@@ -457,6 +553,9 @@ namespace GLFWDotNet
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetWindowAttrib(IntPtr window, int attrib);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwSetWindowAttrib(IntPtr window, int attrib, int value);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetWindowUserPointer(IntPtr window, IntPtr pointer);
@@ -483,7 +582,13 @@ namespace GLFWDotNet
 			public delegate GLFWwindowiconifyfun glfwSetWindowIconifyCallback(IntPtr window, GLFWwindowiconifyfun cbfun);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate GLFWwindowmaximizefun glfwSetWindowMaximizeCallback(IntPtr window, GLFWwindowmaximizefun cbfun);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate GLFWwindowcontentscalefun glfwSetWindowContentScaleCallback(IntPtr window, GLFWwindowcontentscalefun cbfun);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwPollEvents();
@@ -504,7 +609,13 @@ namespace GLFWDotNet
 			public delegate void glfwSetInputMode(IntPtr window, int mode, int value);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwRawMouseMotionSupported();
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetKeyName(int key, int scancode);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwGetKeyScancode(int key);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwGetKey(IntPtr window, int key);
@@ -555,19 +666,43 @@ namespace GLFWDotNet
 			public delegate GLFWdropfun glfwSetDropCallback(IntPtr window, GLFWdropfun cbfun);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate int glfwJoystickPresent(int joy);
+			public delegate int glfwJoystickPresent(int jid);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate IntPtr glfwGetJoystickAxes(int joy, out int count);
+			public delegate IntPtr glfwGetJoystickAxes(int jid, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate IntPtr glfwGetJoystickButtons(int joy, out int count);
+			public delegate IntPtr glfwGetJoystickButtons(int jid, out int count);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-			public delegate IntPtr glfwGetJoystickName(int joy);
+			public delegate IntPtr glfwGetJoystickHats(int jid, out int count);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetJoystickName(int jid);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetJoystickGUID(int jid);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate void glfwSetJoystickUserPointer(int jid, IntPtr pointer);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetJoystickUserPointer(int jid);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwJoystickIsGamepad(int jid);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun cbfun);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwUpdateGamepadMappings(string @string);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetGamepadName(int jid);
+
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate int glfwGetGamepadState(int jid, out IntPtr state);
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate void glfwSetClipboardString(IntPtr window, string @string);
@@ -626,9 +761,13 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwTerminate _glfwTerminate;
 
+		private static Delegates.glfwInitHint _glfwInitHint;
+
 		private static Delegates.glfwGetVersion _glfwGetVersion;
 
 		private static Delegates.glfwGetVersionString _glfwGetVersionString;
+
+		private static Delegates.glfwGetError _glfwGetError;
 
 		private static Delegates.glfwSetErrorCallback _glfwSetErrorCallback;
 
@@ -638,9 +777,17 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwGetMonitorPos _glfwGetMonitorPos;
 
+		private static Delegates.glfwGetMonitorWorkarea _glfwGetMonitorWorkarea;
+
 		private static Delegates.glfwGetMonitorPhysicalSize _glfwGetMonitorPhysicalSize;
 
+		private static Delegates.glfwGetMonitorContentScale _glfwGetMonitorContentScale;
+
 		private static Delegates.glfwGetMonitorName _glfwGetMonitorName;
+
+		private static Delegates.glfwSetMonitorUserPointer _glfwSetMonitorUserPointer;
+
+		private static Delegates.glfwGetMonitorUserPointer _glfwGetMonitorUserPointer;
 
 		private static Delegates.glfwSetMonitorCallback _glfwSetMonitorCallback;
 
@@ -657,6 +804,8 @@ namespace GLFWDotNet
 		private static Delegates.glfwDefaultWindowHints _glfwDefaultWindowHints;
 
 		private static Delegates.glfwWindowHint _glfwWindowHint;
+
+		private static Delegates.glfwWindowHintString _glfwWindowHintString;
 
 		private static Delegates.glfwCreateWindow _glfwCreateWindow;
 
@@ -686,6 +835,12 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwGetWindowFrameSize _glfwGetWindowFrameSize;
 
+		private static Delegates.glfwGetWindowContentScale _glfwGetWindowContentScale;
+
+		private static Delegates.glfwGetWindowOpacity _glfwGetWindowOpacity;
+
+		private static Delegates.glfwSetWindowOpacity _glfwSetWindowOpacity;
+
 		private static Delegates.glfwIconifyWindow _glfwIconifyWindow;
 
 		private static Delegates.glfwRestoreWindow _glfwRestoreWindow;
@@ -698,11 +853,15 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwFocusWindow _glfwFocusWindow;
 
+		private static Delegates.glfwRequestWindowAttention _glfwRequestWindowAttention;
+
 		private static Delegates.glfwGetWindowMonitor _glfwGetWindowMonitor;
 
 		private static Delegates.glfwSetWindowMonitor _glfwSetWindowMonitor;
 
 		private static Delegates.glfwGetWindowAttrib _glfwGetWindowAttrib;
+
+		private static Delegates.glfwSetWindowAttrib _glfwSetWindowAttrib;
 
 		private static Delegates.glfwSetWindowUserPointer _glfwSetWindowUserPointer;
 
@@ -720,7 +879,11 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetWindowIconifyCallback _glfwSetWindowIconifyCallback;
 
+		private static Delegates.glfwSetWindowMaximizeCallback _glfwSetWindowMaximizeCallback;
+
 		private static Delegates.glfwSetFramebufferSizeCallback _glfwSetFramebufferSizeCallback;
+
+		private static Delegates.glfwSetWindowContentScaleCallback _glfwSetWindowContentScaleCallback;
 
 		private static Delegates.glfwPollEvents _glfwPollEvents;
 
@@ -734,7 +897,11 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwSetInputMode _glfwSetInputMode;
 
+		private static Delegates.glfwRawMouseMotionSupported _glfwRawMouseMotionSupported;
+
 		private static Delegates.glfwGetKeyName _glfwGetKeyName;
+
+		private static Delegates.glfwGetKeyScancode _glfwGetKeyScancode;
 
 		private static Delegates.glfwGetKey _glfwGetKey;
 
@@ -774,9 +941,25 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwGetJoystickButtons _glfwGetJoystickButtons;
 
+		private static Delegates.glfwGetJoystickHats _glfwGetJoystickHats;
+
 		private static Delegates.glfwGetJoystickName _glfwGetJoystickName;
 
+		private static Delegates.glfwGetJoystickGUID _glfwGetJoystickGUID;
+
+		private static Delegates.glfwSetJoystickUserPointer _glfwSetJoystickUserPointer;
+
+		private static Delegates.glfwGetJoystickUserPointer _glfwGetJoystickUserPointer;
+
+		private static Delegates.glfwJoystickIsGamepad _glfwJoystickIsGamepad;
+
 		private static Delegates.glfwSetJoystickCallback _glfwSetJoystickCallback;
+
+		private static Delegates.glfwUpdateGamepadMappings _glfwUpdateGamepadMappings;
+
+		private static Delegates.glfwGetGamepadName _glfwGetGamepadName;
+
+		private static Delegates.glfwGetGamepadState _glfwGetGamepadState;
 
 		private static Delegates.glfwSetClipboardString _glfwSetClipboardString;
 
@@ -844,7 +1027,7 @@ namespace GLFWDotNet
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                string assemblyPath = Path.Combine(Directory.GetCurrentDirectory(), Environment.Is64BitProcess ? "x64" : "x86", "glfw3.dll");
+                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "x64" : "x86", "glfw3.dll");
                 IntPtr assembly = Win32.LoadLibrary(assemblyPath);
 
                 if (assembly == IntPtr.Zero)
@@ -864,14 +1047,20 @@ namespace GLFWDotNet
 		{
 			_glfwInit = Marshal.GetDelegateForFunctionPointer<Delegates.glfwInit>(getProcAddress("glfwInit"));
 			_glfwTerminate = Marshal.GetDelegateForFunctionPointer<Delegates.glfwTerminate>(getProcAddress("glfwTerminate"));
+			_glfwInitHint = Marshal.GetDelegateForFunctionPointer<Delegates.glfwInitHint>(getProcAddress("glfwInitHint"));
 			_glfwGetVersion = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetVersion>(getProcAddress("glfwGetVersion"));
 			_glfwGetVersionString = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetVersionString>(getProcAddress("glfwGetVersionString"));
+			_glfwGetError = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetError>(getProcAddress("glfwGetError"));
 			_glfwSetErrorCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetErrorCallback>(getProcAddress("glfwSetErrorCallback"));
 			_glfwGetMonitors = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitors>(getProcAddress("glfwGetMonitors"));
 			_glfwGetPrimaryMonitor = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetPrimaryMonitor>(getProcAddress("glfwGetPrimaryMonitor"));
 			_glfwGetMonitorPos = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorPos>(getProcAddress("glfwGetMonitorPos"));
+			_glfwGetMonitorWorkarea = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorWorkarea>(getProcAddress("glfwGetMonitorWorkarea"));
 			_glfwGetMonitorPhysicalSize = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorPhysicalSize>(getProcAddress("glfwGetMonitorPhysicalSize"));
+			_glfwGetMonitorContentScale = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorContentScale>(getProcAddress("glfwGetMonitorContentScale"));
 			_glfwGetMonitorName = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorName>(getProcAddress("glfwGetMonitorName"));
+			_glfwSetMonitorUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetMonitorUserPointer>(getProcAddress("glfwSetMonitorUserPointer"));
+			_glfwGetMonitorUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMonitorUserPointer>(getProcAddress("glfwGetMonitorUserPointer"));
 			_glfwSetMonitorCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetMonitorCallback>(getProcAddress("glfwSetMonitorCallback"));
 			_glfwGetVideoModes = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetVideoModes>(getProcAddress("glfwGetVideoModes"));
 			_glfwGetVideoMode = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetVideoMode>(getProcAddress("glfwGetVideoMode"));
@@ -880,6 +1069,7 @@ namespace GLFWDotNet
 			_glfwSetGammaRamp = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetGammaRamp>(getProcAddress("glfwSetGammaRamp"));
 			_glfwDefaultWindowHints = Marshal.GetDelegateForFunctionPointer<Delegates.glfwDefaultWindowHints>(getProcAddress("glfwDefaultWindowHints"));
 			_glfwWindowHint = Marshal.GetDelegateForFunctionPointer<Delegates.glfwWindowHint>(getProcAddress("glfwWindowHint"));
+			_glfwWindowHintString = Marshal.GetDelegateForFunctionPointer<Delegates.glfwWindowHintString>(getProcAddress("glfwWindowHintString"));
 			_glfwCreateWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwCreateWindow>(getProcAddress("glfwCreateWindow"));
 			_glfwDestroyWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwDestroyWindow>(getProcAddress("glfwDestroyWindow"));
 			_glfwWindowShouldClose = Marshal.GetDelegateForFunctionPointer<Delegates.glfwWindowShouldClose>(getProcAddress("glfwWindowShouldClose"));
@@ -894,15 +1084,20 @@ namespace GLFWDotNet
 			_glfwSetWindowSize = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowSize>(getProcAddress("glfwSetWindowSize"));
 			_glfwGetFramebufferSize = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetFramebufferSize>(getProcAddress("glfwGetFramebufferSize"));
 			_glfwGetWindowFrameSize = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowFrameSize>(getProcAddress("glfwGetWindowFrameSize"));
+			_glfwGetWindowContentScale = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowContentScale>(getProcAddress("glfwGetWindowContentScale"));
+			_glfwGetWindowOpacity = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowOpacity>(getProcAddress("glfwGetWindowOpacity"));
+			_glfwSetWindowOpacity = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowOpacity>(getProcAddress("glfwSetWindowOpacity"));
 			_glfwIconifyWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwIconifyWindow>(getProcAddress("glfwIconifyWindow"));
 			_glfwRestoreWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwRestoreWindow>(getProcAddress("glfwRestoreWindow"));
 			_glfwMaximizeWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwMaximizeWindow>(getProcAddress("glfwMaximizeWindow"));
 			_glfwShowWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwShowWindow>(getProcAddress("glfwShowWindow"));
 			_glfwHideWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwHideWindow>(getProcAddress("glfwHideWindow"));
 			_glfwFocusWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwFocusWindow>(getProcAddress("glfwFocusWindow"));
+			_glfwRequestWindowAttention = Marshal.GetDelegateForFunctionPointer<Delegates.glfwRequestWindowAttention>(getProcAddress("glfwRequestWindowAttention"));
 			_glfwGetWindowMonitor = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowMonitor>(getProcAddress("glfwGetWindowMonitor"));
 			_glfwSetWindowMonitor = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowMonitor>(getProcAddress("glfwSetWindowMonitor"));
 			_glfwGetWindowAttrib = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowAttrib>(getProcAddress("glfwGetWindowAttrib"));
+			_glfwSetWindowAttrib = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowAttrib>(getProcAddress("glfwSetWindowAttrib"));
 			_glfwSetWindowUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowUserPointer>(getProcAddress("glfwSetWindowUserPointer"));
 			_glfwGetWindowUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWindowUserPointer>(getProcAddress("glfwGetWindowUserPointer"));
 			_glfwSetWindowPosCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowPosCallback>(getProcAddress("glfwSetWindowPosCallback"));
@@ -911,14 +1106,18 @@ namespace GLFWDotNet
 			_glfwSetWindowRefreshCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowRefreshCallback>(getProcAddress("glfwSetWindowRefreshCallback"));
 			_glfwSetWindowFocusCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowFocusCallback>(getProcAddress("glfwSetWindowFocusCallback"));
 			_glfwSetWindowIconifyCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowIconifyCallback>(getProcAddress("glfwSetWindowIconifyCallback"));
+			_glfwSetWindowMaximizeCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowMaximizeCallback>(getProcAddress("glfwSetWindowMaximizeCallback"));
 			_glfwSetFramebufferSizeCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetFramebufferSizeCallback>(getProcAddress("glfwSetFramebufferSizeCallback"));
+			_glfwSetWindowContentScaleCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetWindowContentScaleCallback>(getProcAddress("glfwSetWindowContentScaleCallback"));
 			_glfwPollEvents = Marshal.GetDelegateForFunctionPointer<Delegates.glfwPollEvents>(getProcAddress("glfwPollEvents"));
 			_glfwWaitEvents = Marshal.GetDelegateForFunctionPointer<Delegates.glfwWaitEvents>(getProcAddress("glfwWaitEvents"));
 			_glfwWaitEventsTimeout = Marshal.GetDelegateForFunctionPointer<Delegates.glfwWaitEventsTimeout>(getProcAddress("glfwWaitEventsTimeout"));
 			_glfwPostEmptyEvent = Marshal.GetDelegateForFunctionPointer<Delegates.glfwPostEmptyEvent>(getProcAddress("glfwPostEmptyEvent"));
 			_glfwGetInputMode = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetInputMode>(getProcAddress("glfwGetInputMode"));
 			_glfwSetInputMode = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetInputMode>(getProcAddress("glfwSetInputMode"));
+			_glfwRawMouseMotionSupported = Marshal.GetDelegateForFunctionPointer<Delegates.glfwRawMouseMotionSupported>(getProcAddress("glfwRawMouseMotionSupported"));
 			_glfwGetKeyName = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetKeyName>(getProcAddress("glfwGetKeyName"));
+			_glfwGetKeyScancode = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetKeyScancode>(getProcAddress("glfwGetKeyScancode"));
 			_glfwGetKey = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetKey>(getProcAddress("glfwGetKey"));
 			_glfwGetMouseButton = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetMouseButton>(getProcAddress("glfwGetMouseButton"));
 			_glfwGetCursorPos = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetCursorPos>(getProcAddress("glfwGetCursorPos"));
@@ -938,8 +1137,16 @@ namespace GLFWDotNet
 			_glfwJoystickPresent = Marshal.GetDelegateForFunctionPointer<Delegates.glfwJoystickPresent>(getProcAddress("glfwJoystickPresent"));
 			_glfwGetJoystickAxes = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickAxes>(getProcAddress("glfwGetJoystickAxes"));
 			_glfwGetJoystickButtons = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickButtons>(getProcAddress("glfwGetJoystickButtons"));
+			_glfwGetJoystickHats = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickHats>(getProcAddress("glfwGetJoystickHats"));
 			_glfwGetJoystickName = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickName>(getProcAddress("glfwGetJoystickName"));
+			_glfwGetJoystickGUID = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickGUID>(getProcAddress("glfwGetJoystickGUID"));
+			_glfwSetJoystickUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetJoystickUserPointer>(getProcAddress("glfwSetJoystickUserPointer"));
+			_glfwGetJoystickUserPointer = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetJoystickUserPointer>(getProcAddress("glfwGetJoystickUserPointer"));
+			_glfwJoystickIsGamepad = Marshal.GetDelegateForFunctionPointer<Delegates.glfwJoystickIsGamepad>(getProcAddress("glfwJoystickIsGamepad"));
 			_glfwSetJoystickCallback = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetJoystickCallback>(getProcAddress("glfwSetJoystickCallback"));
+			_glfwUpdateGamepadMappings = Marshal.GetDelegateForFunctionPointer<Delegates.glfwUpdateGamepadMappings>(getProcAddress("glfwUpdateGamepadMappings"));
+			_glfwGetGamepadName = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetGamepadName>(getProcAddress("glfwGetGamepadName"));
+			_glfwGetGamepadState = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetGamepadState>(getProcAddress("glfwGetGamepadState"));
 			_glfwSetClipboardString = Marshal.GetDelegateForFunctionPointer<Delegates.glfwSetClipboardString>(getProcAddress("glfwSetClipboardString"));
 			_glfwGetClipboardString = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetClipboardString>(getProcAddress("glfwGetClipboardString"));
 			_glfwGetTime = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetTime>(getProcAddress("glfwGetTime"));
@@ -971,6 +1178,23 @@ namespace GLFWDotNet
 		public static void glfwTerminate()
 		{
 			_glfwTerminate();
+		}
+
+		/// <summary>
+		/// Sets the specified init hint to the desired value.
+		/// </summary>
+		/// <remarks>
+		/// This function sets hints for the next initialization of GLFW.
+		/// </remarks>
+		/// <param name="hint">
+		/// The [init hint](@ref init_hints) to set.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the init hint.
+		/// </param>
+		public static void glfwInitHint(int hint, int value)
+		{
+			_glfwInitHint(hint, value);
 		}
 
 		/// <summary>
@@ -1012,6 +1236,28 @@ namespace GLFWDotNet
 		{
 			var versionStringPtr = _glfwGetVersionString();
 			return Marshal.PtrToStringAnsi(versionStringPtr);
+		}
+
+		/// <summary>
+		/// Returns and clears the last error for the calling thread.
+		/// </summary>
+		/// <remarks>
+		/// This function returns and clears the [error code](@ref errors) of the last
+		/// error that occurred on the calling thread, and optionally a UTF-8 encoded
+		/// human-readable description of it.  If no error has occurred since the last
+		/// call, it returns @ref GLFW_NO_ERROR (zero) and the description pointer is
+		/// set to `NULL`.
+		/// </remarks>
+		/// <param name="description">
+		/// Where to store the error description pointer, or `NULL`.
+		/// </param>
+		/// <returns>
+		/// The last error code for the calling thread, or @ref GLFW_NO_ERROR
+		/// (zero).
+		/// </returns>
+		public static int glfwGetError(IntPtr description)
+		{
+			return _glfwGetError(description);
 		}
 
 		/// <summary>
@@ -1105,6 +1351,37 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Retrives the work area of the monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the position, in screen coordinates, of the upper-left
+		/// corner of the work area of the specified monitor along with the work area
+		/// size in screen coordinates. The work area is defined as the area of the
+		/// monitor not occluded by the operating system task bar where present. If no
+		/// task bar exists then the work area is the monitor resolution in screen
+		/// coordinates.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="xpos">
+		/// Where to store the monitor x-coordinate, or `NULL`.
+		/// </param>
+		/// <param name="ypos">
+		/// Where to store the monitor y-coordinate, or `NULL`.
+		/// </param>
+		/// <param name="width">
+		/// Where to store the monitor width, or `NULL`.
+		/// </param>
+		/// <param name="height">
+		/// Where to store the monitor height, or `NULL`.
+		/// </param>
+		public static void glfwGetMonitorWorkarea(IntPtr monitor, out int xpos, out int ypos, out int width, out int height)
+		{
+			_glfwGetMonitorWorkarea(monitor, out xpos, out ypos, out width, out height);
+		}
+
+		/// <summary>
 		/// Returns the physical size of the monitor.
 		/// </summary>
 		/// <remarks>
@@ -1128,6 +1405,32 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Retrieves the content scale for the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the content scale for the specified monitor.  The
+		/// content scale is the ratio between the current DPI and the platform's
+		/// default DPI.  This is especially important for text and any UI elements.  If
+		/// the pixel dimensions of your UI scaled by this look appropriate on your
+		/// machine then it should appear at a reasonable size on other machines
+		/// regardless of their DPI and scaling settings.  This relies on the system DPI
+		/// and scaling settings being somewhat correct.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor to query.
+		/// </param>
+		/// <param name="xscale">
+		/// Where to store the x-axis content scale, or `NULL`.
+		/// </param>
+		/// <param name="yscale">
+		/// Where to store the y-axis content scale, or `NULL`.
+		/// </param>
+		public static void glfwGetMonitorContentScale(IntPtr monitor, out IntPtr xscale, out IntPtr yscale)
+		{
+			_glfwGetMonitorContentScale(monitor, out xscale, out yscale);
+		}
+
+		/// <summary>
 		/// Returns the name of the specified monitor.
 		/// </summary>
 		/// <remarks>
@@ -1145,6 +1448,40 @@ namespace GLFWDotNet
 		public static IntPtr glfwGetMonitorName(IntPtr monitor)
 		{
 			return _glfwGetMonitorName(monitor);
+		}
+
+		/// <summary>
+		/// Sets the user pointer of the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the user-defined pointer of the specified monitor.  The
+		/// current value is retained until the monitor is disconnected.  The initial
+		/// value is `NULL`.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor whose pointer to set.
+		/// </param>
+		/// <param name="pointer">
+		/// The new value.
+		/// </param>
+		public static void glfwSetMonitorUserPointer(IntPtr monitor, IntPtr pointer)
+		{
+			_glfwSetMonitorUserPointer(monitor, pointer);
+		}
+
+		/// <summary>
+		/// Returns the user pointer of the specified monitor.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current value of the user-defined pointer of the
+		/// specified monitor.  The initial value is `NULL`.
+		/// </remarks>
+		/// <param name="monitor">
+		/// The monitor whose pointer to return.
+		/// </param>
+		public static IntPtr glfwGetMonitorUserPointer(IntPtr monitor)
+		{
+			return _glfwGetMonitorUserPointer(monitor);
 		}
 
 		/// <summary>
@@ -1218,9 +1555,9 @@ namespace GLFWDotNet
 		/// Generates a gamma ramp and sets it for the specified monitor.
 		/// </summary>
 		/// <remarks>
-		/// This function generates a 256-element gamma ramp from the specified exponent
-		/// and then calls @ref glfwSetGammaRamp with it.  The value must be a finite
-		/// number greater than zero.
+		/// This function generates an appropriately sized gamma ramp from the specified
+		/// exponent and then calls @ref glfwSetGammaRamp with it.  The value must be
+		/// a finite number greater than zero.
 		/// </remarks>
 		/// <param name="monitor">
 		/// The monitor whose gamma ramp to set.
@@ -1311,9 +1648,8 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets hints for the next call to @ref glfwCreateWindow.  The
-		/// hints, once set, retain their values until changed by a call to @ref
-		/// glfwWindowHint or @ref glfwDefaultWindowHints, or until the library is
-		/// terminated.
+		/// hints, once set, retain their values until changed by a call to this
+		/// function or @ref glfwDefaultWindowHints, or until the library is terminated.
 		/// </remarks>
 		/// <param name="hint">
 		/// The [window hint](@ref window_hints) to set.
@@ -1324,6 +1660,25 @@ namespace GLFWDotNet
 		public static void glfwWindowHint(int hint, int value)
 		{
 			_glfwWindowHint(hint, value);
+		}
+
+		/// <summary>
+		/// Sets the specified window hint to the desired value.
+		/// </summary>
+		/// <remarks>
+		/// This function sets hints for the next call to @ref glfwCreateWindow.  The
+		/// hints, once set, retain their values until changed by a call to this
+		/// function or @ref glfwDefaultWindowHints, or until the library is terminated.
+		/// </remarks>
+		/// <param name="hint">
+		/// The [window hint](@ref window_hints) to set.
+		/// </param>
+		/// <param name="value">
+		/// The new value of the window hint.
+		/// </param>
+		public static void glfwWindowHintString(int hint, string value)
+		{
+			_glfwWindowHintString(hint, value);
 		}
 
 		/// <summary>
@@ -1457,22 +1812,22 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Retrieves the position of the client area of the specified window.
+		/// Retrieves the position of the content area of the specified window.
 		/// </summary>
 		/// <remarks>
 		/// This function retrieves the position, in screen coordinates, of the
-		/// upper-left corner of the client area of the specified window.
+		/// upper-left corner of the content area of the specified window.
 		/// </remarks>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
 		/// <param name="xpos">
 		/// Where to store the x-coordinate of the upper-left corner of
-		/// the client area, or `NULL`.
+		/// the content area, or `NULL`.
 		/// </param>
 		/// <param name="ypos">
 		/// Where to store the y-coordinate of the upper-left corner of
-		/// the client area, or `NULL`.
+		/// the content area, or `NULL`.
 		/// </param>
 		public static void glfwGetWindowPos(IntPtr window, out int xpos, out int ypos)
 		{
@@ -1480,21 +1835,21 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Sets the position of the client area of the specified window.
+		/// Sets the position of the content area of the specified window.
 		/// </summary>
 		/// <remarks>
 		/// This function sets the position, in screen coordinates, of the upper-left
-		/// corner of the client area of the specified windowed mode window.  If the
+		/// corner of the content area of the specified windowed mode window.  If the
 		/// window is a full screen window, this function does nothing.
 		/// </remarks>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
 		/// <param name="xpos">
-		/// The x-coordinate of the upper-left corner of the client area.
+		/// The x-coordinate of the upper-left corner of the content area.
 		/// </param>
 		/// <param name="ypos">
-		/// The y-coordinate of the upper-left corner of the client area.
+		/// The y-coordinate of the upper-left corner of the content area.
 		/// </param>
 		public static void glfwSetWindowPos(IntPtr window, int xpos, int ypos)
 		{
@@ -1502,10 +1857,10 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Retrieves the size of the client area of the specified window.
+		/// Retrieves the size of the content area of the specified window.
 		/// </summary>
 		/// <remarks>
-		/// This function retrieves the size, in screen coordinates, of the client area
+		/// This function retrieves the size, in screen coordinates, of the content area
 		/// of the specified window.  If you wish to retrieve the size of the
 		/// framebuffer of the window in pixels, see @ref glfwGetFramebufferSize.
 		/// </remarks>
@@ -1514,11 +1869,11 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="width">
 		/// Where to store the width, in screen coordinates, of the
-		/// client area, or `NULL`.
+		/// content area, or `NULL`.
 		/// </param>
 		/// <param name="height">
 		/// Where to store the height, in screen coordinates, of the
-		/// client area, or `NULL`.
+		/// content area, or `NULL`.
 		/// </param>
 		public static void glfwGetWindowSize(IntPtr window, out int width, out int height)
 		{
@@ -1529,7 +1884,7 @@ namespace GLFWDotNet
 		/// Sets the size limits of the specified window.
 		/// </summary>
 		/// <remarks>
-		/// This function sets the size limits of the client area of the specified
+		/// This function sets the size limits of the content area of the specified
 		/// window.  If the window is full screen, the size limits only take effect
 		/// once it is made windowed.  If the window is not resizable, this function
 		/// does nothing.
@@ -1538,20 +1893,20 @@ namespace GLFWDotNet
 		/// The window to set limits for.
 		/// </param>
 		/// <param name="minwidth">
-		/// The minimum width, in screen coordinates, of the client
+		/// The minimum width, in screen coordinates, of the content
 		/// area, or `GLFW_DONT_CARE`.
 		/// </param>
 		/// <param name="minheight">
 		/// The minimum height, in screen coordinates, of the
-		/// client area, or `GLFW_DONT_CARE`.
+		/// content area, or `GLFW_DONT_CARE`.
 		/// </param>
 		/// <param name="maxwidth">
-		/// The maximum width, in screen coordinates, of the client
+		/// The maximum width, in screen coordinates, of the content
 		/// area, or `GLFW_DONT_CARE`.
 		/// </param>
 		/// <param name="maxheight">
 		/// The maximum height, in screen coordinates, of the
-		/// client area, or `GLFW_DONT_CARE`.
+		/// content area, or `GLFW_DONT_CARE`.
 		/// </param>
 		public static void glfwSetWindowSizeLimits(IntPtr window, int minwidth, int minheight, int maxwidth, int maxheight)
 		{
@@ -1562,7 +1917,7 @@ namespace GLFWDotNet
 		/// Sets the aspect ratio of the specified window.
 		/// </summary>
 		/// <remarks>
-		/// This function sets the required aspect ratio of the client area of the
+		/// This function sets the required aspect ratio of the content area of the
 		/// specified window.  If the window is full screen, the aspect ratio only takes
 		/// effect once it is made windowed.  If the window is not resizable, this
 		/// function does nothing.
@@ -1584,10 +1939,10 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Sets the size of the client area of the specified window.
+		/// Sets the size of the content area of the specified window.
 		/// </summary>
 		/// <remarks>
-		/// This function sets the size, in screen coordinates, of the client area of
+		/// This function sets the size, in screen coordinates, of the content area of
 		/// the specified window.
 		/// </remarks>
 		/// <param name="window">
@@ -1595,11 +1950,11 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="width">
 		/// The desired width, in screen coordinates, of the window
-		/// client area.
+		/// content area.
 		/// </param>
 		/// <param name="height">
 		/// The desired height, in screen coordinates, of the window
-		/// client area.
+		/// content area.
 		/// </param>
 		public static void glfwSetWindowSize(IntPtr window, int width, int height)
 		{
@@ -1661,6 +2016,66 @@ namespace GLFWDotNet
 		public static void glfwGetWindowFrameSize(IntPtr window, out int left, out int top, out int right, out int bottom)
 		{
 			_glfwGetWindowFrameSize(window, out left, out top, out right, out bottom);
+		}
+
+		/// <summary>
+		/// Retrieves the content scale for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function retrieves the content scale for the specified window.  The
+		/// content scale is the ratio between the current DPI and the platform's
+		/// default DPI.  This is especially important for text and any UI elements.  If
+		/// the pixel dimensions of your UI scaled by this look appropriate on your
+		/// machine then it should appear at a reasonable size on other machines
+		/// regardless of their DPI and scaling settings.  This relies on the system DPI
+		/// and scaling settings being somewhat correct.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <param name="xscale">
+		/// Where to store the x-axis content scale, or `NULL`.
+		/// </param>
+		/// <param name="yscale">
+		/// Where to store the y-axis content scale, or `NULL`.
+		/// </param>
+		public static void glfwGetWindowContentScale(IntPtr window, out IntPtr xscale, out IntPtr yscale)
+		{
+			_glfwGetWindowContentScale(window, out xscale, out yscale);
+		}
+
+		/// <summary>
+		/// Returns the opacity of the whole window.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the opacity of the window, including any decorations.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to query.
+		/// </param>
+		/// <returns>
+		/// The opacity value of the specified window.
+		/// </returns>
+		public static float glfwGetWindowOpacity(IntPtr window)
+		{
+			return _glfwGetWindowOpacity(window);
+		}
+
+		/// <summary>
+		/// Sets the opacity of the whole window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the opacity of the window, including any decorations.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to set the opacity for.
+		/// </param>
+		/// <param name="opacity">
+		/// The desired opacity of the specified window.
+		/// </param>
+		public static void glfwSetWindowOpacity(IntPtr window, float opacity)
+		{
+			_glfwSetWindowOpacity(window, opacity);
 		}
 
 		/// <summary>
@@ -1758,6 +2173,22 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Requests user attention to the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function requests user attention to the specified window.  On
+		/// platforms where this is not supported, attention is requested to the
+		/// application as a whole.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to request attention to.
+		/// </param>
+		public static void glfwRequestWindowAttention(IntPtr window)
+		{
+			_glfwRequestWindowAttention(window);
+		}
+
+		/// <summary>
 		/// Returns the monitor that the window uses for full screen mode.
 		/// </summary>
 		/// <remarks>
@@ -1791,18 +2222,18 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="xpos">
 		/// The desired x-coordinate of the upper-left corner of the
-		/// client area.
+		/// content area.
 		/// </param>
 		/// <param name="ypos">
 		/// The desired y-coordinate of the upper-left corner of the
-		/// client area.
+		/// content area.
 		/// </param>
 		/// <param name="width">
-		/// The desired with, in screen coordinates, of the client area
-		/// or video mode.
+		/// The desired with, in screen coordinates, of the content
+		/// area or video mode.
 		/// </param>
 		/// <param name="height">
-		/// The desired height, in screen coordinates, of the client
+		/// The desired height, in screen coordinates, of the content
 		/// area or video mode.
 		/// </param>
 		/// <param name="refreshRate">
@@ -1835,6 +2266,26 @@ namespace GLFWDotNet
 		public static int glfwGetWindowAttrib(IntPtr window, int attrib)
 		{
 			return _glfwGetWindowAttrib(window, attrib);
+		}
+
+		/// <summary>
+		/// Sets an attribute of the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the value of an attribute of the specified window.
+		/// </remarks>
+		/// <param name="window">
+		/// The window to set the attribute for.
+		/// </param>
+		/// <param name="attrib">
+		/// A supported window attribute.
+		/// </param>
+		/// <param name="value">
+		/// `GLFW_TRUE` or `GLFW_FALSE`.
+		/// </param>
+		public static void glfwSetWindowAttrib(IntPtr window, int attrib, int value)
+		{
+			_glfwSetWindowAttrib(window, attrib, value);
 		}
 
 		/// <summary>
@@ -1876,8 +2327,9 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets the position callback of the specified window, which is
-		/// called when the window is moved.  The callback is provided with the screen
-		/// position of the upper-left corner of the client area of the window.
+		/// called when the window is moved.  The callback is provided with the
+		/// position, in screen coordinates, of the upper-left corner of the content
+		/// area of the window.
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose callback to set.
@@ -1901,7 +2353,7 @@ namespace GLFWDotNet
 		/// <remarks>
 		/// This function sets the size callback of the specified window, which is
 		/// called when the window is resized.  The callback is provided with the size,
-		/// in screen coordinates, of the client area of the window.
+		/// in screen coordinates, of the content area of the window.
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose callback to set.
@@ -1948,7 +2400,7 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets the refresh callback of the specified window, which is
-		/// called when the client area of the window needs to be redrawn, for example
+		/// called when the content area of the window needs to be redrawn, for example
 		/// if the window has been exposed after having been covered by another window.
 		/// </remarks>
 		/// <param name="window">
@@ -2014,6 +2466,29 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Sets the maximize callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the maximization callback of the specified window, which
+		/// is called when the window is maximized or restored.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		public static GLFWwindowmaximizefun glfwSetWindowMaximizeCallback(IntPtr window, GLFWwindowmaximizefun cbfun)
+		{
+			return _glfwSetWindowMaximizeCallback(window, cbfun);
+		}
+
+		/// <summary>
 		/// Sets the framebuffer resize callback for the specified window.
 		/// </summary>
 		/// <remarks>
@@ -2034,6 +2509,29 @@ namespace GLFWDotNet
 		public static GLFWframebuffersizefun glfwSetFramebufferSizeCallback(IntPtr window, GLFWframebuffersizefun cbfun)
 		{
 			return _glfwSetFramebufferSizeCallback(window, cbfun);
+		}
+
+		/// <summary>
+		/// Sets the window content scale callback for the specified window.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the window content scale callback of the specified window,
+		/// which is called when the content scale of the specified window changes.
+		/// </remarks>
+		/// <param name="window">
+		/// The window whose callback to set.
+		/// </param>
+		/// <param name="cbfun">
+		/// The new callback, or `NULL` to remove the currently set
+		/// callback.
+		/// </param>
+		/// <returns>
+		/// The previously set callback, or `NULL` if no callback was set or the
+		/// library had not been [initialized](@ref intro_init).
+		/// </returns>
+		public static GLFWwindowcontentscalefun glfwSetWindowContentScaleCallback(IntPtr window, GLFWwindowcontentscalefun cbfun)
+		{
+			return _glfwSetWindowContentScaleCallback(window, cbfun);
 		}
 
 		/// <summary>
@@ -2101,15 +2599,15 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function returns the value of an input option for the specified window.
-		/// The mode must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
-		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// The mode must be one of @ref GLFW_CURSOR, @ref GLFW_STICKY_KEYS,
 		/// </remarks>
 		/// <param name="window">
 		/// The window to query.
 		/// </param>
 		/// <param name="mode">
-		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
-		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS`,
+		/// `GLFW_STICKY_MOUSE_BUTTONS`, `GLFW_LOCK_KEY_MODS` or
+		/// `GLFW_RAW_MOUSE_MOTION`.
 		/// </param>
 		public static int glfwGetInputMode(IntPtr window, int mode)
 		{
@@ -2121,15 +2619,15 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets an input mode option for the specified window.  The mode
-		/// must be one of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
-		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// must be one of @ref GLFW_CURSOR, @ref GLFW_STICKY_KEYS,
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose input mode to set.
 		/// </param>
 		/// <param name="mode">
-		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS` or
-		/// `GLFW_STICKY_MOUSE_BUTTONS`.
+		/// One of `GLFW_CURSOR`, `GLFW_STICKY_KEYS`,
+		/// `GLFW_STICKY_MOUSE_BUTTONS`, `GLFW_LOCK_KEY_MODS` or
+		/// `GLFW_RAW_MOUSE_MOTION`.
 		/// </param>
 		/// <param name="value">
 		/// The new value of the specified input mode.
@@ -2140,11 +2638,31 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Returns the localized name of the specified printable key.
+		/// Returns whether raw mouse motion is supported.
 		/// </summary>
 		/// <remarks>
-		/// This function returns the localized name of the specified printable key.
-		/// This is intended for displaying key bindings to the user.
+		/// This function returns whether raw mouse motion is supported on the current
+		/// system.  This status does not change after GLFW has been initialized so you
+		/// only need to check this once.  If you attempt to enable raw motion on
+		/// a system that does not support it, @ref GLFW_PLATFORM_ERROR will be emitted.
+		/// </remarks>
+		/// <returns>
+		/// `GLFW_TRUE` if raw mouse motion is supported on the current machine,
+		/// or `GLFW_FALSE` otherwise.
+		/// </returns>
+		public static int glfwRawMouseMotionSupported()
+		{
+			return _glfwRawMouseMotionSupported();
+		}
+
+		/// <summary>
+		/// Returns the layout-specific name of the specified printable key.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the name of the specified printable key, encoded as
+		/// UTF-8.  This is typically the character that key would produce without any
+		/// modifier keys, intended for displaying key bindings to the user.  For dead
+		/// keys, it is typically the diacritic it would add to a character.
 		/// </remarks>
 		/// <param name="key">
 		/// The key to query, or `GLFW_KEY_UNKNOWN`.
@@ -2153,11 +2671,29 @@ namespace GLFWDotNet
 		/// The scancode of the key to query.
 		/// </param>
 		/// <returns>
-		/// The localized name of the key, or `NULL`.
+		/// The UTF-8 encoded, layout-specific name of the key, or `NULL`.
 		/// </returns>
 		public static IntPtr glfwGetKeyName(int key, int scancode)
 		{
 			return _glfwGetKeyName(key, scancode);
+		}
+
+		/// <summary>
+		/// Returns the platform-specific scancode of the specified key.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the platform-specific scancode of the specified key.
+		/// </remarks>
+		/// <param name="key">
+		/// Any [named key](@ref keys).
+		/// </param>
+		/// <returns>
+		/// The platform-specific scancode for the key, or `-1` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		public static int glfwGetKeyScancode(int key)
+		{
+			return _glfwGetKeyScancode(key);
 		}
 
 		/// <summary>
@@ -2209,12 +2745,12 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Retrieves the position of the cursor relative to the client area of
+		/// Retrieves the position of the cursor relative to the content area of
 		/// the window.
 		/// </summary>
 		/// <remarks>
 		/// This function returns the position of the cursor, in screen coordinates,
-		/// relative to the upper-left corner of the client area of the specified
+		/// relative to the upper-left corner of the content area of the specified
 		/// window.
 		/// </remarks>
 		/// <param name="window">
@@ -2222,11 +2758,11 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="xpos">
 		/// Where to store the cursor x-coordinate, relative to the
-		/// left edge of the client area, or `NULL`.
+		/// left edge of the content area, or `NULL`.
 		/// </param>
 		/// <param name="ypos">
 		/// Where to store the cursor y-coordinate, relative to the to
-		/// top edge of the client area, or `NULL`.
+		/// top edge of the content area, or `NULL`.
 		/// </param>
 		public static void glfwGetCursorPos(IntPtr window, out double xpos, out double ypos)
 		{
@@ -2234,12 +2770,12 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Sets the position of the cursor, relative to the client area of the
+		/// Sets the position of the cursor, relative to the content area of the
 		/// window.
 		/// </summary>
 		/// <remarks>
 		/// This function sets the position, in screen coordinates, of the cursor
-		/// relative to the upper-left corner of the client area of the specified
+		/// relative to the upper-left corner of the content area of the specified
 		/// window.  The window must have input focus.  If the window does not have
 		/// input focus when this function is called, it fails silently.
 		/// </remarks>
@@ -2248,11 +2784,11 @@ namespace GLFWDotNet
 		/// </param>
 		/// <param name="xpos">
 		/// The desired x-coordinate, relative to the left edge of the
-		/// client area.
+		/// content area.
 		/// </param>
 		/// <param name="ypos">
 		/// The desired y-coordinate, relative to the top edge of the
-		/// client area.
+		/// content area.
 		/// </param>
 		public static void glfwSetCursorPos(IntPtr window, double xpos, double ypos)
 		{
@@ -2325,7 +2861,7 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets the cursor image to be used when the cursor is over the
-		/// client area of the specified window.  The set cursor will only be visible
+		/// content area of the specified window.  The set cursor will only be visible
 		/// when the [cursor mode](@ref cursor_mode) of the window is
 		/// `GLFW_CURSOR_NORMAL`.
 		/// </remarks>
@@ -2441,7 +2977,7 @@ namespace GLFWDotNet
 		/// This function sets the cursor position callback of the specified window,
 		/// which is called when the cursor is moved.  The callback is provided with the
 		/// position, in screen coordinates, relative to the upper-left corner of the
-		/// client area of the window.
+		/// content area of the window.
 		/// </remarks>
 		/// <param name="window">
 		/// The window whose callback to set.
@@ -2464,7 +3000,7 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function sets the cursor boundary crossing callback of the specified
-		/// window, which is called when the cursor enters or leaves the client area of
+		/// window, which is called when the cursor enters or leaves the content area of
 		/// the window.
 		/// </remarks>
 		/// <param name="window">
@@ -2536,15 +3072,15 @@ namespace GLFWDotNet
 		/// <remarks>
 		/// This function returns whether the specified joystick is present.
 		/// </remarks>
-		/// <param name="joy">
+		/// <param name="jid">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
 		/// <returns>
 		/// `GLFW_TRUE` if the joystick is present, or `GLFW_FALSE` otherwise.
 		/// </returns>
-		public static int glfwJoystickPresent(int joy)
+		public static int glfwJoystickPresent(int jid)
 		{
-			return _glfwJoystickPresent(joy);
+			return _glfwJoystickPresent(jid);
 		}
 
 		/// <summary>
@@ -2554,7 +3090,7 @@ namespace GLFWDotNet
 		/// This function returns the values of all axes of the specified joystick.
 		/// Each element in the array is a value between -1.0 and 1.0.
 		/// </remarks>
-		/// <param name="joy">
+		/// <param name="jid">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
 		/// <param name="count">
@@ -2586,7 +3122,7 @@ namespace GLFWDotNet
 		/// This function returns the state of all buttons of the specified joystick.
 		/// Each element in the array is either `GLFW_PRESS` or `GLFW_RELEASE`.
 		/// </remarks>
-		/// <param name="joy">
+		/// <param name="jid">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
 		/// <param name="count">
@@ -2609,6 +3145,30 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Returns the state of all hats of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the state of all hats of the specified joystick.
+		/// Each element in the array is one of the following values:
+		/// </remarks>
+		/// <param name="jid">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="count">
+		/// Where to store the number of hat states in the returned
+		/// array.  This is set to zero if the joystick is not present or an error
+		/// occurred.
+		/// </param>
+		/// <returns>
+		/// An array of hat states, or `NULL` if the joystick is not present
+		/// or an [error](@ref error_handling) occurred.
+		/// </returns>
+		public static IntPtr glfwGetJoystickHats(int jid, out int count)
+		{
+			return _glfwGetJoystickHats(jid, out count);
+		}
+
+		/// <summary>
 		/// Returns the name of the specified joystick.
 		/// </summary>
 		/// <remarks>
@@ -2616,16 +3176,89 @@ namespace GLFWDotNet
 		/// The returned string is allocated and freed by GLFW.  You should not free it
 		/// yourself.
 		/// </remarks>
-		/// <param name="joy">
+		/// <param name="jid">
 		/// The [joystick](@ref joysticks) to query.
 		/// </param>
 		/// <returns>
 		/// The UTF-8 encoded name of the joystick, or `NULL` if the joystick
 		/// is not present or an [error](@ref error_handling) occurred.
 		/// </returns>
-		public static IntPtr glfwGetJoystickName(int joy)
+		public static IntPtr glfwGetJoystickName(int jid)
 		{
-			return _glfwGetJoystickName(joy);
+			return _glfwGetJoystickName(jid);
+		}
+
+		/// <summary>
+		/// Returns the SDL comaptible GUID of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the SDL compatible GUID, as a UTF-8 encoded
+		/// hexadecimal string, of the specified joystick.  The returned string is
+		/// allocated and freed by GLFW.  You should not free it yourself.
+		/// </remarks>
+		/// <param name="jid">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded GUID of the joystick, or `NULL` if the joystick
+		/// is not present or an [error](@ref error_handling) occurred.
+		/// </returns>
+		public static IntPtr glfwGetJoystickGUID(int jid)
+		{
+			return _glfwGetJoystickGUID(jid);
+		}
+
+		/// <summary>
+		/// Sets the user pointer of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function sets the user-defined pointer of the specified joystick.  The
+		/// current value is retained until the joystick is disconnected.  The initial
+		/// value is `NULL`.
+		/// </remarks>
+		/// <param name="jid">
+		/// The joystick whose pointer to set.
+		/// </param>
+		/// <param name="pointer">
+		/// The new value.
+		/// </param>
+		public static void glfwSetJoystickUserPointer(int jid, IntPtr pointer)
+		{
+			_glfwSetJoystickUserPointer(jid, pointer);
+		}
+
+		/// <summary>
+		/// Returns the user pointer of the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the current value of the user-defined pointer of the
+		/// specified joystick.  The initial value is `NULL`.
+		/// </remarks>
+		/// <param name="jid">
+		/// The joystick whose pointer to return.
+		/// </param>
+		public static IntPtr glfwGetJoystickUserPointer(int jid)
+		{
+			return _glfwGetJoystickUserPointer(jid);
+		}
+
+		/// <summary>
+		/// Returns whether the specified joystick has a gamepad mapping.
+		/// </summary>
+		/// <remarks>
+		/// This function returns whether the specified joystick is both present and has
+		/// a gamepad mapping.
+		/// </remarks>
+		/// <param name="jid">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if a joystick is both present and has a gamepad mapping,
+		/// or `GLFW_FALSE` otherwise.
+		/// </returns>
+		public static int glfwJoystickIsGamepad(int jid)
+		{
+			return _glfwJoystickIsGamepad(jid);
 		}
 
 		/// <summary>
@@ -2650,6 +3283,71 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
+		/// Adds the specified SDL_GameControllerDB gamepad mappings.
+		/// </summary>
+		/// <remarks>
+		/// This function parses the specified ASCII encoded string and updates the
+		/// internal list with any gamepad mappings it finds.  This string may
+		/// contain either a single gamepad mapping or many mappings separated by
+		/// newlines.  The parser supports the full format of the `gamecontrollerdb.txt`
+		/// source file including empty lines and comments.
+		/// </remarks>
+		/// <param name="string">
+		/// The string containing the gamepad mappings.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		public static int glfwUpdateGamepadMappings(string @string)
+		{
+			return _glfwUpdateGamepadMappings(@string);
+		}
+
+		/// <summary>
+		/// Returns the human-readable gamepad name for the specified joystick.
+		/// </summary>
+		/// <remarks>
+		/// This function returns the human-readable name of the gamepad from the
+		/// gamepad mapping assigned to the specified joystick.
+		/// </remarks>
+		/// <param name="jid">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <returns>
+		/// The UTF-8 encoded name of the gamepad, or `NULL` if the
+		/// joystick is not present, does not have a mapping or an
+		/// [error](@ref error_handling) occurred.
+		/// </returns>
+		public static IntPtr glfwGetGamepadName(int jid)
+		{
+			return _glfwGetGamepadName(jid);
+		}
+
+		/// <summary>
+		/// Retrieves the state of the specified joystick remapped as a gamepad.
+		/// </summary>
+		/// <remarks>
+		/// This function retrives the state of the specified joystick remapped to
+		/// an Xbox-like gamepad.
+		/// </remarks>
+		/// <param name="jid">
+		/// The [joystick](@ref joysticks) to query.
+		/// </param>
+		/// <param name="state">
+		/// The gamepad input state of the joystick.
+		/// </param>
+		/// <returns>
+		/// `GLFW_TRUE` if successful, or `GLFW_FALSE` if no joystick is
+		/// connected, it has no gamepad mapping or an [error](@ref error_handling)
+		/// occurred.
+		/// </returns>
+		public static int glfwGetGamepadState(int jid, out IntPtr state)
+		{
+			return _glfwGetGamepadState(jid, out state);
+		}
+
+		/// <summary>
 		/// Sets the clipboard to the specified string.
 		/// </summary>
 		/// <remarks>
@@ -2657,7 +3355,7 @@ namespace GLFWDotNet
 		/// string.
 		/// </remarks>
 		/// <param name="window">
-		/// The window that will own the clipboard contents.
+		/// Deprecated.  Any valid window or `NULL`.
 		/// </param>
 		/// <param name="string">
 		/// A UTF-8 encoded string.
@@ -2677,7 +3375,7 @@ namespace GLFWDotNet
 		/// GLFW_FORMAT_UNAVAILABLE error is generated.
 		/// </remarks>
 		/// <param name="window">
-		/// The window that will request the clipboard contents.
+		/// Deprecated.  Any valid window or `NULL`.
 		/// </param>
 		/// <returns>
 		/// The contents of the clipboard as a UTF-8 encoded string, or `NULL`
@@ -2730,7 +3428,7 @@ namespace GLFWDotNet
 		/// glfwGetTimerFrequency.
 		/// </remarks>
 		/// <returns>
-		/// The value of the timer, or zero if an 
+		/// The value of the timer, or zero if an
 		/// [error](@ref error_handling) occurred.
 		/// </returns>
 		public static ulong glfwGetTimerValue()
@@ -2759,7 +3457,7 @@ namespace GLFWDotNet
 		/// </summary>
 		/// <remarks>
 		/// This function makes the OpenGL or OpenGL ES context of the specified window
-		/// current on the calling thread.  A context can only be made current on
+		/// current on the calling thread.  A context must only be made current on
 		/// a single thread at a time and each thread can have only a single current
 		/// context at a time.
 		/// </remarks>
@@ -2867,14 +3565,15 @@ namespace GLFWDotNet
 		}
 
 		/// <summary>
-		/// Returns whether the Vulkan loader has been found.
+		/// Returns whether the Vulkan loader and an ICD have been found.
 		/// </summary>
 		/// <remarks>
-		/// This function returns whether the Vulkan loader has been found.  This check
-		/// is performed by @ref glfwInit.
+		/// This function returns whether the Vulkan loader and any minimally functional
+		/// ICD have been found.
 		/// </remarks>
 		/// <returns>
-		/// `GLFW_TRUE` if Vulkan is available, or `GLFW_FALSE` otherwise.
+		/// `GLFW_TRUE` if Vulkan is minimally available, or `GLFW_FALSE`
+		/// otherwise.
 		/// </returns>
 		public static int glfwVulkanSupported()
 		{

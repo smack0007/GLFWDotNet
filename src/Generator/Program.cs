@@ -545,6 +545,7 @@ namespace Generator
                 case "unsigned int":
                     return "uint";
 
+                case "unsigned char":
                 case "unsigned char*":
                     return "IntPtr";
 
@@ -668,7 +669,12 @@ namespace Generator
                 foreach (var member in @struct.Members)
                 {
                     var type = GetParamType(member.Type, ParamModifier.None, structs);
-                    sb.AppendLine($"\t\t\tpublic {type} {member.Name};");
+
+                    string name = member.Name;
+                    if (name.EndsWith("]"))
+                        name = name.Substring(0, name.IndexOf('['));
+
+                    sb.AppendLine($"\t\t\tpublic {type} {name};");
                 }
 
                 sb.AppendLine("\t\t}");

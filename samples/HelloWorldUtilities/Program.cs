@@ -10,10 +10,11 @@ namespace HelloWorldUtilities
             if (!Application.Init())
                 return;
 
-            MainWindow window = new MainWindow();
+            var window = new MainWindow();
             window.MakeContextCurrent();
 
-            Keyboard keyboard = new Keyboard(window);
+            var keyboard = new Keyboard(window);
+            var mouse = new Mouse(window);
 
             Application.Run(window, () =>
             {
@@ -21,6 +22,8 @@ namespace HelloWorldUtilities
                 {
                     window.Close();
                 }
+
+                window.Info = $"Mouse: ({mouse.X}, {mouse.Y})";
             });
 
             Application.Terminate();

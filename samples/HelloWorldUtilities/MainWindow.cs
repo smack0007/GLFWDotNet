@@ -1,32 +1,46 @@
 ﻿using GLFWDotNet.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace HelloWorldUtilities
 {
     public class MainWindow : Window
     {
+        private string _info;
+
+        public string Info
+        {
+            get => _info;
+
+            set
+            {
+                if (value != _info)
+                {
+                    _info = value;
+                    UpdateTitle();
+                }
+            }
+        }
+
         public MainWindow()
             : base()
         {
-            this.UpdateTitle();
+            UpdateTitle();
         }
 
         private void UpdateTitle()
         {
-            this.Title = $"MainWindow [{this.X}x{this.Y}] ({this.Width}x{this.Height})";
+            Title = $"MainWindow [{X}x{Y}] ({Width}x{Height}) {Info}";
         }
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            this.UpdateTitle();
+            UpdateTitle();
             base.OnSizeChanged(e);
         }
 
         protected override void OnPositionChanged(EventArgs e)
         {
-            this.UpdateTitle();
+            UpdateTitle();
             base.OnPositionChanged(e);
         }
     }

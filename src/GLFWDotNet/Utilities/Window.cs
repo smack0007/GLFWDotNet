@@ -5,87 +5,92 @@ namespace GLFWDotNet.Utilities
 {
     public class Window : IDisposable
     {
-        private string title;
-        private int width, height;
-        private int x, y;
+        private string _title;
+        private int _width, _height;
+        private int _x, _y;
 
-        GLFWkeyfun keyCallback;
-        private readonly KeyActionEventArgs keyActionEventArgs = new KeyActionEventArgs();
+        GLFWcursorposfun _cursorPosCallback;
+        private readonly MousePositionEventArgs _mousePositionEventArgs = new MousePositionEventArgs();
 
-        GLFWwindowsizefun windowSizeCallback;
-        GLFWwindowposfun windowPosCallback;
+        GLFWkeyfun _keyCallback;
+        private readonly KeyActionEventArgs _keyActionEventArgs = new KeyActionEventArgs();
+
+        GLFWwindowsizefun _windowSizeCallback;
+        GLFWwindowposfun _windowPosCallback;
 
         public IntPtr Handle { get; }
 
         public string Title
         {
-            get { return this.title; }
+            get { return _title; }
 
             set
             {
-                if (value != this.title)
+                if (value != _title)
                 {
-                    this.title = value;
-                    glfwSetWindowTitle(this.Handle, this.title);
+                    _title = value;
+                    glfwSetWindowTitle(Handle, _title);
                 }
             }
         }
 
         public int Width
         {
-            get { return this.width; }
+            get { return _width; }
 
             set
             {
-                if (value != this.width)
+                if (value != _width)
                 {
-                    this.width = value;
-                    glfwSetWindowSize(this.Handle, this.width, this.height);
+                    _width = value;
+                    glfwSetWindowSize(Handle, _width, _height);
                 }
             }
         }
 
         public int Height
         {
-            get { return this.height; }
+            get { return _height; }
 
             set
             {
-                if (value != this.height)
+                if (value != _height)
                 {
-                    this.height = value;
-                    glfwSetWindowSize(this.Handle, this.width, this.height);
+                    _height = value;
+                    glfwSetWindowSize(Handle, _width, _height);
                 }
             }
         }
 
         public int X
         {
-            get { return this.x; }
+            get { return _x; }
 
             set
             {
-                if (value != this.x)
+                if (value != _x)
                 {
-                    this.x = value;
-                    glfwSetWindowPos(this.Handle, this.x, this.y);
+                    _x = value;
+                    glfwSetWindowPos(Handle, _x, _y);
                 }
             }
         }
 
         public int Y
         {
-            get { return this.y; }
+            get { return _y; }
 
             set
             {
-                if (value != this.y)
+                if (value != _y)
                 {
-                    this.y = value;
-                    glfwSetWindowPos(this.Handle, this.x, this.y);
+                    _y = value;
+                    glfwSetWindowPos(Handle, _x, _y);
                 }
             }
         }
+
+        public event EventHandler<MousePositionEventArgs> MousePositionChanged;
 
         public event EventHandler<KeyActionEventArgs> KeyAction;
 
@@ -95,38 +100,41 @@ namespace GLFWDotNet.Utilities
 
         public Window()
         {
-            this.title = string.Empty;
-            this.width = 800;
-            this.height = 600;
+            _title = string.Empty;
+            _width = 800;
+            _height = 600;
 
-            this.Handle = glfwCreateWindow(this.width, this.height, this.title, IntPtr.Zero, IntPtr.Zero);
+            Handle = glfwCreateWindow(_width, _height, _title, IntPtr.Zero, IntPtr.Zero);
 
-            if (this.Handle == IntPtr.Zero)
+            if (Handle == IntPtr.Zero)
                 throw new GLFWException("Failed to create window.");
 
             int xpos, ypos;
-            glfwGetWindowPos(this.Handle, out xpos, out ypos);
-            this.x = xpos;
-            this.y = ypos;
+            glfwGetWindowPos(Handle, out xpos, out ypos);
+            _x = xpos;
+            _y = ypos;
 
-            this.keyCallback = this.OnKey;
-            glfwSetKeyCallback(this.Handle, this.keyCallback);
+            _cursorPosCallback = OnCursorPos;
+            glfwSetCursorPosCallback(Handle, _cursorPosCallback);
 
-            this.windowPosCallback = this.OnWindowPos;
-            glfwSetWindowPosCallback(this.Handle, this.windowPosCallback);
+            _keyCallback = OnKey;
+            glfwSetKeyCallback(Handle, _keyCallback);
 
-            this.windowSizeCallback = this.OnWindowSize;
-            glfwSetWindowSizeCallback(this.Handle, this.windowSizeCallback);
+            _windowPosCallback = OnWindowPos;
+            glfwSetWindowPosCallback(Handle, _windowPosCallback);
+
+            _windowSizeCallback = OnWindowSize;
+            glfwSetWindowSizeCallback(Handle, _windowSizeCallback);
         }
 
         ~Window()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -134,70 +142,85 @@ namespace GLFWDotNet.Utilities
         {
             if (disposing)
             {
-                glfwSetKeyCallback(this.Handle, null);
-                this.keyCallback = null;
+                glfwSetCursorPosCallback(Handle, null);
+                _cursorPosCallback = null;
 
-                glfwSetWindowPosCallback(this.Handle, null);
-                this.windowPosCallback = null;
+                glfwSetKeyCallback(Handle, null);
+                _keyCallback = null;
 
-                glfwSetWindowSizeCallback(this.Handle, null);
-                this.windowSizeCallback = null;
+                glfwSetWindowPosCallback(Handle, null);
+                _windowPosCallback = null;
+
+                glfwSetWindowSizeCallback(Handle, null);
+                _windowSizeCallback = null;
             }
         }
 
         public void MakeContextCurrent()
         {
-            glfwMakeContextCurrent(this.Handle);
+            glfwMakeContextCurrent(Handle);
         }
 
         public void Close()
         {
-            glfwSetWindowShouldClose(this.Handle, 1);
+            glfwSetWindowShouldClose(Handle, 1);
         }
 
         public bool ShouldClose()
         {
-            return glfwWindowShouldClose(this.Handle) != 0;
+            return glfwWindowShouldClose(Handle) != 0;
+        }
+
+        private void OnCursorPos(IntPtr window, double xpos, double ypos)
+        {
+            OnCursorPositionChanged(xpos, ypos);
+        }
+
+        protected virtual void OnCursorPositionChanged(double xPosition, double yPosition)
+        {
+            _mousePositionEventArgs.XPosition = xPosition;
+            _mousePositionEventArgs.YPosition = yPosition;
+            MousePositionChanged?.Invoke(this, _mousePositionEventArgs);
         }
 
         private void OnKey(IntPtr window, int key, int scanCode, int action, int mods)
         {
-            this.OnKeyAction((Keys)key, scanCode, (InputAction)action, (KeyModifiers)mods);
+            OnKeyAction((Keys)key, scanCode, (InputAction)action, (KeyModifiers)mods);
         }
 
         protected virtual void OnKeyAction(Keys key, int scanCode, InputAction action, KeyModifiers modifiers)
         {
-            this.keyActionEventArgs.Key = key;
-            this.keyActionEventArgs.ScanCode = scanCode;
-            this.keyActionEventArgs.Action = action;
-            this.keyActionEventArgs.Modifiers = modifiers;
-            this.KeyAction?.Invoke(this, this.keyActionEventArgs);
+            _keyActionEventArgs.Key = key;
+            _keyActionEventArgs.ScanCode = scanCode;
+            _keyActionEventArgs.Action = action;
+            _keyActionEventArgs.Modifiers = modifiers;
+            KeyAction?.Invoke(this, _keyActionEventArgs);
         }
 
         private void OnWindowSize(IntPtr handle, int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            _width = width;
+            _height = height;
 
-            this.OnSizeChanged(EventArgs.Empty);
+            OnSizeChanged(EventArgs.Empty);
         }
 
         protected virtual void OnSizeChanged(EventArgs e)
         {
-            this.SizeChanged?.Invoke(this, e);
+            SizeChanged?.Invoke(this, e);
         }
 
         private void OnWindowPos(IntPtr handle, int xpos, int ypos)
         {
-            this.x = xpos;
-            this.y = ypos;
+            _x = xpos;
+            _y = ypos;
 
-            this.OnPositionChanged(EventArgs.Empty);
+            OnPositionChanged(EventArgs.Empty);
         }
 
         protected virtual void OnPositionChanged(EventArgs e)
         {
-            this.PositionChanged?.Invoke(this, e);
+            PositionChanged?.Invoke(this, e);
         }
     }
 }

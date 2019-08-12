@@ -2,7 +2,7 @@
 
 namespace GLFWDotNet.Utilities
 {
-    public enum InputAction
+    public enum InputActions
     {
         Release = GLFW_RELEASE,
 

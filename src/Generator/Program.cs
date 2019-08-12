@@ -215,7 +215,8 @@ namespace Generator
                 {
                     return InflectEnumName(x.Substring("GLFW_MOD".Length));
                 },
-                "KeyModifiers");
+                "KeyModifiers",
+                true);
 
             WriteEnumFile(
                 enums.Where(x => x.Name.StartsWith("GLFW_JOYSTICK") && !x.Name.EndsWith("LAST")),
@@ -1077,14 +1078,22 @@ namespace Generator
         private static void WriteEnumFile(
             IEnumerable<EnumData> enums,
             Func<string, string> inflectName,
-            string enumName)
+            string enumName,
+            bool isFlags = false)
         {
             StringBuilder sb = new StringBuilder(1024);
+
+            if (isFlags)
+                sb.AppendLine("using System;");
 
             sb.AppendLine("using static GLFWDotNet.GLFW;");
             sb.AppendLine();
             sb.AppendLine("namespace GLFWDotNet.Utilities");
             sb.AppendLine("{");
+
+            if (isFlags)
+                sb.AppendLine("\t[Flags]");
+
             sb.AppendLine($"\tpublic enum {enumName}");
             sb.AppendLine("\t{");
 

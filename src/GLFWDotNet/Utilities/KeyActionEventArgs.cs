@@ -8,7 +8,7 @@ namespace GLFWDotNet.Utilities
 
         public int ScanCode { get; internal set; }
 
-        public InputAction Action { get; internal set; }
+        public InputActions Action { get; internal set; }
 
         public KeyModifiers Modifiers { get; internal set; }
 

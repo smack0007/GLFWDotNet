@@ -10,10 +10,13 @@ namespace GLFWDotNet.Utilities
 
         public double Y { get; private set; }
 
+        public bool ButtonLeft { get; private set; }
+
         public Mouse(Window window)
         {
             this.window = window ?? throw new ArgumentNullException(nameof(window));
-            this.window.MousePositionChanged += this.Window_MousePositionChanged;
+            this.window.MousePositionChanged += Window_MousePositionChanged;
+            this.window.MouseButtonAction += Window_MouseButtonAction;
         }
 
         public void Dispose()
@@ -25,6 +28,16 @@ namespace GLFWDotNet.Utilities
         {
             X = e.XPosition;
             Y = e.YPosition;
+        }
+
+        private void Window_MouseButtonAction(object sender, MouseButtonActionEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    ButtonLeft = e.Action == InputActions.Press;
+                    break;
+            }
         }
     }
 }

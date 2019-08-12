@@ -1,7 +1,9 @@
+using System;
 using static GLFWDotNet.GLFW;
 
 namespace GLFWDotNet.Utilities
 {
+	[Flags]
 	public enum KeyModifiers
 	{
 		Shift = GLFW_MOD_SHIFT,

@@ -9,11 +9,14 @@ namespace GLFWDotNet.Utilities
         private int _width, _height;
         private int _x, _y;
 
+        GLFWkeyfun _keyCallback;
+        private readonly KeyActionEventArgs _keyActionEventArgs = new KeyActionEventArgs();
+
         GLFWcursorposfun _cursorPosCallback;
         private readonly MousePositionEventArgs _mousePositionEventArgs = new MousePositionEventArgs();
 
-        GLFWkeyfun _keyCallback;
-        private readonly KeyActionEventArgs _keyActionEventArgs = new KeyActionEventArgs();
+        GLFWmousebuttonfun _mouseButtonCallback;
+        private readonly MouseButtonActionEventArgs _mouseButtonActionEventArgs = new MouseButtonActionEventArgs();
 
         GLFWwindowsizefun _windowSizeCallback;
         GLFWwindowposfun _windowPosCallback;
@@ -90,10 +93,12 @@ namespace GLFWDotNet.Utilities
             }
         }
 
-        public event EventHandler<MousePositionEventArgs> MousePositionChanged;
-
         public event EventHandler<KeyActionEventArgs> KeyAction;
 
+        public event EventHandler<MousePositionEventArgs> MousePositionChanged;
+
+        public event EventHandler<MouseButtonActionEventArgs> MouseButtonAction;
+        
         public event EventHandler PositionChanged;
 
         public event EventHandler SizeChanged;
@@ -116,6 +121,9 @@ namespace GLFWDotNet.Utilities
 
             _cursorPosCallback = OnCursorPos;
             glfwSetCursorPosCallback(Handle, _cursorPosCallback);
+
+            _mouseButtonCallback = OnMouseButton;
+            glfwSetMouseButtonCallback(Handle, _mouseButtonCallback);
 
             _keyCallback = OnKey;
             glfwSetKeyCallback(Handle, _keyCallback);
@@ -183,12 +191,25 @@ namespace GLFWDotNet.Utilities
             MousePositionChanged?.Invoke(this, _mousePositionEventArgs);
         }
 
-        private void OnKey(IntPtr window, int key, int scanCode, int action, int mods)
+        private void OnMouseButton(IntPtr window, int button, int action, int mods)
         {
-            OnKeyAction((Keys)key, scanCode, (InputAction)action, (KeyModifiers)mods);
+            OnMouseButtonAction((MouseButtons)button, (InputActions)action, (KeyModifiers)mods);
         }
 
-        protected virtual void OnKeyAction(Keys key, int scanCode, InputAction action, KeyModifiers modifiers)
+        protected virtual void OnMouseButtonAction(MouseButtons button, InputActions action, KeyModifiers modifiers)
+        {
+            _mouseButtonActionEventArgs.Button = button;
+            _mouseButtonActionEventArgs.Action = action;
+            _mouseButtonActionEventArgs.Modifiers = modifiers;
+            MouseButtonAction?.Invoke(this, _mouseButtonActionEventArgs);
+        }
+
+        private void OnKey(IntPtr window, int key, int scanCode, int action, int mods)
+        {
+            OnKeyAction((Keys)key, scanCode, (InputActions)action, (KeyModifiers)mods);
+        }
+
+        protected virtual void OnKeyAction(Keys key, int scanCode, InputActions action, KeyModifiers modifiers)
         {
             _keyActionEventArgs.Key = key;
             _keyActionEventArgs.ScanCode = scanCode;

@@ -23,7 +23,12 @@ namespace HelloWorldUtilities
                     window.Close();
                 }
 
-                window.Info = $"Mouse: ({mouse.X}, {mouse.Y})";
+                var mouseButtons = "";
+
+                if (mouse.ButtonLeft)
+                    mouseButtons += "L";
+
+                window.Info = $"Mouse: ({mouse.X}, {mouse.Y}) [{mouseButtons}]";
             });
 
             Application.Terminate();

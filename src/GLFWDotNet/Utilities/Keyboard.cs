@@ -23,7 +23,7 @@ namespace GLFWDotNet.Utilities
         {
             int index = this.GetKeyMapIndex(e.Key);
 
-            if (e.Action == InputAction.Release)
+            if (e.Action == InputActions.Release)
             {
                 this.keyMap[index] = false;
             }

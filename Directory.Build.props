@@ -8,14 +8,11 @@
 
     <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
     <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
-
-    <PatchNumber Condition=" $(PatchNumber) == '' ">0</PatchNumber>
-    <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
+    <PatchNumber Condition="$(PatchNumber) == ''">0</PatchNumber>
     <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber)</VersionPrefix>
-    <VersionPostfix>$(BuildNumber)</VersionPostfix>
 
     <Authors>smack0007</Authors>
-    <Copyright>Copyright © Zachary Snow 2018</Copyright>
+    <Copyright>Copyright © Zachary Snow $([System.DateTime]::Now.ToString(yyyy))</Copyright>
 
     <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
     <PackageTags>GLFW;C#;.NET</PackageTags>
@@ -28,4 +25,10 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
   </ItemGroup>
+
+  <Target Name="CalculateVersions" BeforeTargets="GenerateTargetFrameworkMonikerAttribute" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" StandardOutputImportance="Low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="InformationalVersion" />
+    </Exec>
+  </Target>
 </Project>

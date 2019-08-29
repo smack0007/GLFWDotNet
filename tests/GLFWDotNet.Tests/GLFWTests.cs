@@ -1,5 +1,4 @@
 using System;
-using Xunit;
 using static GLFWDotNet.GLFW;
 
 namespace GLFWDotNet.Tests

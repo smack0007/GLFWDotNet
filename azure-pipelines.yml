@@ -23,7 +23,7 @@ steps:
   inputs:
     command: pack
     packagesToPack: src/GLFWDotNet/GLFWDotNet.csproj
-    buildProperties: 'Configuration=Release;BuildNumber=$(Build.BuildNumber)'
+    buildProperties: 'Configuration=Release'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: GLFWDotNet'

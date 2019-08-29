@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B218290B-7F6A-4727-B34B-740EDA309399}"
 	ProjectSection(SolutionItems) = preProject
-		samples\Directory.Build.targets = samples\Directory.Build.targets
+		samples\Directory.Build.props = samples\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22DFB173-8802-4C66-9345-6E1D60EBB028}"
@@ -25,9 +25,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GLFWDotNet", "GLFWDotNet", 
 	ProjectSection(SolutionItems) = preProject
 		azure-pipelines.yml = azure-pipelines.yml
 		Directory.Build.props = Directory.Build.props
+		License.txt = License.txt
+		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldUtilities", "samples\HelloWorldUtilities\HelloWorldUtilities.csproj", "{FFAF6220-6D54-49AA-83F8-41D0180D7D1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldUtilities", "samples\HelloWorldUtilities\HelloWorldUtilities.csproj", "{FFAF6220-6D54-49AA-83F8-41D0180D7D1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C0CFDAF6-F0D7-413D-9CEA-1817629EF240}"
+	ProjectSection(SolutionItems) = preProject
+		build\CopyDependencies.targets = build\CopyDependencies.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +132,7 @@ Global
 		{CEF9D625-503A-43A9-BABC-A4D63DDF4928} = {C28993C0-709C-4220-AFF3-AD35C38ECAD4}
 		{A4EBCC09-2417-465A-BA54-2FF459174708} = {CEF9D625-503A-43A9-BABC-A4D63DDF4928}
 		{FFAF6220-6D54-49AA-83F8-41D0180D7D1E} = {B218290B-7F6A-4727-B34B-740EDA309399}
+		{C0CFDAF6-F0D7-413D-9CEA-1817629EF240} = {C28993C0-709C-4220-AFF3-AD35C38ECAD4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3C34CCB-5F40-4FD8-AC75-722778A911E0}

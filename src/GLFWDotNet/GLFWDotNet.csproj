@@ -1,29 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>.NET bindings for GLFW.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-
-  <Import Project="$(RepositoryRootDirectory)GLFW.targets" />
+  <Import Project="$(RepositoryRootDirectory)build\CopyDependencies.targets" />
 
   <ItemGroup>
-    <None Include="$(GLFWDirectory)GLFW.license">
-      <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)\</PackagePath>
-    </None>
-    <None Include="$(GLFWDirectory)x64\glfw3.dll">
-      <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)\x64\</PackagePath>
-    </None>
-    <None Include="$(GLFWDirectory)x86\glfw3.dll">
-      <Pack>true</Pack>
-      <PackagePath>lib\$(TargetFramework)\x86\</PackagePath>
-    </None>
+    <None Include="$(GLFWDirectory)GLFW.license" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\" />
+    <None Include="$(GLFWDirectory)x64\glfw3.dll" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\win-x64\" />
+    <None Include="$(GLFWDirectory)x86\glfw3.dll" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\win-x86\" />
   </ItemGroup>
 
 </Project>

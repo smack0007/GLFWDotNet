@@ -1027,7 +1027,7 @@ namespace GLFWDotNet
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "x64" : "x86", "glfw3.dll");
+                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "win-x64" : "win-x86", "glfw3.dll");
                 IntPtr assembly = Win32.LoadLibrary(assemblyPath);
 
                 if (assembly == IntPtr.Zero)

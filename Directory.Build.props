@@ -1,27 +1,31 @@
 <Project>
-    <PropertyGroup>
-        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-        <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
-        <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
-        <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
-        <LangVersion>latest</LangVersion>
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
+    <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
+    <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
+    <LangVersion>latest</LangVersion>
 
-        <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
-        <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
-        
-        <PatchNumber Condition=" $(PatchNumber) == '' ">0</PatchNumber>
-        <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
-        <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber)</VersionPrefix>
-        <VersionPostfix>$(BuildNumber)</VersionPostfix>
+    <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
+    <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
 
-        <Authors>smack0007</Authors>
-        <Copyright>Copyright © Zachary Snow 2018</Copyright>
+    <PatchNumber Condition=" $(PatchNumber) == '' ">0</PatchNumber>
+    <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
+    <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber)</VersionPrefix>
+    <VersionPostfix>$(BuildNumber)</VersionPostfix>
 
-        <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/smack0007/GLFWDotNet/master/License.txt</PackageLicenseUrl>
-        <PackageTags>GLFW;C#;.NET</PackageTags>
+    <Authors>smack0007</Authors>
+    <Copyright>Copyright © Zachary Snow 2018</Copyright>
 
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/smack0007/GLFWDotNet.git</RepositoryUrl>
-    </PropertyGroup>
+    <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
+    <PackageTags>GLFW;C#;.NET</PackageTags>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/smack0007/GLFWDotNet.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+  </ItemGroup>
 </Project>

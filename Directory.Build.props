@@ -26,9 +26,5 @@
     <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
   </ItemGroup>
 
-  <Target Name="CalculateVersions" BeforeTargets="GenerateTargetFrameworkMonikerAttribute" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" StandardOutputImportance="Low">
-      <Output TaskParameter="ConsoleOutput" PropertyName="InformationalVersion" />
-    </Exec>
-  </Target>
+  <Import Project="$(MSBuildThisFileDirectory)/build/GitVersion.targets" />
 </Project>

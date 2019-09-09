@@ -1,0 +1,40 @@
+<Project>
+  <Target Name="CalculateGitVersions" BeforeTargets="PrepareForBuild" Condition="$(UseGitVersion) == true">
+    <PropertyGroup>
+      <GitVersionTag>v0.0.1</GitVersionTag>
+    </PropertyGroup>
+
+    <Exec Command="git describe --tags --abbrev=0 --match v*" ConsoleToMSBuild="true" StandardOutputImportance="Low" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitVersionTag" />
+    </Exec>
+
+    <PropertyGroup>      
+      <GitVersion>$(GitVersionTag.Substring(1))</GitVersion>      
+      <GitVersionMajor>$(GitVersion.Split('.')[0])</GitVersionMajor>
+      <GitVersionMinor>$(GitVersion.Split('.')[1])</GitVersionMinor>
+      <GitVersionPatch>$(GitVersion.Split('.')[2])</GitVersionPatch>
+
+      <_CurrentYear>$([System.DateTime]::Now.ToString(yy))</_CurrentYear>
+      <_CurrentMonth>$([System.DateTime]::Now.ToString(MM))</_CurrentMonth>
+      <_CurrentPatch>0</_CurrentPatch>
+
+      <!-- If the last version occured in the same Year/Month then add one to the patch. -->
+      <_CurrentPatch Condition="'$(_CurrentYear)' == '$(GitVersionMajor)' And '$(_CurrentMonth)' == '$(GitVersionMinor)'">$([MSBuild]::Add($(GitVersionPatch), 1))</_CurrentPatch>
+      
+      <GitVersion>$(_CurrentYear).$(_CurrentMonth).$(_CurrentPatch)</GitVersion>
+      <GitVersionMajor>$(_CurrentYear)</GitVersionMajor>
+      <GitVersionMinor>$(_CurrentMonth)</GitVersionMinor>
+      <GitVersionPatch>$(_CurrentPatch)</GitVersionPatch>
+
+      <VersionPrefix>$(GitVersion)</VersionPrefix>
+      <Version>$(GitVersion)</Version>
+      <PackageVersion>$(GitVersion)</PackageVersion>
+      <AssemblyVersion>$(GitVersion)</AssemblyVersion>
+      <FileVersion>$(GitVersion)</FileVersion>
+    </PropertyGroup>
+    
+    <Exec Command="git rev-parse --short HEAD" ConsoleToMSBuild="true" StandardOutputImportance="Low" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="InformationalVersion" />
+    </Exec>
+  </Target>
+</Project>

@@ -3,28 +3,10 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'dotnet msbuild'
   inputs:
-    projects: GLFWDotNet.sln
-    arguments: '/v:d /p:Configuration=Release'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
-  inputs:
-    command: test
-    projects: 'tests/GLFWDotNet.Tests/GLFWDotNet.Tests.csproj'
-    arguments: '-c Release'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
-  inputs:
-    command: pack
-    packagesToPack: src/GLFWDotNet/GLFWDotNet.csproj
-    buildProperties: 'Configuration=Release'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: GLFWDotNet'
-  inputs:
-    artifactName: 'GLFWDotNet'
-
+    command: 'custom'
+    custom: 'msbuild'
+    projects: build/Build.proj
+    arguments: '-v:n'
 

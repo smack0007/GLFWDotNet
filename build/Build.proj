@@ -1,0 +1,87 @@
+<Project DefaultTargets="Build">
+  <PropertyGroup>
+    <UseGitVersion>true</UseGitVersion>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <ItemGroup>
+    <ProjectSolutions Include="$(RepositoryRootDirectory)/*.sln" />
+    <ProjectSources Include="$(RepositoryRootDirectory)/src/**/*.csproj" />
+    <ProjectTests Include="$(RepositoryRootDirectory)/tests/**/*.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <BuildArgs>-v:n -c Release -p:UseGitVersion=true</BuildArgs>
+  </PropertyGroup>
+  
+  <!--
+  Clean
+  -->
+  
+  <Target Name="Clean">
+    <Exec
+      Command="dotnet clean %(ProjectSolutions.Identity)"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+  
+  <!--
+  Build
+  -->
+  
+  <Target Name="Build" DependsOnTargets="BuildSolution;PackLibrary" />
+  
+  <Target Name="BuildSolution">
+    <Exec
+      Command="dotnet build %(ProjectSolutions.Identity) $(BuildArgs)"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+
+  <Target Name="PackLibrary">
+    <Exec
+      Command="dotnet pack %(ProjectSources.Identity) $(BuildArgs)"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+
+  <!--
+  Test
+  -->
+
+  <Target Name="Test">
+    <Exec
+      Command="dotnet test %(ProjectSolutions.Identity) $(BuildArgs)"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+  
+  <!--
+  Release
+  -->
+  
+  <Target Name="Release" DependsOnTargets="Clean;Build;Test;EnsureNoChanges;PushNuGet;CalculateGitVersions;TagRepository" />
+
+  <Target Name="EnsureNoChanges">
+    <Exec Command="git status -s" ConsoleToMSBuild="true" StandardOutputImportance="Low" ContinueOnError="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitStatus" />
+    </Exec>
+
+    <Error
+      Condition="$(GitStatus) != ''"
+      Text="There are currently uncommitted changes." />
+  </Target>
+  
+  <Target Name="PushNuGet">
+    <ItemGroup>
+      <Packages Include="$(RepositoryRootDirectory)bin/**/*.nupkg" />
+    </ItemGroup>
+
+    <Exec
+      Command="dotnet nuget push %(Packages.Identity) -s https://api.nuget.org/v3/index.json"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+  
+  <Target Name="TagRepository">
+    <Exec
+      Command="git tag -a v$(GitVersion) -m &quot;Version $(GitVersion)&quot;"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
+  </Target>
+</Project>

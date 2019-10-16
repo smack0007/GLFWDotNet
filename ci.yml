@@ -1,0 +1,15 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: dotnet msbuild build\Build.proj -nologo -v:n -t:Build
+    - name: Test
+      run: dotnet msbuild build\Build.proj -nologo -v:n -t:Test

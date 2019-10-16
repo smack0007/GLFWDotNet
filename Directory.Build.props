@@ -1,30 +1,25 @@
 <Project>
   <PropertyGroup>
-    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
     <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
-    <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)'))\$(MSBuildProjectName)</OutputPath>
+    <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)/$(PlatformTarget)'))/$(MSBuildProjectName)</OutputPath>
     <LangVersion>latest</LangVersion>
-
-    <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
-    <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
-    <PatchNumber Condition="$(PatchNumber) == ''">0</PatchNumber>
-    <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber)</VersionPrefix>
 
     <Authors>smack0007</Authors>
     <Copyright>Copyright © Zachary Snow $([System.DateTime]::Now.ToString(yyyy))</Copyright>
 
-    <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
-    <PackageTags>GLFW;C#;.NET</PackageTags>
+    <VersionPrefix>0.0.1</VersionPrefix>
+
     <PackageLicenseFile>License.txt</PackageLicenseFile>
 
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/smack0007/GLFWDotNet.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
   </ItemGroup>
 
+  <Import Project="$(MSBuildThisFileDirectory)/build/Project.props" />
   <Import Project="$(MSBuildThisFileDirectory)/build/GitVersion.targets" />
 </Project>

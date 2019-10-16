@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/smack0007/GLFWDotNet.git</RepositoryUrl>
+
+    <PackageProjectUrl>https://github.com/smack0007/GLFWDotNet/</PackageProjectUrl>
+    <PackageTags>GLFW;C#;.NET</PackageTags>
+
+    <LangVersion>7.3</LangVersion>
+    <!--<Nullable>enable</Nullable>-->
+  </PropertyGroup>
+</Project>

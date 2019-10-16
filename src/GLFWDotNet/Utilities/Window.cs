@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using static GLFWDotNet.GLFW;
 
 namespace GLFWDotNet.Utilities
@@ -177,6 +178,14 @@ namespace GLFWDotNet.Utilities
         public bool ShouldClose()
         {
             return glfwWindowShouldClose(Handle) != 0;
+        }
+
+        public IntPtr GetNativeHandle()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return glfwGetWin32Window(Handle);
+
+            return IntPtr.Zero;
         }
 
         private void OnCursorPos(IntPtr window, double xpos, double ypos)

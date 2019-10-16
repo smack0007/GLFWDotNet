@@ -12,6 +12,7 @@ namespace HelloWorldUtilities
 
             var window = new MainWindow();
             window.MakeContextCurrent();
+            var nativeHandle = window.GetNativeHandle();
 
             var keyboard = new Keyboard(window);
             var mouse = new Mouse(window);
@@ -28,7 +29,7 @@ namespace HelloWorldUtilities
                 if (mouse.ButtonLeft)
                     mouseButtons += "L";
 
-                window.Info = $"Mouse: ({mouse.X}, {mouse.Y}) [{mouseButtons}]";
+                window.Info = $"NativeHandle: {nativeHandle} Mouse: ({mouse.X}, {mouse.Y}) [{mouseButtons}]";
             });
 
             Application.Terminate();

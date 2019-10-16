@@ -35,6 +35,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C0CFDAF6-F0D7-413D-9CEA-1817629EF240}"
 	ProjectSection(SolutionItems) = preProject
 		build\CopyDependencies.targets = build\CopyDependencies.targets
+		build\Project.props = build\Project.props
 	EndProjectSection
 EndProject
 Global

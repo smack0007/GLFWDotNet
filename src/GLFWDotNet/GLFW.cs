@@ -1,5 +1,5 @@
 // MIT License
-// Copyright (c) 2016 - 2018 Zachary Snow
+// Copyright (c) 2016 - 2019 Zachary Snow
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -755,6 +755,9 @@ namespace GLFWDotNet
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface);
 
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetWin32Window(IntPtr window);
+
 		}
 
 		private static Delegates.glfwInit _glfwInit;
@@ -995,6 +998,8 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwCreateWindowSurface _glfwCreateWindowSurface;
 
+		private static Delegates.glfwGetWin32Window _glfwGetWin32Window;
+
 		private static class Win32
         {
             [DllImport("kernel32")]
@@ -1164,6 +1169,7 @@ namespace GLFWDotNet
 			_glfwGetInstanceProcAddress = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetInstanceProcAddress>(getProcAddress("glfwGetInstanceProcAddress"));
 			_glfwGetPhysicalDevicePresentationSupport = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetPhysicalDevicePresentationSupport>(getProcAddress("glfwGetPhysicalDevicePresentationSupport"));
 			_glfwCreateWindowSurface = Marshal.GetDelegateForFunctionPointer<Delegates.glfwCreateWindowSurface>(getProcAddress("glfwCreateWindowSurface"));
+			_glfwGetWin32Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWin32Window>(getProcAddress("glfwGetWin32Window"));
 		}
 
 		/// <summary>
@@ -3693,6 +3699,20 @@ namespace GLFWDotNet
 		public static int glfwCreateWindowSurface(IntPtr instance, IntPtr window, IntPtr allocator, out IntPtr surface)
 		{
 			return _glfwCreateWindowSurface(instance, window, allocator, out surface);
+		}
+
+		/// <summary>
+
+		/// </summary>
+		/// <remarks>
+
+		/// </remarks>
+		/// <param name="window">
+
+		/// </param>
+		public static IntPtr glfwGetWin32Window(IntPtr window)
+		{
+			return _glfwGetWin32Window(window);
 		}
 
 	}

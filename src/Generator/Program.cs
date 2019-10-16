@@ -79,7 +79,7 @@ namespace Generator
 
             public bool CommentOut { get; set; }
 
-            public List<ParamData> Params { get; } = new List<ParamData>();
+            public List<ParamData> Params { get; set; } = new List<ParamData>();
 
             public override string ToString() => this.Name;
 
@@ -175,6 +175,17 @@ namespace Generator
             var structs = new List<StructData>();
 
             Parse(lines, enums, functions, callbacks, structs);
+
+            functions.Add(new FunctionData()
+            {
+                Name = "glfwGetWin32Window",
+                ReturnType = "IntPtr",
+                Params = new List<ParamData>()
+                {
+                    new ParamData() { Type = "IntPtr", Name = "window" }
+                }
+            });
+
 
             Write(enums, functions, callbacks, structs);
 
@@ -681,6 +692,9 @@ namespace Generator
 
         private static string FormatDocs(string input, string padding)
         {
+            if (input == null)
+                return "";
+
             return
                 padding + "/// " +
                 string.Join(

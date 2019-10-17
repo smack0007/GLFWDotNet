@@ -29,7 +29,7 @@ using System.Security;
 
 namespace GLFWDotNet
 {
-	public static class GLFW
+	public static partial class GLFW
 	{
 		public const int GLFW_VERSION_MAJOR = 3;
 		public const int GLFW_VERSION_MINOR = 3;
@@ -1002,16 +1002,7 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwGetWin32Window _glfwGetWin32Window;
 
-		private static class Win32
-        {
-            [DllImport("kernel32")]
-            public static extern IntPtr LoadLibrary(string fileName);
-
-            [DllImport("kernel32")]
-            public static extern IntPtr GetProcAddress(IntPtr module, string procName);
-        }
-
-        /// <summary>
+		/// <summary>
         /// Initializes the GLFW library.
         /// </summary>
         /// <remarks>
@@ -1028,26 +1019,6 @@ namespace GLFWDotNet
         {
             LoadFunctions(LoadAssembly());
             return _glfwInit();
-        }
-
-        private static Func<string, IntPtr> LoadAssembly()
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                string assemblyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Environment.Is64BitProcess ? "win-x64" : "win-x86", "glfw3.dll");
-                IntPtr assembly = Win32.LoadLibrary(assemblyPath);
-
-                if (assembly == IntPtr.Zero)
-                    throw new InvalidOperationException($"Failed to load GLFW dll from path '{assemblyPath}'.");
-
-                return x => Win32.GetProcAddress(assembly, x);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                // Coming soon...
-            }
-
-            throw new NotImplementedException("Unsupported platform.");
         }
 
 		private static void LoadFunctions(Func<string, IntPtr> getProcAddress)

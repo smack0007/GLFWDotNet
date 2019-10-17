@@ -94,15 +94,15 @@ namespace GLFWDotNet.Utilities
             }
         }
 
-        public event EventHandler<KeyActionEventArgs> KeyAction;
+        public event EventHandler<KeyActionEventArgs>? KeyAction;
 
-        public event EventHandler<MousePositionEventArgs> MousePositionChanged;
+        public event EventHandler<MousePositionEventArgs>? MousePositionChanged;
 
-        public event EventHandler<MouseButtonActionEventArgs> MouseButtonAction;
+        public event EventHandler<MouseButtonActionEventArgs>? MouseButtonAction;
         
-        public event EventHandler PositionChanged;
+        public event EventHandler? PositionChanged;
 
-        public event EventHandler SizeChanged;
+        public event EventHandler? SizeChanged;
 
         public Window()
         {
@@ -152,16 +152,9 @@ namespace GLFWDotNet.Utilities
             if (disposing)
             {
                 glfwSetCursorPosCallback(Handle, null);
-                _cursorPosCallback = null;
-
                 glfwSetKeyCallback(Handle, null);
-                _keyCallback = null;
-
-                glfwSetWindowPosCallback(Handle, null);
-                _windowPosCallback = null;
-
+                glfwSetWindowPosCallback(Handle, null);                
                 glfwSetWindowSizeCallback(Handle, null);
-                _windowSizeCallback = null;
             }
         }
 

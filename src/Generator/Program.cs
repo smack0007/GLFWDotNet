@@ -720,6 +720,8 @@ namespace Generator
             }
 
             sb.AppendLine();
+            sb.AppendLine("#nullable disable");
+            sb.AppendLine();
 
             sb.AppendLine("using System;");
             sb.AppendLine("using System.IO;");

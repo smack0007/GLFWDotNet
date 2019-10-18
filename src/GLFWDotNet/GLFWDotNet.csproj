@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>.NET bindings for GLFW.</Description>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <Import Project="$(RepositoryRootDirectory)build\CopyDependencies.targets" />
 
   <ItemGroup>
-    <None Include="$(GLFWDirectory)GLFW.license" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\" />
-    <None Include="$(GLFWDirectory)x64\glfw3.dll" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\win-x64\" />
-    <None Include="$(GLFWDirectory)x86\glfw3.dll" Visible="false" Pack="true" PackagePath="lib\$(TargetFramework)\win-x86\" />
+    <None Include="$(GLFWDirectory)GLFW.license" Visible="false" Pack="true" PackagePath=" lib\$(TargetFramework)\" />
+    <None Include="$(GLFWDirectory)x64\glfw3.dll" Visible="false" Pack="true" PackagePath="runtimes\win-x64\native" />
+    <None Include="$(GLFWDirectory)x86\glfw3.dll" Visible="false" Pack="true" PackagePath="runtimes\win-x86\native" />
   </ItemGroup>
 
 </Project>

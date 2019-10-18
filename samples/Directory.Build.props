@@ -4,6 +4,9 @@
   <Import Project="$(RepositoryRootDirectory)build\CopyDependencies.targets" />
 
   <ItemGroup>
-    <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />        
+    <ProjectReference Include="$(RepositoryRootDirectory)src\GLFWDotNet\GLFWDotNet.csproj" />
+
+    <!-- The next line can be used for testing the samples with a debug NuGet package. -->
+    <!--<PackageReference Include="GLFWDotNet" Version="0.0.1" />-->
   </ItemGroup>
 </Project>

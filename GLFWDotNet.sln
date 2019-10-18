@@ -5,6 +5,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B218290B-7F6A-4727-B34B-740EDA309399}"
 	ProjectSection(SolutionItems) = preProject
 		samples\Directory.Build.props = samples\Directory.Build.props
+		samples\nuget.config = samples\nuget.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22DFB173-8802-4C66-9345-6E1D60EBB028}"
@@ -33,7 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldUtilities", "samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C0CFDAF6-F0D7-413D-9CEA-1817629EF240}"
 	ProjectSection(SolutionItems) = preProject
+		build\Build.proj = build\Build.proj
 		build\CopyDependencies.targets = build\CopyDependencies.targets
+		build\GitVersion.targets = build\GitVersion.targets
 		build\Project.props = build\Project.props
 	EndProjectSection
 EndProject

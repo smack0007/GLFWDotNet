@@ -18,11 +18,17 @@ namespace GLFWDotNet
 
         private static Func<string, IntPtr> LoadAssembly()
         {
-            var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var assemblyDirectory = Path.GetDirectoryName(typeof(GLFW).Assembly.Location);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                string assemblyPath = Path.Combine(assemblyDirectory, Environment.Is64BitProcess ? "win-x64" : "win-x86", "glfw3.dll");
+                string assemblyPath = Path.Combine(
+                    assemblyDirectory,
+                    "runtimes",
+                    Environment.Is64BitProcess ? "win-x64" : "win-x86",
+                    "native",
+                    "glfw3.dll");
+
                 IntPtr assembly = Win32.LoadLibrary(assemblyPath);
 
                 if (assembly == IntPtr.Zero)

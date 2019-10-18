@@ -6,10 +6,10 @@
   <Target Name="CopyGLFW" AfterTargets="AfterBuild">
     <Copy
       SourceFiles="$(GLFWDirectory)x64\glfw3.dll"
-      DestinationFolder="$(TargetDir)win-x64\" />
+      DestinationFolder="$(TargetDir)runtimes\win-x64\native" />
 
     <Copy
       SourceFiles="$(GLFWDirectory)x86\glfw3.dll"
-      DestinationFolder="$(TargetDir)win-x86\" />
+      DestinationFolder="$(TargetDir)runtimes\win-x86\native" />
   </Target>
 </Project>

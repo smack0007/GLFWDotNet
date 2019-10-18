@@ -87,5 +87,9 @@
     <Exec
       Command="git tag -a v$(GitVersion) -m &quot;Version $(GitVersion)&quot;"
       WorkingDirectory="$(RepositoryRootDirectory)" />
+
+    <Exec
+      Command="git push &quot;origin&quot; --tags"
+      WorkingDirectory="$(RepositoryRootDirectory)" />
   </Target>
 </Project>

@@ -4,7 +4,7 @@
     <RepositoryRootDirectory>$(MSBuildThisFileDirectory)</RepositoryRootDirectory>
     <BinDirectory>$(RepositoryRootDirectory)bin\</BinDirectory>
     <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)/$(PlatformTarget)'))/$(MSBuildProjectName)</OutputPath>
-    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <Authors>smack0007</Authors>
     <Copyright>Copyright © Zachary Snow $([System.DateTime]::Now.ToString(yyyy))</Copyright>
@@ -14,6 +14,9 @@
     <PackageLicenseFile>License.txt</PackageLicenseFile>
 
     <RepositoryType>git</RepositoryType>
+
+    <!-- Tells Visual Studio to always run MSBuild. -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
 
   <ItemGroup>

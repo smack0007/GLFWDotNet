@@ -1,6 +1,6 @@
 [![The MIT License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat-square)](http://opensource.org/licenses/MIT)
-[![Build Status](https://dev.azure.com/smack0007/Github/_apis/build/status/smack0007.GLFWDotNet?branchName=master)](https://dev.azure.com/smack0007/Github/_build/latest?definitionId=13?branchName=master)
-[![BotBuilder Badge](https://buildstats.info/nuget/GLFWDotNet)](https://www.nuget.org/packages/GLFWDotNet/)  
+[![Actions Status](https://github.com/smack0007/GLFWDotNet/workflows/CI/badge.svg)](https://github.com/smack0007/GLFWDotNet/actions)
+[![NuGet Badge](https://buildstats.info/nuget/GLFWDotNet)](https://www.nuget.org/packages/GLFWDotNet/)
 
 # GLFWDotNet
 

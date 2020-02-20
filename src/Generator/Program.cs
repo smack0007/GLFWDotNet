@@ -10,15 +10,15 @@ namespace Generator
     {
         interface IDocs
         {
-            string BriefDescription { get; set; }
+            string? BriefDescription { get; set; }
 
-            string Description { get; set; }
+            string? Description { get; set; }
 
-            string Remarks { get; set; }
+            string? Remarks { get; set; }
 
-            string ReturnDescription { get; set; }
+            string? ReturnDescription { get; set; }
 
-            string Group { get; set; }
+            string? Group { get; set; }
 
             IEnumerable<KeyValuePair<string, string>> GetParamDocs();
 
@@ -29,21 +29,21 @@ namespace Generator
 
         class EnumData : IDocs
         {
-            public string BriefDescription { get; set; }
+            public string? BriefDescription { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Remarks { get; set; }
+            public string? Remarks { get; set; }
 
-            public string ReturnDescription { get; set; }
+            public string? ReturnDescription { get; set; }
 
-            public string Group { get; set; }
+            public string? Group { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public string Value { get; set; }
+            public string? Value { get; set; }
 
-            public override string ToString() => this.Name;
+            public override string ToString() => Name ?? "";
 
             public IEnumerable<KeyValuePair<string, string>> GetParamDocs()
             {
@@ -63,38 +63,34 @@ namespace Generator
 
         class FunctionData : IDocs
         {
-            public string Group { get; set; }
+            public string? Group { get; set; }
 
-            public string BriefDescription { get; set; }
+            public string? BriefDescription { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Remarks { get; set; }
+            public string? Remarks { get; set; }
 
-            public string ReturnDescription { get; set; }
+            public string? ReturnDescription { get; set; }
 
-            public string ReturnType { get; set; }
+            public string? ReturnType { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             public bool CommentOut { get; set; }
 
             public List<ParamData> Params { get; set; } = new List<ParamData>();
 
-            public override string ToString() => this.Name;
+            public override string ToString() => Name ?? "";
 
             public IEnumerable<KeyValuePair<string, string>> GetParamDocs() =>
-                this.Params.Select(x => new KeyValuePair<string, string>(x.Name, x.Description));
+                Params.Select(x => new KeyValuePair<string, string>(x.Name ?? "", x.Description ?? ""));
 
-            public void SetParamDescription(string name, string description)
-            {
-                this.Params.Single(x => x.Name == name).Description = description;
-            }
+            public void SetParamDescription(string name, string description) =>
+                Params.Single(x => x.Name == name).Description = description;
 
-            public void SetParamModifier(string name, ParamModifier modifier)
-            {
-                this.Params.Single(x => x.Name == name).Modifier = modifier;
-            }
+            public void SetParamModifier(string name, ParamModifier modifier) =>            
+                Params.Single(x => x.Name == name).Modifier = modifier;
         }
 
         enum ParamModifier
@@ -108,50 +104,50 @@ namespace Generator
         {
             public ParamModifier Modifier { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Type { get; set; }
+            public string? Type { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public override string ToString() => this.Name;
+            public override string ToString() => Name ?? "";
         }
 
         class CallbackData : IDocs
         {
-            public string Group { get; set; }
+            public string? Group { get; set; }
 
-            public string BriefDescription { get; set; }
+            public string? BriefDescription { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Remarks { get; set; }
+            public string? Remarks { get; set; }
 
-            public string ReturnDescription { get; set; }
+            public string? ReturnDescription { get; set; }
 
-            public string ReturnType { get; set; }
+            public string? ReturnType { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             public List<ParamData> Params { get; } = new List<ParamData>();
 
-            public override string ToString() => this.Name;
+            public override string ToString() => Name ?? "";
 
             public IEnumerable<KeyValuePair<string, string>> GetParamDocs() =>
-                this.Params.Select(x => new KeyValuePair<string, string>(x.Name, x.Description));
+                Params.Select(x => new KeyValuePair<string, string>(x.Name ?? "", x.Description ?? ""));
 
             public void SetParamDescription(string name, string description)
             {
                 // Abusing the fact that SetParamDescription is called first in order to
                 // the name from the docs.
-                var param = this.Params.First(x => x.Name == null);
+                var param = Params.First(x => x.Name == null);
                 param.Name = name;
                 param.Description = description;
             }
 
             public void SetParamModifier(string name, ParamModifier modifier)
             {
-                var param = this.Params.First(x => x.Name == name).Modifier = modifier;
+                var param = Params.First(x => x.Name == name).Modifier = modifier;
             }
         }
 
@@ -159,11 +155,11 @@ namespace Generator
         {
             public bool IsOpaque { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             public List<ParamData> Members { get; } = new List<ParamData>();
 
-            public override string ToString() => this.Name;
+            public override string ToString() => Name ?? "";
         }
 
         public static void Main(string[] args)
@@ -321,7 +317,7 @@ namespace Generator
             {
                 bool finished = false;
 
-                string trimmedLine = null;
+                string? trimmedLine = null;
 
                 if (lines[i].Length >= 4)
                 {
@@ -647,7 +643,13 @@ namespace Generator
             List<CallbackData> callbacks,
             List<StructData> structs)
         {
-            string[] license = File.ReadAllLines(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "License.txt"));
+            var assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
+
+            // Should never happen.
+            if (assemblyPath == null)
+                return;
+
+            string[] license = File.ReadAllLines(Path.Combine(assemblyPath, "License.txt"));
 
             StringBuilder sb = new StringBuilder(1024);
 
@@ -675,8 +677,8 @@ namespace Generator
 
             foreach (var @enum in enums)
             {
-                string name = @enum.Name;
-                string value = @enum.Value;
+                string name = @enum.Name ?? "";
+                string value = @enum.Value ?? "";
 
                 sb.AppendLine($"\t\tpublic const int {name} = {value};");
             }
@@ -685,14 +687,14 @@ namespace Generator
 
             foreach (var @struct in structs.Where(x => !x.IsOpaque))
             {
-                sb.AppendLine($"\t\tpublic struct {GetType(@struct.Name, structs)}");
+                sb.AppendLine($"\t\tpublic struct {GetType(@struct.Name ?? "", structs)}");
                 sb.AppendLine("\t\t{");
 
                 foreach (var member in @struct.Members)
                 {
-                    var type = GetParamType(member.Type, ParamModifier.None, structs);
+                    var type = GetParamType(member.Type ?? "", ParamModifier.None, structs);
 
-                    string name = member.Name;
+                    string name = member.Name ?? "";
                     if (name.EndsWith("]"))
                         name = name.Substring(0, name.IndexOf('['));
 
@@ -706,10 +708,10 @@ namespace Generator
 
             foreach (var callback in callbacks)
             {
-                string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+                string parameters = string.Join(", ", callback.Params.Select(x => GetParamType(x.Type ?? "", x.Modifier, structs) + " " + GetParamName(x.Name ?? "")));
 
                 sb.AppendLine("\t\t[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]");
-                sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType, structs)} {callback.Name}({parameters});");
+                sb.AppendLine($"\t\tpublic delegate {GetReturnType(callback.ReturnType ?? "", structs)} {callback.Name}({parameters});");
 
                 sb.AppendLine();
             }
@@ -719,13 +721,13 @@ namespace Generator
 
             foreach (var function in functions)
             {
-                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
+                string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type ?? "", x.Modifier, structs) + " " + GetParamName(x.Name ?? "")));
 
                 if (function.CommentOut)
                     sb.AppendLine("/*");
 
                 sb.AppendLine("\t\t\t[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]");
-                sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType, structs)} {function.Name}({parameters});");
+                sb.AppendLine($"\t\t\tpublic delegate {GetReturnType(function.ReturnType ?? "", structs)} {function.Name}({parameters});");
 
                 if (function.CommentOut)
                     sb.AppendLine("*/");
@@ -750,9 +752,9 @@ namespace Generator
             var glfwInit = functions.Single(x => x.Name == "glfwInit");
 
             var loaderCode = LoaderCode
-                .Replace("/// glfwInit.Summary ///", FormatDocs(glfwInit.BriefDescription, "\t\t").TrimStart())
-                .Replace("/// glfwInit.Remarks ///", FormatDocs(glfwInit.Description, "\t\t").TrimStart())
-                .Replace("/// glfwInit.Returns ///", FormatDocs(glfwInit.ReturnDescription, "\t\t").TrimStart());
+                .Replace("/// glfwInit.Summary ///", FormatDocs(glfwInit.BriefDescription ?? "", "\t\t").TrimStart())
+                .Replace("/// glfwInit.Remarks ///", FormatDocs(glfwInit.Description ?? "", "\t\t").TrimStart())
+                .Replace("/// glfwInit.Returns ///", FormatDocs(glfwInit.ReturnDescription ?? "", "\t\t").TrimStart());
 
             sb.AppendLine(loaderCode.Trim());
             sb.AppendLine();
@@ -774,16 +776,16 @@ namespace Generator
             foreach (var function in functions.Where(x => x.Name != "glfwInit"))
             {
                 sb.AppendLine("\t\t/// <summary>");
-                sb.AppendLine(FormatDocs(function.BriefDescription, "\t\t"));
+                sb.AppendLine(FormatDocs(function.BriefDescription ?? "", "\t\t"));
                 sb.AppendLine("\t\t/// </summary>");
                 sb.AppendLine("\t\t/// <remarks>");
-                sb.AppendLine(FormatDocs(function.Description, "\t\t"));
+                sb.AppendLine(FormatDocs(function.Description ?? "", "\t\t"));
                 sb.AppendLine("\t\t/// </remarks>");
 
                 foreach (var param in function.Params)
                 {
                     sb.AppendLine($"\t\t/// <param name=\"{param.Name}\">");
-                    sb.AppendLine(FormatDocs(param.Description, "\t\t"));
+                    sb.AppendLine(FormatDocs(param.Description ?? "", "\t\t"));
                     sb.AppendLine("\t\t/// </param>");
                 }
 
@@ -797,11 +799,11 @@ namespace Generator
                 if (function.CommentOut)
                     sb.AppendLine("/*");
 
-                if (!Methods.ContainsKey(function.Name))
+                if (!Methods.ContainsKey(function.Name ?? ""))
                 {
-                    string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type, x.Modifier, structs) + " " + GetParamName(x.Name)));
-                    string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name), x.Modifier)));
-                    string returnType = GetReturnType(function.ReturnType, structs);
+                    string parameters = string.Join(", ", function.Params.Select(x => GetParamType(x.Type ?? "", x.Modifier, structs) + " " + GetParamName(x.Name ?? "")));
+                    string parametersInvoke = string.Join(", ", function.Params.Select(x => PrependModifier(GetParamName(x.Name ?? ""), x.Modifier)));
+                    string returnType = GetReturnType(function.ReturnType ?? "", structs);
 
                     sb.AppendLine($"\t\tpublic static {returnType} {function.Name}({parameters})");
                     sb.AppendLine("\t\t{");
@@ -820,7 +822,7 @@ namespace Generator
                 }
                 else
                 {
-                    sb.AppendLine("\t\t" + Methods[function.Name].Trim());
+                    sb.AppendLine("\t\t" + Methods[function.Name ?? ""].Trim());
                 }
 
                 sb.AppendLine();

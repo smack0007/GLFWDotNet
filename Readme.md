@@ -18,20 +18,24 @@ Use one of the following options:
 ### Native DLLs
   
 If you include GLFW.cs directly into your project, the GLFW dlls must be
-copied into win-x86/win-x64 subdirectories relative to the GLFWDotNet.dll. See the
+copied into runtimes\{win-x86|win-x64}\native subdirectories relative to the GLFWDotNet.dll. See the
 output of the samples. An example MSBuild Target can be seen in the
 [CopyDependencies.targets](https://github.com/smack0007/GLFWDotNet/blob/master/build/CopyDependencies.targets)
 build script.
 
 ```xml
-<Target Name="CopyGLFW" AfterTargets="AfterBuild">        
-    <Copy
-		SourceFiles="$(GLFWDirectory)x64\glfw3.dll"
-        DestinationFolder="$(TargetDir)win-x64\" />
+<PropertyGroup>
+  <GLFWDirectory>$(MSBuildThisFileDirectory)..\ext\GLFW\</GLFWDirectory>
+</PropertyGroup>
 
-    <Copy
-		SourceFiles="$(GLFWDirectory)x86\glfw3.dll"
-        DestinationFolder="$(TargetDir)win-x86\" />
+<Target Name="CopyGLFW" AfterTargets="AfterBuild">
+  <Copy
+    SourceFiles="$(GLFWDirectory)x64\glfw3.dll"
+    DestinationFolder="$(TargetDir)runtimes\win-x64\native" />
+
+  <Copy
+    SourceFiles="$(GLFWDirectory)x86\glfw3.dll"
+    DestinationFolder="$(TargetDir)runtimes\win-x86\native" />
 </Target>
 ```
 

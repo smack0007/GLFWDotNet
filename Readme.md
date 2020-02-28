@@ -17,8 +17,10 @@ Use one of the following options:
   
 ### Native DLLs
   
-If you include GLFW.cs directly into your project, the GLFW dlls must be
-copied into runtimes\{win-x86|win-x64}\native subdirectories relative to the GLFWDotNet.dll. See the
+If you include GLFW.cs directly into your project you'll need to implement the LoadAssembly() method of
+the GLFW class yourself, the default implementation is in [GLFW.LoadAssembly.cs](https://github.com/smack0007/GLFWDotNet/blob/master/src/GLFWDotNet/GLFW.LoadAssembly.cs).
+
+This can also just be included in your project of course, in which case the GLFW dlls must be copied into runtimes\\{win-x86|win-x64}\\native subdirectories relative to the GLFWDotNet.dll. See the
 output of the samples. An example MSBuild Target can be seen in the
 [CopyDependencies.targets](https://github.com/smack0007/GLFWDotNet/blob/master/build/CopyDependencies.targets)
 build script.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace GLFWDotNet
@@ -14,6 +13,72 @@ namespace GLFWDotNet
 
             [DllImport("kernel32")]
             public static extern IntPtr GetProcAddress(IntPtr module, string procName);
+        }
+
+        private static class Linux
+        {
+
+            const int RTLD_NOW = 2;
+            public static IntPtr LoadLibrary (string fileName)
+            {
+                IntPtr retVal = dlopen (fileName, RTLD_NOW);
+                var errPtr = dlerror ();
+                if (errPtr != IntPtr.Zero) {
+                    Console.WriteLine(Marshal.PtrToStringAnsi (errPtr));
+                }
+                return retVal;
+            }
+
+            public static void FreeLibrary (IntPtr handle)
+            {
+                dlclose (handle);
+            }
+
+            [DllImport("libdl.so")]
+            private static extern IntPtr dlopen (String fileName, int flags);
+
+            [DllImport("libdl.so")]
+            public static extern IntPtr dlsym (IntPtr handle, String symbol);
+
+            [DllImport("libdl.so")]
+            private static extern int dlclose (IntPtr handle);
+
+            [DllImport("libdl.so")]
+            private static extern IntPtr dlerror ();
+        }
+
+        public static class OSX
+        {
+            const int RTLD_NOW = 2;
+            public static IntPtr LoadLibrary(string fileName)
+            {
+                IntPtr retVal = dlopen(fileName, RTLD_NOW);
+                var errPtr = dlerror();
+                if (errPtr != IntPtr.Zero)
+                {
+                    Console.WriteLine(Marshal.PtrToStringAnsi(errPtr));
+                }
+
+                return retVal;
+            }
+
+            public static void FreeLibrary(IntPtr handle)
+            {
+                dlclose(handle);
+            }
+
+
+            [DllImport("libdl.dylib")]
+            private static extern IntPtr dlopen(String fileName, int flags);
+
+            [DllImport("libdl.dylib")]
+            public static extern IntPtr dlsym(IntPtr handle, String symbol);
+
+            [DllImport("libdl.dylib")]
+            private static extern int dlclose(IntPtr handle);
+
+            [DllImport("libdl.dylib")]
+            private static extern IntPtr dlerror();
         }
 
         private static Func<string, IntPtr> LoadAssembly()
@@ -36,9 +101,25 @@ namespace GLFWDotNet
 
                 return x => Win32.GetProcAddress(assembly, x);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) )
             {
-                // Coming soon...
+                // sudo apt install libglfw3-dev
+                string assemblyPath = "libglfw.so";
+                IntPtr assembly = Linux.LoadLibrary(assemblyPath);
+                if (assembly == IntPtr.Zero)
+                    throw new InvalidOperationException($"Failed to load GLFW so from path '{assemblyPath}'.");
+
+                return functionName => Linux.dlsym(assembly, functionName);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // brew install glfw3
+                string assemblyPath = "libglfw.dylib";
+                IntPtr assembly = OSX.LoadLibrary(assemblyPath);
+                if (assembly == IntPtr.Zero)
+                    throw new InvalidOperationException($"Failed to load GLFW dylib from path '{assemblyPath}'.");
+
+                return functionName => OSX.dlsym(assembly, functionName);
             }
 
             throw new NotImplementedException("Unsupported platform.");

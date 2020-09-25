@@ -1142,7 +1142,10 @@ namespace GLFWDotNet
 			_glfwGetInstanceProcAddress = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetInstanceProcAddress>(getProcAddress("glfwGetInstanceProcAddress"));
 			_glfwGetPhysicalDevicePresentationSupport = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetPhysicalDevicePresentationSupport>(getProcAddress("glfwGetPhysicalDevicePresentationSupport"));
 			_glfwCreateWindowSurface = Marshal.GetDelegateForFunctionPointer<Delegates.glfwCreateWindowSurface>(getProcAddress("glfwCreateWindowSurface"));
-			_glfwGetWin32Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWin32Window>(getProcAddress("glfwGetWin32Window"));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+            _glfwGetWin32Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWin32Window>(getProcAddress("glfwGetWin32Window"));
+            }
 		}
 
 		/// <summary>

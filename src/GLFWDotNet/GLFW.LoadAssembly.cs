@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace GLFWDotNet
@@ -16,11 +15,35 @@ namespace GLFWDotNet
             public static extern IntPtr GetProcAddress(IntPtr module, string procName);
         }
 
+        private static class Unix
+        {
+
+            public static IntPtr LoadLibrary(string fileName)
+            {
+                IntPtr retVal = dlopen(fileName, 2);
+                var errPtr = dlerror ();
+                if (errPtr != IntPtr.Zero) {
+                    throw new InvalidOperationException(Marshal.PtrToStringAnsi (errPtr));
+                }
+                return retVal;
+            }
+
+            [DllImport("libdl")]
+            private static extern IntPtr dlopen(string fileName, int flags);
+
+            [DllImport("libdl")]
+            public static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+            [DllImport("libdl")]
+            private static extern IntPtr dlerror();
+        }
+
+
         private static Func<string, IntPtr> LoadAssembly()
         {
             var assemblyDirectory = Path.GetDirectoryName(typeof(GLFW).Assembly.Location);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 string assemblyPath = Path.Combine(
                     assemblyDirectory,
@@ -36,9 +59,16 @@ namespace GLFWDotNet
 
                 return x => Win32.GetProcAddress(assembly, x);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                // Coming soon...
+                string extension = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "so" : "dylib";
+                string assemblyPath = $"libglfw.{extension}";
+                IntPtr assembly = Unix.LoadLibrary(assemblyPath);
+                if (assembly == IntPtr.Zero)
+                    throw new InvalidOperationException($"Failed to load GLFW so from path '{assemblyPath}'.");
+
+                return functionName => Unix.dlsym(assembly, functionName);
             }
 
             throw new NotImplementedException("Unsupported platform.");

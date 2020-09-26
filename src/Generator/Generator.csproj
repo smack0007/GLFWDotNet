@@ -21,6 +21,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GLFWDotNet\GLFWDotNet.csproj" />
+  </ItemGroup>
+
   <Target Name="ExecuteAfterBuild" AfterTargets="AfterBuild" Condition=" $(ExecuteAfterBuild) == true ">
     <Exec WorkingDirectory="$(OutputPath)" Command="dotnet $(AssemblyName).dll" />
   </Target>

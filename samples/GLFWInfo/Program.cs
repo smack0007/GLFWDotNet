@@ -17,8 +17,11 @@ namespace GLFWInfo
 
         public static int Main(string[] args)
         {
-             if (glfwInit() == 0)
-                return -1;
+            if (glfwInit() == 0)
+            {
+                Console.Error.WriteLine("Failed to initialize GLFW.");
+                return 1;
+            }
 
             glfwGetVersion(out int major, out int minor, out int revision);
             Console.WriteLine($"GLFW Version: {major}.{minor}.{revision}");

@@ -1165,6 +1165,24 @@ namespace GLFWDotNet
                 _glfwGetCocoaWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetCocoaWindow>(getProcAddress("glfwGetCocoaWindow"));
             }
 		}
+		
+        public static string glfwGetWindowNativeFunctionName()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "glfwGetWin32Window";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "glfwGetX11Window";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "glfwGetCocoaWindow";
+            }
+            throw new NotImplementedException("Unsupported platform.");
+        }
+
 
 		/// <summary>
 		/// Terminates the GLFW library.

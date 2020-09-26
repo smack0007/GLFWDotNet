@@ -15,77 +15,35 @@ namespace GLFWDotNet
             public static extern IntPtr GetProcAddress(IntPtr module, string procName);
         }
 
-        private static class Linux
+        private static class Unix
         {
 
-            const int RTLD_NOW = 2;
-            public static IntPtr LoadLibrary (string fileName)
-            {
-                IntPtr retVal = dlopen (fileName, RTLD_NOW);
-                var errPtr = dlerror ();
-                if (errPtr != IntPtr.Zero) {
-                    Console.WriteLine(Marshal.PtrToStringAnsi (errPtr));
-                }
-                return retVal;
-            }
-
-            public static void FreeLibrary (IntPtr handle)
-            {
-                dlclose (handle);
-            }
-
-            [DllImport("libdl.so")]
-            private static extern IntPtr dlopen (String fileName, int flags);
-
-            [DllImport("libdl.so")]
-            public static extern IntPtr dlsym (IntPtr handle, String symbol);
-
-            [DllImport("libdl.so")]
-            private static extern int dlclose (IntPtr handle);
-
-            [DllImport("libdl.so")]
-            private static extern IntPtr dlerror ();
-        }
-
-        public static class OSX
-        {
-            const int RTLD_NOW = 2;
             public static IntPtr LoadLibrary(string fileName)
             {
-                IntPtr retVal = dlopen(fileName, RTLD_NOW);
-                var errPtr = dlerror();
-                if (errPtr != IntPtr.Zero)
-                {
-                    Console.WriteLine(Marshal.PtrToStringAnsi(errPtr));
+                IntPtr retVal = dlopen(fileName, 2);
+                var errPtr = dlerror ();
+                if (errPtr != IntPtr.Zero) {
+                    throw new InvalidOperationException(Marshal.PtrToStringAnsi (errPtr));
                 }
-
                 return retVal;
             }
 
-            public static void FreeLibrary(IntPtr handle)
-            {
-                dlclose(handle);
-            }
+            [DllImport("libdl")]
+            private static extern IntPtr dlopen(string fileName, int flags);
 
+            [DllImport("libdl")]
+            public static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-            [DllImport("libdl.dylib")]
-            private static extern IntPtr dlopen(String fileName, int flags);
-
-            [DllImport("libdl.dylib")]
-            public static extern IntPtr dlsym(IntPtr handle, String symbol);
-
-            [DllImport("libdl.dylib")]
-            private static extern int dlclose(IntPtr handle);
-
-            [DllImport("libdl.dylib")]
+            [DllImport("libdl")]
             private static extern IntPtr dlerror();
         }
+
 
         private static Func<string, IntPtr> LoadAssembly()
         {
             var assemblyDirectory = Path.GetDirectoryName(typeof(GLFW).Assembly.Location);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 string assemblyPath = Path.Combine(
                     assemblyDirectory,
@@ -101,25 +59,16 @@ namespace GLFWDotNet
 
                 return x => Win32.GetProcAddress(assembly, x);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) )
+
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                // sudo apt install libglfw3-dev
-                string assemblyPath = "libglfw.so";
-                IntPtr assembly = Linux.LoadLibrary(assemblyPath);
+                string extension = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "so" : "dylib";
+                string assemblyPath = $"libglfw.{extension}";
+                IntPtr assembly = Unix.LoadLibrary(assemblyPath);
                 if (assembly == IntPtr.Zero)
                     throw new InvalidOperationException($"Failed to load GLFW so from path '{assemblyPath}'.");
 
-                return functionName => Linux.dlsym(assembly, functionName);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                // brew install glfw3
-                string assemblyPath = "libglfw.dylib";
-                IntPtr assembly = OSX.LoadLibrary(assemblyPath);
-                if (assembly == IntPtr.Zero)
-                    throw new InvalidOperationException($"Failed to load GLFW dylib from path '{assemblyPath}'.");
-
-                return functionName => OSX.dlsym(assembly, functionName);
+                return functionName => Unix.dlsym(assembly, functionName);
             }
 
             throw new NotImplementedException("Unsupported platform.");

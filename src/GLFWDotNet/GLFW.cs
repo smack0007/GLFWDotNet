@@ -759,6 +759,12 @@ namespace GLFWDotNet
 
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
 			public delegate IntPtr glfwGetWin32Window(IntPtr window);
+            
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+			public delegate IntPtr glfwGetX11Window(IntPtr window);
+            
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
+            public delegate IntPtr glfwGetCocoaWindow(IntPtr window);
 
 		}
 
@@ -1000,7 +1006,11 @@ namespace GLFWDotNet
 
 		private static Delegates.glfwCreateWindowSurface _glfwCreateWindowSurface;
 
-		private static Delegates.glfwGetWin32Window _glfwGetWin32Window;
+        private static Delegates.glfwGetWin32Window _glfwGetWin32Window;
+
+		private static Delegates.glfwGetX11Window _glfwGetX11Window;
+
+        private static Delegates.glfwGetCocoaWindow _glfwGetCocoaWindow;
 
 		/// <summary>
         /// Initializes the GLFW library.
@@ -1144,7 +1154,15 @@ namespace GLFWDotNet
 			_glfwCreateWindowSurface = Marshal.GetDelegateForFunctionPointer<Delegates.glfwCreateWindowSurface>(getProcAddress("glfwCreateWindowSurface"));
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-            _glfwGetWin32Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWin32Window>(getProcAddress("glfwGetWin32Window"));
+                _glfwGetWin32Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetWin32Window>(getProcAddress("glfwGetWin32Window"));
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                _glfwGetX11Window = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetX11Window>(getProcAddress("glfwGetX11Window"));
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                _glfwGetCocoaWindow = Marshal.GetDelegateForFunctionPointer<Delegates.glfwGetCocoaWindow>(getProcAddress("glfwGetCocoaWindow"));
             }
 		}
 

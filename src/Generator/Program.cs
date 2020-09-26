@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using GLFWDotNet;
 
 namespace Generator
 {
@@ -163,7 +161,7 @@ namespace Generator
 
             public override string ToString() => Name ?? "";
         }
-        
+
         public static void Main(string[] args)
         {
             var assemblyPath = Path.GetDirectoryName(typeof(Program).Assembly.Location);
@@ -182,7 +180,7 @@ namespace Generator
 
             functions.Add(new FunctionData()
             {
-                Name = GLFW.glfwGetWindowNativeFunctionName(),
+                Name = "glfwGetWin32Window",
                 ReturnType = "IntPtr",
                 Params = new List<ParamData>()
                 {

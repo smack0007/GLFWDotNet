@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B218
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{22DFB173-8802-4C66-9345-6E1D60EBB028}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "Samples\HelloWorld\HelloWorld.csproj", "{C15774E0-8B2E-4FB5-B01B-0C5F455A32FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{C15774E0-8B2E-4FB5-B01B-0C5F455A32FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLFWDotNet", "src\GLFWDotNet\GLFWDotNet.csproj", "{9E603FC7-C711-4EC4-A93B-CB2F551B7E06}"
 EndProject

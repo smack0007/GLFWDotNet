@@ -81,6 +81,8 @@ namespace Generator
 
             public List<ParamData> Params { get; set; } = new List<ParamData>();
 
+            public string? Platform { get; set; }
+
             public override string ToString() => Name ?? "";
 
             public IEnumerable<KeyValuePair<string, string>> GetParamDocs() =>
@@ -178,6 +180,13 @@ namespace Generator
 
             Parse(lines, enums, functions, callbacks, structs);
 
+            AddNativeFunctions(functions);
+
+            Write(enums, functions, callbacks, structs);
+        }
+
+        private static void AddNativeFunctions(List<FunctionData> functions)
+        {
             functions.Add(new FunctionData()
             {
                 Name = "glfwGetWin32Window",
@@ -185,11 +194,31 @@ namespace Generator
                 Params = new List<ParamData>()
                 {
                     new ParamData() { Type = "IntPtr", Name = "window" }
-                }
+                },
+                Platform = "Windows"
             });
 
+            functions.Add(new FunctionData()
+            {
+                Name = "glfwGetX11Window",
+                ReturnType = "IntPtr",
+                Params = new List<ParamData>()
+                {
+                    new ParamData() { Type = "IntPtr", Name = "window" }
+                },
+                Platform = "Linux"
+            });
 
-            Write(enums, functions, callbacks, structs);
+            functions.Add(new FunctionData()
+            {
+                Name = "glfwGetCocoaWindow",
+                ReturnType = "IntPtr",
+                Params = new List<ParamData>()
+                {
+                    new ParamData() { Type = "IntPtr", Name = "window" }
+                },
+                Platform = "OSX"
+            });
         }
 
         private static string ParseType(string[] parts, ref int j)
@@ -767,7 +796,15 @@ namespace Generator
                 if (function.CommentOut)
                     sb.Append("// ");
 
-                sb.AppendLine($"\t\t\t_{function.Name} = Marshal.GetDelegateForFunctionPointer<Delegates.{function.Name}>(getProcAddress(\"{function.Name}\"));");
+                string padding = "\t\t\t";
+
+                if (function.Platform != null)
+                {
+                    sb.Append($"{padding}if (RuntimeInformation.IsOSPlatform(OSPlatform.{function.Platform})) ");
+                    padding = "";
+                }
+
+                sb.AppendLine($"{padding}_{function.Name} = Marshal.GetDelegateForFunctionPointer<Delegates.{function.Name}>(getProcAddress(\"{function.Name}\"));");
             }
 
             sb.AppendLine("\t\t}");
@@ -883,7 +920,7 @@ namespace Generator
 
 			return result;
 		}",
-            
+
             ["glfwGetJoystickAxes"] = @"
         public static float[] glfwGetJoystickAxes(int joy)
 		{
@@ -946,7 +983,7 @@ namespace Generator
 
 			return result;
 		}",
-        
+
             ["glfwGetVersionString"] = @"
         public static string glfwGetVersionString()
 		{

@@ -73,5 +73,23 @@ namespace GLFWDotNet
 
             throw new NotImplementedException("Unsupported platform.");
         }
+
+        public static IntPtr glfwGetNativeWindow(IntPtr window)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return glfwGetWin32Window(window);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return glfwGetX11Window(window);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return glfwGetCocoaWindow(window);
+            }
+
+            throw new NotImplementedException("Unsupported platform.");
+        }
     }
 }

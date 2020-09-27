@@ -16,7 +16,9 @@ Use one of the following options:
   in your project.
   
 ### Native DLLs
-  
+
+#### Windows  
+
 If you include GLFW.cs directly into your project you'll need to implement the LoadAssembly() method of
 the GLFW class yourself, the default implementation is in [GLFW.LoadAssembly.cs](https://github.com/smack0007/GLFWDotNet/blob/master/src/GLFWDotNet/GLFW.LoadAssembly.cs).
 
@@ -39,6 +41,25 @@ build script.
     SourceFiles="$(GLFWDirectory)x86\glfw3.dll"
     DestinationFolder="$(TargetDir)runtimes\win-x86\native" />
 </Target>
+```
+
+#### Linux
+
+Usage on Linux requires `libglfw.so` to be installed as well as `libdl.so`.
+
+In Ubuntu the dependencies can be installed via the following command:
+
+```bash
+sudo apt install libc6-dev libglfw3-dev
+```
+
+#### MacOS
+
+Usage on MacOS requires `libglfw.dylib` to be installed. Dependencies can be installed
+via brew with the following command:
+
+```bash
+brew install glfw3
 ```
 
 ## Samples
